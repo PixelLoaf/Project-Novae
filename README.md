@@ -1,2 +1,2 @@
-# Project-Yuri
+# Project-Novae
 Temporary name, duh
