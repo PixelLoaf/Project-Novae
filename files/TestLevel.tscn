@@ -19,7 +19,7 @@ custom_solver_bias = 0.0
 a = Vector2( 48, -16 )
 b = Vector2( -16, 16 )
 
-[node name="Level" type="Node"]
+[node name="Level" type="Node" index="0"]
 
 _sections_unfolded = [ "Cell" ]
 
@@ -66,7 +66,85 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="StaticBody2D6" type="StaticBody2D" parent="FakeTileMap" index="1"]
+[node name="StaticBody2D2" type="StaticBody2D" parent="FakeTileMap" index="1"]
+
+position = Vector2( 976, 288 )
+rotation = 1.5708
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+_sections_unfolded = [ "Transform" ]
+
+[node name="Polygon2D" type="Polygon2D" parent="FakeTileMap/StaticBody2D2" index="0"]
+
+polygon = PoolVector2Array( -304, -16, 16, -16, 16, 16, -304, 16 )
+uv = PoolVector2Array(  )
+color = Color( 1, 1, 1, 1 )
+vertex_colors = PoolColorArray(  )
+offset = Vector2( 0, 0 )
+antialiased = false
+texture = null
+texture_offset = Vector2( 0, 0 )
+texture_scale = Vector2( 1, 1 )
+texture_rotation_degrees = 0.0
+invert_enable = false
+invert_border = 100.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FakeTileMap/StaticBody2D2" index="1"]
+
+position = Vector2( -144, 0 )
+shape = SubResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="FakeTileMap" index="2"]
+
+position = Vector2( 192, 752 )
+rotation = 1.5708
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+_sections_unfolded = [ "Transform" ]
+
+[node name="Polygon2D" type="Polygon2D" parent="FakeTileMap/StaticBody2D3" index="0"]
+
+polygon = PoolVector2Array( -304, -16, 16, -16, 16, 16, -304, 16 )
+uv = PoolVector2Array(  )
+color = Color( 1, 1, 1, 1 )
+vertex_colors = PoolColorArray(  )
+offset = Vector2( 0, 0 )
+antialiased = false
+texture = null
+texture_offset = Vector2( 0, 0 )
+texture_scale = Vector2( 1, 1 )
+texture_rotation_degrees = 0.0
+invert_enable = false
+invert_border = 100.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FakeTileMap/StaticBody2D3" index="1"]
+
+position = Vector2( -144, 0 )
+shape = SubResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="StaticBody2D6" type="StaticBody2D" parent="FakeTileMap" index="3"]
 
 position = Vector2( 304, 576 )
 input_pickable = false
@@ -103,7 +181,7 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="StaticBody2D13" type="StaticBody2D" parent="FakeTileMap" index="2"]
+[node name="StaticBody2D13" type="StaticBody2D" parent="FakeTileMap" index="4"]
 
 position = Vector2( 432, 448 )
 input_pickable = false
@@ -139,7 +217,7 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="StaticBody2D14" type="StaticBody2D" parent="FakeTileMap" index="3"]
+[node name="StaticBody2D14" type="StaticBody2D" parent="FakeTileMap" index="5"]
 
 position = Vector2( 400, 480 )
 input_pickable = false
@@ -175,7 +253,7 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="StaticBody2D15" type="StaticBody2D" parent="FakeTileMap" index="4"]
+[node name="StaticBody2D15" type="StaticBody2D" parent="FakeTileMap" index="6"]
 
 position = Vector2( 368, 512 )
 input_pickable = false
@@ -211,7 +289,7 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="StaticBody2D16" type="StaticBody2D" parent="FakeTileMap" index="5"]
+[node name="StaticBody2D16" type="StaticBody2D" parent="FakeTileMap" index="7"]
 
 position = Vector2( 336, 544 )
 input_pickable = false
@@ -247,7 +325,7 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="StaticBody2D17" type="StaticBody2D" parent="FakeTileMap" index="6"]
+[node name="StaticBody2D17" type="StaticBody2D" parent="FakeTileMap" index="8"]
 
 position = Vector2( 464, 416 )
 input_pickable = false
@@ -283,7 +361,7 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="StaticBody2D19" type="StaticBody2D" parent="FakeTileMap" index="7"]
+[node name="StaticBody2D19" type="StaticBody2D" parent="FakeTileMap" index="9"]
 
 position = Vector2( 496, 384 )
 input_pickable = false
@@ -319,7 +397,7 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="StaticBody2D20" type="StaticBody2D" parent="FakeTileMap" index="8"]
+[node name="StaticBody2D20" type="StaticBody2D" parent="FakeTileMap" index="10"]
 
 position = Vector2( 528, 352 )
 input_pickable = false
@@ -355,7 +433,7 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="StaticBody2D21" type="StaticBody2D" parent="FakeTileMap" index="9"]
+[node name="StaticBody2D21" type="StaticBody2D" parent="FakeTileMap" index="11"]
 
 position = Vector2( 560, 320 )
 input_pickable = false
@@ -391,7 +469,7 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="StaticBody2D18" type="StaticBody2D" parent="FakeTileMap" index="10"]
+[node name="StaticBody2D18" type="StaticBody2D" parent="FakeTileMap" index="12"]
 
 position = Vector2( 592, 288 )
 input_pickable = false

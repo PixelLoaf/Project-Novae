@@ -1,15 +1,16 @@
 extends KinematicBody2D
 
 # Gravity
-const CHAR_GRAVITY = Vector2(0, 2000)
+const CHAR_GRAVITY = 2000
 # Up direction
-const CHAR_UP = Vector2(0, -1)
+var CHAR_UP = Vector2(0, -1)
 # Maximum time after leaving a platform that a player may still jump for
 const CHAR_TIME_MAX_JUMP = 0.12
 # Time after pressing the jump button that the player can still jump for
 const CHAR_TIME_JUMP_WITHOLD = 0.2
 # If the player is not moving, stop the player if they are moving slower than this
 const CHAR_INERT_STOP_SPEED = 240
+# If the player is moving, stop the player if they are moving slower than this
 const CHAR_MOVING_STOP_SPEED = 5
 
 # Maximum movement speed for the player
@@ -53,6 +54,7 @@ func _input(event):
 		char_time_since_jump_button = 0.0
 
 func _physics_process(delta):
+	CHAR_UP = Vector2(0, -1).rotated(get_rotation())
 	# Calculate movement
 	var stop_speed = CHAR_INERT_STOP_SPEED;
 	var target_speed = 0
@@ -66,14 +68,14 @@ func _physics_process(delta):
 			stop_speed = CHAR_MOVING_STOP_SPEED
 		target_speed = char_speed_max
 	# Increment variables
-	char_velocity += CHAR_GRAVITY * delta
+	char_velocity += CHAR_GRAVITY * -CHAR_UP * delta
 	char_time_since_jump_button += delta
 	char_time_since_floor += delta
 	# Jump. The purpose of doing it this way is so that the player can press the
 	# jump button slightly before hitting the ground and still jump.
 	if char_is_on_floor() and char_time_since_jump_button < CHAR_TIME_JUMP_WITHOLD:
 		char_time_since_jump_button = 1.0
-		char_velocity.y = -char_jump_speed
+		char_set_motion_vertical(CHAR_UP, char_jump_speed)
 		char_time_since_floor = 1.0
 	# Actual movement here
 	char_velocity = move_and_slide(char_velocity, CHAR_UP, stop_speed, 5, 0.8)
@@ -89,7 +91,8 @@ func _physics_process(delta):
 		char_floor_normal = Vector2();
 		for i in range(get_slide_count()):
 			var col = get_slide_collision(i);
-			char_floor_normal += col.normal
+			if abs(col.normal.dot(CHAR_UP)) > 0.2:
+				char_floor_normal += col.normal
 		if char_floor_normal == Vector2():
 			char_floor_normal = CHAR_UP;
 		else:
