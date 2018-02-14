@@ -11,9 +11,7 @@ const CHAR_TIME_JUMP_WITHOLD = 0.2
 # If the player is not moving, stop the player if they are moving slower than this
 const CHAR_INERT_STOP_SPEED = 160
 # If the player is moving, stop the player if they are moving slower than this
-const CHAR_MOVING_STOP_SPEED = 5
-# Momentum and inertia hinge around this
-var CHAR_SLIPPERINESS = 10 	
+const CHAR_MOVING_STOP_SPEED = 0
 
 # Maximum movement speed for the player
 export var char_speed_max = 400
@@ -28,6 +26,8 @@ var char_time_since_floor = 1.0
 var char_floor_normal = CHAR_UP
 # Time since pressing the jump button
 var char_time_since_jump_button = 1.0
+# Momentum and inertia hinge around this
+var char_slipperiness = 0.2
 
 func char_get_normal():
 	if char_is_on_floor():
@@ -76,7 +76,7 @@ func _physics_process(delta):
 			stop_speed = CHAR_MOVING_STOP_SPEED
 		target_speed = char_speed_max
 	# Increment variables
-	char_velocity += CHAR_GRAVITY * -CHAR_UP * delta
+	char_velocity += CHAR_GRAVITY * -char_get_normal() * delta
 	char_time_since_jump_button += delta
 	char_time_since_floor += delta
 	# Jump. The purpose of doing it this way is so that the player can press the
@@ -101,9 +101,7 @@ func _physics_process(delta):
 			char_floor_normal = CHAR_UP;
 		else:
 			char_floor_normal = char_floor_normal.normalized()
-		print("NEW FLOOR")
 	# Change the player's horizontal movement according to the player's input
 	veloc_h = char_get_motion_horizontal(char_get_normal())
-	#veloc_h = lerp(veloc_h, target_speed, pow(delta, 1.0/2.0))
-	veloc_h += (target_speed - veloc_h) / CHAR_SLIPPERINESS
+	veloc_h += delta * (target_speed - veloc_h) / char_slipperiness
 	char_set_motion_horizontal(char_get_normal(), veloc_h)
