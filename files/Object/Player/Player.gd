@@ -9,7 +9,7 @@ const CHAR_TIME_MAX_JUMP = 0.12
 # Time after pressing the jump button that the player can still jump for
 const CHAR_TIME_JUMP_WITHOLD = 0.2
 # If the player is not moving, stop the player if they are moving slower than this
-const CHAR_INERT_STOP_SPEED = 160
+const CHAR_INERT_STOP_SPEED = 80
 # If the player is moving, stop the player if they are moving slower than this
 const CHAR_MOVING_STOP_SPEED = 5
 # Momentum and inertia hinge around this
