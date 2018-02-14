@@ -12,6 +12,8 @@ const CHAR_TIME_JUMP_WITHOLD = 0.2
 const CHAR_INERT_STOP_SPEED = 160
 # If the player is moving, stop the player if they are moving slower than this
 const CHAR_MOVING_STOP_SPEED = 5
+# Momentum and inertia hinge around this
+const CHAR_SLIPPERINESS = 10 	
 
 # Maximum movement speed for the player
 export var char_speed_max = 400
@@ -102,5 +104,6 @@ func _physics_process(delta):
 		print("NEW FLOOR")
 	# Change the player's horizontal movement according to the player's input
 	veloc_h = char_get_motion_horizontal(char_get_normal())
-	veloc_h = lerp(veloc_h, target_speed, pow(delta, 1.0/2.0))
+	#veloc_h = lerp(veloc_h, target_speed, pow(delta, 1.0/2.0))
+	veloc_h += (target_speed - veloc_h) / CHAR_SLIPPERINESS
 	char_set_motion_horizontal(char_get_normal(), veloc_h)
