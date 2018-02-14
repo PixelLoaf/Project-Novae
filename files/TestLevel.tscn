@@ -23,11 +23,9 @@ b = Vector2( -16, 16 )
 
 _sections_unfolded = [ "Cell" ]
 
-[node name="player" parent="." index="0" instance=ExtResource( 1 )]
+[node name="FakeTileMap" type="Node2D" parent="." index="0"]
 
-position = Vector2( 432, 384 )
-
-[node name="FakeTileMap" type="Node2D" parent="." index="1"]
+editor/display_folded = true
 
 [node name="StaticBody2D" type="StaticBody2D" parent="FakeTileMap" index="0"]
 
@@ -504,5 +502,9 @@ shape = SubResource( 3 )
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="player" parent="." index="1" instance=ExtResource( 1 )]
+
+position = Vector2( 432, 384 )
 
 

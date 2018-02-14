@@ -9,7 +9,7 @@ const CHAR_TIME_MAX_JUMP = 0.12
 # Time after pressing the jump button that the player can still jump for
 const CHAR_TIME_JUMP_WITHOLD = 0.2
 # If the player is not moving, stop the player if they are moving slower than this
-const CHAR_INERT_STOP_SPEED = 240
+const CHAR_INERT_STOP_SPEED = 160
 # If the player is moving, stop the player if they are moving slower than this
 const CHAR_MOVING_STOP_SPEED = 5
 
@@ -26,6 +26,12 @@ var char_time_since_floor = 1.0
 var char_floor_normal = CHAR_UP
 # Time since pressing the jump button
 var char_time_since_jump_button = 1.0
+
+func char_get_normal():
+	if char_is_on_floor():
+		return char_floor_normal
+	else:
+		return CHAR_UP
 
 # Get the character's movement perpendicular to its normal
 func char_get_motion_horizontal(normal):
@@ -58,7 +64,7 @@ func _physics_process(delta):
 	# Calculate movement
 	var stop_speed = CHAR_INERT_STOP_SPEED;
 	var target_speed = 0
-	var veloc_h = char_get_motion_horizontal(char_floor_normal)
+	var veloc_h = char_get_motion_horizontal(char_get_normal())
 	if Input.is_action_pressed("left"):
 		if veloc_h <= 0:
 			stop_speed = CHAR_MOVING_STOP_SPEED
@@ -78,14 +84,10 @@ func _physics_process(delta):
 		char_set_motion_vertical(CHAR_UP, char_jump_speed)
 		char_time_since_floor = 1.0
 	# Actual movement here
-	char_velocity = move_and_slide(char_velocity, CHAR_UP, stop_speed, 5, 0.8)
+	char_velocity = move_and_slide(char_velocity, CHAR_UP, stop_speed, 4, 0.8)
 	# Detect if the player is touching a floor
 	if is_on_floor():
 		char_time_since_floor = 0.0
-	else:
-		# Reset normal to UP if the player is not on a floor. This is so that the
-		# player moves parallel to the ground while in the air.
-		char_floor_normal = CHAR_UP
 	# Calculate the player's normal if they are on the ground
 	if get_slide_count() > 0:
 		char_floor_normal = Vector2();
@@ -97,7 +99,8 @@ func _physics_process(delta):
 			char_floor_normal = CHAR_UP;
 		else:
 			char_floor_normal = char_floor_normal.normalized()
+		print("NEW FLOOR")
 	# Change the player's horizontal movement according to the player's input
-	veloc_h = char_get_motion_horizontal(char_floor_normal)
-	veloc_h = lerp(veloc_h, target_speed, pow(delta, 1.0/4.0))
-	char_set_motion_horizontal(char_floor_normal, veloc_h)
+	veloc_h = char_get_motion_horizontal(char_get_normal())
+	veloc_h = lerp(veloc_h, target_speed, pow(delta, 1.0/2.0))
+	char_set_motion_horizontal(char_get_normal(), veloc_h)
