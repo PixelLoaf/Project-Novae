@@ -9,9 +9,13 @@ const CHAR_TIME_MAX_JUMP = 0.12
 # Time after pressing the jump button that the player can still jump for
 const CHAR_TIME_JUMP_WITHOLD = 0.2
 # If the player is not moving, stop the player if they are moving slower than this
-const CHAR_INERT_STOP_SPEED = 80
+const CHAR_INERT_STOP_SPEED = 25
 # If the player is moving, stop the player if they are moving slower than this
 const CHAR_MOVING_STOP_SPEED = 0
+# If the player is moving downhill, this is the maximum that their velocity can be multiplied by
+const CHAR_DOWNHILL_MULT_MAX = 2.5
+# If the player is moving uphill, this is the minimum that their velocity can be multiplied by
+const CHAR_UPHILL_MULT_MIN = 0.33
 
 # Maximum movement speed for the player
 export var char_speed_max = 400
@@ -27,8 +31,9 @@ var char_floor_normal = CHAR_UP
 # Time since pressing the jump button
 var char_time_since_jump_button = 1.0
 # Momentum and inertia hinge around this
-var char_slipperiness = 0.2
+var char_slipperiness = 0.16
 
+# Get this character's normal vector
 func char_get_normal():
 	if char_is_on_floor():
 		return char_floor_normal
@@ -102,6 +107,19 @@ func _physics_process(delta):
 		else:
 			char_floor_normal = char_floor_normal.normalized()
 	# Change the player's horizontal movement according to the player's input
+	var mult_accel = 1
+	if target_speed > veloc_h:
+		var mult_right = char_get_normal().dot(CHAR_UP.rotated(PI/2))
+		if mult_right > 0:
+			mult_accel = lerp(1, CHAR_DOWNHILL_MULT_MAX, mult_right)
+		else:
+			mult_accel = lerp(1, CHAR_UPHILL_MULT_MIN, -mult_right)
+	else:
+		var mult_left = char_get_normal().dot(CHAR_UP.rotated(-PI/2))
+		if mult_left > 0:
+			mult_accel = lerp(1, CHAR_DOWNHILL_MULT_MAX, mult_left)
+		else:
+			mult_accel = lerp(1, CHAR_UPHILL_MULT_MIN, -mult_left)
 	veloc_h = char_get_motion_horizontal(char_get_normal())
-	veloc_h += delta * (target_speed - veloc_h) / char_slipperiness
+	veloc_h += mult_accel * delta * (target_speed - veloc_h) / char_slipperiness
 	char_set_motion_horizontal(char_get_normal(), veloc_h)
