@@ -13,7 +13,7 @@ const CHAR_INERT_STOP_SPEED = 160
 # If the player is moving, stop the player if they are moving slower than this
 const CHAR_MOVING_STOP_SPEED = 5
 # Momentum and inertia hinge around this
-const CHAR_SLIPPERINESS = 10 	
+var CHAR_SLIPPERINESS = 10 	
 
 # Maximum movement speed for the player
 export var char_speed_max = 400
