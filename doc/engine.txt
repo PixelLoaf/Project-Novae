@@ -1,0 +1,34 @@
+Information about the game engine and how it will work.
+
+Each character (including players, enemies, etc.) will be laid out as such:
+
+KinematicBody: Base body of the character. Only collides with tiles. 
+|              Does NOT represent the hitbox.
+|
+|-CollisionShape2D: Collision shape for the character. 
+|
+|-Area2D: Represents the Hitbox. will detect collision with other characters, 
+| |       bullets, enemies, players, etc. depending on what it needs to collide 
+| |       with.
+| |
+| \-CollisionShape2D: Collision shape for the hitbox.
+|
+|-...: anything else that the character needs, e.g. sprites, weapons, etc.
+
+Note that characters should have circular body shapes. That way if the player
+rotates or something to that effect, then that character is guaranteed to not
+get lodged into a wall. The hitbox can be any shape since it does not determine
+collision with solid objects.
+
+The following collision layers are defined:
+1 - solid objects
+2 - players
+3 - enemies
+
+Setting a layer to one of the above means that the object IS that thing. If the
+layer is set to 'players,' for example, then that object SHOULD BE a player, or
+a player-like object (such as a partner NPC).
+
+Setting a mask to one of the above means that the object WILL COLLIDE with that
+thing. If the layer is set to 'players,' for example, then that object SHOULD
+collide with players. For example, a bullet, coin, powerup, etc.
