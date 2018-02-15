@@ -54,7 +54,7 @@ Seventh section: Checksum e.g. `|207D`
   output = 0
   for i in string:
       output += ord(i)
-  print("Checksum:", '{:4x}'.format(output).upper())
+  print("Checksum:", '{:04x}'.format(output).upper())
   ```
   (returns `207D` given the example level code as input)
 
