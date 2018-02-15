@@ -13,14 +13,16 @@ const CHAR_INERT_STOP_SPEED = 25
 # If the player is moving, stop the player if they are moving slower than this
 const CHAR_MOVING_STOP_SPEED = 0
 # If the player is moving downhill, this is the maximum that their velocity can be multiplied by
-const CHAR_DOWNHILL_MULT_MAX = 2.5
+const CHAR_DOWNHILL_MULT_MAX = 1.5
 # If the player is moving uphill, this is the minimum that their velocity can be multiplied by
-const CHAR_UPHILL_MULT_MIN = 0.33
+const CHAR_UPHILL_MULT_MIN = 0.5
+# Slipperiness while in the air
+const CHAR_SLIP_AIR = 0.4
 
 # Maximum movement speed for the player
-export var char_speed_max = 400
+export var char_speed_max = 320
 # Jumping speed for the player
-export var char_jump_speed = 800
+export var char_jump_speed = 640
 
 # The player's velocity
 var char_velocity = Vector2()
@@ -31,7 +33,7 @@ var char_floor_normal = CHAR_UP
 # Time since pressing the jump button
 var char_time_since_jump_button = 1.0
 # Momentum and inertia hinge around this
-var char_slipperiness = 0.16
+var char_slipperiness = 0.2
 
 # Get this character's normal vector
 func char_get_normal():
@@ -43,6 +45,10 @@ func char_get_normal():
 # Get the character's movement perpendicular to its normal
 func char_get_motion_horizontal(normal):
 	return normal.rotated(PI/2).dot(char_velocity)
+	
+# Get horizontal motion as a vector2
+func char_get_motion_horizontal_vec(normal):
+	return char_get_motion_horizontal(normal) * normal.rotated(PI/2)
 
 # Set the character's movement perpendicular to its normal
 func char_set_motion_horizontal(normal, value):
@@ -50,9 +56,13 @@ func char_set_motion_horizontal(normal, value):
 	char_velocity += value * normal.rotated(PI/2)
 
 # Get the character's movement parallel to its normal
-func char_get_motion_vertical(normal, value):
+func char_get_motion_vertical(normal):
 	return normal.dot(char_velocity)
-
+	
+# Get horizontal motion as a vector2
+func char_get_motion_vertical_vec(normal):
+	return char_get_motion_vertical(normal) * normal
+	
 # Set the character's movement parallel to its normal
 func char_set_motion_vertical(normal, value):
 	char_velocity = char_velocity.slide(normal)
@@ -65,6 +75,22 @@ func char_is_on_floor():
 func _input(event):
 	if event.is_action_pressed("action_jump"):
 		char_time_since_jump_button = 0.0
+
+# Project the player so that it moves by 'vec'
+func char_project_self(space, param, vec):
+	param.transform = get_node("CollisionShape2D").get_global_transform()
+	param.motion = vec
+	var result = space.cast_motion(param)
+	print(result)
+	if not result.empty() and result[1] != 1:
+		move_and_collide(vec * result[1])
+
+var _char_cast_param = Physics2DShapeQueryParameters.new();
+func char_do_movement(stop_speed):
+	var space_state = get_world_2d().get_direct_space_state()
+	char_velocity = move_and_slide(char_velocity, CHAR_UP, stop_speed, 4, 0.8)
+	if char_is_on_floor():
+		char_project_self(space_state, _char_cast_param, CHAR_UP * -4);
 
 func _physics_process(delta):
 	CHAR_UP = Vector2(0, -1).rotated(get_rotation())
@@ -90,10 +116,11 @@ func _physics_process(delta):
 	# jump button slightly before hitting the ground and still jump.
 	if char_is_on_floor() and char_time_since_jump_button < CHAR_TIME_JUMP_WITHOLD:
 		char_time_since_jump_button = 1.0
-		char_set_motion_vertical(CHAR_UP, char_jump_speed)
+		char_velocity.y = -char_jump_speed
 		char_time_since_floor = 1.0
 	# Actual movement here
-	char_velocity = move_and_slide(char_velocity, CHAR_UP, stop_speed, 4, 0.8)
+	char_do_movement(stop_speed)
+#	char_velocity = move_and_slide(char_velocity, CHAR_UP, stop_speed, 4, 0.8)
 	# Detect if the player is touching a floor
 	if is_on_floor():
 		char_time_since_floor = 0.0
@@ -122,9 +149,15 @@ func _physics_process(delta):
 			mult_accel = lerp(1, CHAR_DOWNHILL_MULT_MAX, mult_left)
 		else:
 			mult_accel = lerp(1, CHAR_UPHILL_MULT_MIN, -mult_left)
+	var slip = char_slipperiness
+	if not char_is_on_floor():
+		slip = CHAR_SLIP_AIR
 	veloc_h = char_get_motion_horizontal(char_get_normal())
-	veloc_h += mult_accel * delta * (target_speed - veloc_h) / char_slipperiness
+	veloc_h += mult_accel * delta * (target_speed - veloc_h) / slip
 	char_set_motion_horizontal(char_get_normal(), veloc_h)
 
 func _ready():
 	$AnimationPlayer.play("idle")
+	_char_cast_param.collision_layer = self.collision_mask
+	_char_cast_param.margin = 0.08
+	_char_cast_param.set_shape(get_node("CollisionShape2D").shape)
