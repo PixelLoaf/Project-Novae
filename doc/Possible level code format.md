@@ -50,12 +50,12 @@ Seventh section: Checksum e.g. `|207D`
   hasn’t been tampered with – not really intended to be secure or anything.
   Can be generated with 5 lines of Python code:
   ```python
-  string = "3~2|My%20Level|1,2,5,0,0,3~4,1,1,0,0,5|4,6,0,0,This%20is%20a%20sign~4,6,100,300,Press%20right%20to%20move|53|4,2~1,10|"
+  string = str(input("Paste the level code including the final | here\n"))
   output = 0
   for i in string:
-    output += ord(i)
-  print(hex(output).upper())
+      output += ord(i)
+  print("Checksum:", '{:4x}'.format(output).upper())
   ```
-  (returns `0X207D`)
+  (returns `207D` given the example level code as input)
 
 Final level code: `3~2|My%20Level|1,2,5,0,0,3~4,1,1,0,0,5|4,6,0,0,This%20is%20a%20sign~4,6,100,300,Press%20right%20to%20move|53|4,2~1,10|207D`
