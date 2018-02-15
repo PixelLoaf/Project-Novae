@@ -74,10 +74,12 @@ func _physics_process(delta):
 	var veloc_h = char_get_motion_horizontal(char_get_normal())
 	if Input.is_action_pressed("left"):
 		if veloc_h <= 0:
+			$Sprite.flip_h = true
 			stop_speed = CHAR_MOVING_STOP_SPEED
 		target_speed = -char_speed_max
 	elif Input.is_action_pressed("right"):
 		if veloc_h >= 0:
+			$Sprite.flip_h = false
 			stop_speed = CHAR_MOVING_STOP_SPEED
 		target_speed = char_speed_max
 	# Increment variables
@@ -123,3 +125,6 @@ func _physics_process(delta):
 	veloc_h = char_get_motion_horizontal(char_get_normal())
 	veloc_h += mult_accel * delta * (target_speed - veloc_h) / char_slipperiness
 	char_set_motion_horizontal(char_get_normal(), veloc_h)
+
+func _ready():
+	$AnimationPlayer.play("idle")

@@ -1,19 +1,39 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Object/Player/Player.gd" type="Script" id=1]
-[ext_resource path="res://Object/Player/Debug.gd" type="Script" id=2]
+[ext_resource path="res://Object/Player/player.png" type="Texture" id=2]
+[ext_resource path="res://Object/Player/Debug.gd" type="Script" id=3]
 
 [sub_resource type="CircleShape2D" id=1]
 
 custom_solver_bias = 0.0
-radius = 16.0
+radius = 8.0
 
 [sub_resource type="RectangleShape2D" id=2]
 
 custom_solver_bias = 0.0
-extents = Vector2( 16, 32 )
+extents = Vector2( 12, 18 )
 
-[node name="player" type="KinematicBody2D"]
+[sub_resource type="Animation" id=3]
+
+resource_name = "idle"
+length = 8.0
+loop = true
+step = 1.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1, 2, 3, 4, 5, 6, 7 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7 ]
+}
+
+[node name="player" type="KinematicBody2D" index="0"]
 
 z_index = 1
 input_pickable = false
@@ -25,27 +45,13 @@ _sections_unfolded = [ "Collision", "Z Index", "collision" ]
 char_speed_max = 400
 char_jump_speed = 800
 
-[node name="Polygon2D" type="Polygon2D" parent="." index="0"]
-
-polygon = PoolVector2Array( -16, -48, 16, -48, 16, 16, -16, 16 )
-uv = PoolVector2Array(  )
-color = Color( 0.477844, 1, 0.433594, 1 )
-vertex_colors = PoolColorArray(  )
-offset = Vector2( 0, 0 )
-antialiased = false
-texture = null
-texture_offset = Vector2( 0, 0 )
-texture_scale = Vector2( 1, 1 )
-texture_rotation_degrees = 0.0
-invert_enable = false
-invert_border = 100.0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." index="1"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." index="0"]
 
 shape = SubResource( 1 )
 
-[node name="Hitbox" type="Area2D" parent="." index="2"]
+[node name="Hitbox" type="Area2D" parent="." index="1"]
 
+editor/display_folded = true
 input_pickable = true
 gravity_vec = Vector2( 0, 1 )
 gravity = 98.0
@@ -59,16 +65,54 @@ _sections_unfolded = [ "Collision" ]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" index="0"]
 
-position = Vector2( 0, -16 )
+position = Vector2( 0, -10 )
 shape = SubResource( 2 )
 
-[node name="Debug" type="Node2D" parent="." index="3"]
+[node name="Sprite" type="Sprite" parent="." index="2"]
 
-script = ExtResource( 2 )
+position = Vector2( 0, 6 )
+texture = ExtResource( 2 )
+offset = Vector2( 0, -16 )
+vframes = 3
+hframes = 3
+frame = 4
+_sections_unfolded = [ "Animation" ]
 
-[node name="Velocity" type="Polygon2D" parent="Debug" index="0"]
+[node name="Camera2D" type="Camera2D" parent="." index="3"]
 
-polygon = PoolVector2Array( 0, -8, 0, 8, 64, 8, 64, 16, 80, 0, 64, -16, 64, -8 )
+position = Vector2( 0, -24 )
+anchor_mode = 1
+rotating = false
+current = true
+zoom = Vector2( 1, 1 )
+limit_left = -10000000
+limit_top = -10000000
+limit_right = 10000000
+limit_bottom = 10000000
+limit_smoothed = false
+drag_margin_h_enabled = false
+drag_margin_v_enabled = false
+smoothing_enabled = false
+smoothing_speed = 5.0
+offset_v = 0.0
+offset_h = 0.0
+drag_margin_left = 0.2
+drag_margin_top = 0.2
+drag_margin_right = 0.2
+drag_margin_bottom = 0.2
+editor_draw_screen = true
+editor_draw_limits = false
+editor_draw_drag_margin = false
+_sections_unfolded = [ "Drag Margin" ]
+
+[node name="Debug" type="Node2D" parent="Camera2D" index="0"]
+
+position = Vector2( 0, 24 )
+script = ExtResource( 3 )
+
+[node name="Velocity" type="Polygon2D" parent="Camera2D/Debug" index="0"]
+
+polygon = PoolVector2Array( 0, -6, 0, 6, 32, 6, 32, 12, 44, 0, 32, -12, 32, -6 )
 uv = PoolVector2Array(  )
 color = Color( 0.00643921, 0.824219, 0, 1 )
 vertex_colors = PoolColorArray(  )
@@ -81,9 +125,9 @@ texture_rotation_degrees = 0.0
 invert_enable = false
 invert_border = 100.0
 
-[node name="Normal" type="Polygon2D" parent="Debug" index="1"]
+[node name="Normal" type="Polygon2D" parent="Camera2D/Debug" index="1"]
 
-polygon = PoolVector2Array( 0, 16, -8, 8, 0, -16, 8, 8 )
+polygon = PoolVector2Array( 0, 8, -3, 7, 0, -8, 3, 7 )
 uv = PoolVector2Array(  )
 color = Color( 0.707031, 0, 0, 1 )
 vertex_colors = PoolColorArray(  )
@@ -97,26 +141,24 @@ invert_enable = false
 invert_border = 100.0
 _sections_unfolded = [ "Transform" ]
 
-[node name="Node" type="Node" parent="Debug" index="2"]
-
-_sections_unfolded = [ "Material", "Transform", "Visibility", "Z Index" ]
-
-[node name="Panel" type="Panel" parent="Debug/Node" index="0"]
+[node name="Panel" type="Panel" parent="Camera2D/Debug" index="2"]
 
 anchor_left = 1.0
 anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 0.0
-margin_left = -200.0
-margin_bottom = 64.0
+margin_left = 56.0
+margin_top = -204.0
+margin_right = 256.0
+margin_bottom = -104.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
-_sections_unfolded = [ "Material", "Rect", "Visibility" ]
+_sections_unfolded = [ "Material", "Visibility" ]
 
-[node name="HLabel" type="Label" parent="Debug/Node/Panel" index="0"]
+[node name="HLabel" type="Label" parent="Camera2D/Debug/Panel" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -139,7 +181,7 @@ lines_skipped = 0
 max_lines_visible = -1
 _sections_unfolded = [ "custom_colors" ]
 
-[node name="VLabel" type="Label" parent="Debug/Node/Panel" index="1"]
+[node name="VLabel" type="Label" parent="Camera2D/Debug/Panel" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -162,7 +204,7 @@ lines_skipped = 0
 max_lines_visible = -1
 _sections_unfolded = [ "custom_colors" ]
 
-[node name="VelLabel" type="Label" parent="Debug/Node/Panel" index="2"]
+[node name="VelLabel" type="Label" parent="Camera2D/Debug/Panel" index="2"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -183,7 +225,7 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="PosLabel" type="Label" parent="Debug/Node/Panel" index="3"]
+[node name="PosLabel" type="Label" parent="Camera2D/Debug/Panel" index="3"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -204,7 +246,7 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="XPos" type="Label" parent="Debug/Node/Panel" index="4"]
+[node name="XPos" type="Label" parent="Camera2D/Debug/Panel" index="4"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -225,7 +267,7 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="XVel" type="Label" parent="Debug/Node/Panel" index="5"]
+[node name="XVel" type="Label" parent="Camera2D/Debug/Panel" index="5"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -246,7 +288,7 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="YVel" type="Label" parent="Debug/Node/Panel" index="6"]
+[node name="YVel" type="Label" parent="Camera2D/Debug/Panel" index="6"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -267,7 +309,7 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="YPos" type="Label" parent="Debug/Node/Panel" index="7"]
+[node name="YPos" type="Label" parent="Camera2D/Debug/Panel" index="7"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -287,5 +329,47 @@ align = 2
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
+
+[node name="Label" type="RichTextLabel" parent="Camera2D/Debug/Panel" index="8"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 55.0
+margin_right = 200.0
+margin_bottom = 97.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+bbcode_enabled = false
+bbcode_text = "Arrow keys to move
+Spacebar to jump
+Press H to hide debug"
+visible_characters = -1
+percent_visible = 1.0
+meta_underlined = true
+tab_size = 4
+text = "Arrow keys to move
+Spacebar to jump
+Press H to hide debug"
+scroll_active = false
+scroll_following = false
+selection_enabled = false
+override_selected_font_color = false
+_sections_unfolded = [ "BBCode" ]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="4"]
+
+root_node = NodePath("..")
+autoplay = ""
+playback_process_mode = 1
+playback_default_blend_time = 0.0
+playback_speed = 2.0
+anims/idle = SubResource( 3 )
+blend_times = [  ]
+_sections_unfolded = [ "Playback Options" ]
 
 
