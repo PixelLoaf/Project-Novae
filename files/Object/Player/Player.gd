@@ -127,14 +127,14 @@ func _physics_process(delta):
 			$Sprite.flip_h = true
 			stop_speed = CHAR_MOVING_STOP_SPEED
 		target_speed = -char_speed_walk
-		if Input.is_key_pressed(49):
+		if Input.is_action_pressed("action_run"):
 			target_speed = -char_speed_run
 	elif Input.is_action_pressed("move_right"):
 		if veloc_h >= 0:
 			$Sprite.flip_h = false
 			stop_speed = CHAR_MOVING_STOP_SPEED
 		target_speed = char_speed_walk
-		if Input.is_key_pressed(49):
+		if Input.is_action_pressed("action_run"):
 			target_speed = char_speed_run
 	# Increment timers
 	char_time_since_jump_button += delta

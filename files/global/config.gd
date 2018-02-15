@@ -16,6 +16,7 @@ const SECTION_KEY_ELEMENTS = [
 	"move_left",
 	"move_right",
 	"action_jump",
+	"action_run",
 ]
 # All configurable volumes
 const SECTION_VOLUME_ELEMENTS = [
@@ -31,6 +32,7 @@ const INPUT_REALNAMES = {
 	"move_right": "Move Right",
 	"action_jump": "Jump",
 	"hide_debug": "Hide Debug Menu",
+	"action_run": "Run",
 }
 
 # Get the real name for a given action
