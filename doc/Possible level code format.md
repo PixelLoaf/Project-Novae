@@ -48,5 +48,14 @@ Seventh section: Checksum e.g. `|207D`
   take the lowest 2 bytes as hex characters, to make sure the level
   hasn’t been entered incorrectly, or, if we make a user level designer,
   hasn’t been tampered with – not really intended to be secure or anything.
+  Can be generated with 5 lines of Python code:
+  ```python
+  string = "3~2|My%20Level|1,2,5,0,0,3~4,1,1,0,0,5|4,6,0,0,This%20is%20a%20sign~4,6,100,300,Press%20right%20to%20move|53|4,2~1,10|"
+  output = 0
+  for i in string:
+    output += ord(i)
+  print(hex(output).upper())
+  ```
+  (returns `0X207D`)
 
 Final level code: `3~2|My%20Level|1,2,5,0,0,3~4,1,1,0,0,5|4,6,0,0,This%20is%20a%20sign~4,6,100,300,Press%20right%20to%20move|53|4,2~1,10|207D`
