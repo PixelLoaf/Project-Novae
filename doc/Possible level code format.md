@@ -1,8 +1,8 @@
 ## A possible level code format for Project Novae							
 
-	- Sections split by `|`
-	- Individual elements in sections split by `~`
-	- Subsections of elements split by `,`
+- Sections split by `|`
+- Individual elements in sections split by `~`
+- Subsections of elements split by `,`
 
 First section: level size in tiles (x, y) e.g. `3~2|`
 
