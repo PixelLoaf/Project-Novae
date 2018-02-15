@@ -1,14 +1,14 @@
-A possible level code format for Project Novae							
+## A possible level code format for Project Novae							
 
-	* Sections split by '|'
-	* Individual elements in sections split by '~'
-	* Subsections of elements split by ','
+	- Sections split by `|`
+	- Individual elements in sections split by `~`
+	- Subsections of elements split by `,`
 
-First section: level size in tiles (x, y) e.g. 3~2|
+First section: level size in tiles (x, y) e.g. `3~2|`
 
-Second section: Level title (URL encoded) e.g. |My%20Level|
+Second section: Level title (URL encoded) e.g. `|My%20Level|`
 
-Third section: Tiles e.g. |1,2,5,0,0,3~4,1,1,0,0,5|
+Third section: Tiles e.g. `|1,2,5,0,0,3~4,1,1,0,0,5|`
 
 	Tiles are stored starting from the top left corner of the map.
 	Treating this as an array (although in reality it would just
@@ -23,7 +23,7 @@ Third section: Tiles e.g. |1,2,5,0,0,3~4,1,1,0,0,5|
 	of pixels. The rest of the elements would be used for tile-specific
 	additional data, e.g. animation frame to start on, colour palette, etc.
 
-Fourth section: Items e.g. |4,6,0,0,This%20is%20a%20sign~4,6,100,300,Press%20right%20to%20move| 
+Fourth section: Items e.g. `|4,6,0,0,This%20is%20a%20sign~4,6,100,300,Press%20right%20to%20move|` 
 
 	Items are stored similarly to tiles, except absolute x and y coordinates
 	are used rather than offsets from the grid. The first and second
@@ -34,14 +34,14 @@ Fourth section: Items e.g. |4,6,0,0,This%20is%20a%20sign~4,6,100,300,Press%20rig
 	with item-specific data, e.g. sign messages if we implement that,
 	starting from the fifth element. 
 
-Fifth section: Music e.g. |53| (lookup table)
+Fifth section: Music e.g. `|53|` (lookup table)
 
-Sixth section: Screen effects such as blur, vignette e.g. |4,2~1,10|
+Sixth section: Screen effects such as blur, vignette e.g. `|4,2~1,10|`
 
 	Stored as an array – first element would be the ID of the effect
 	and the second would be the strength.
 
-Seventh section: Checksum e.g. |207D
+Seventh section: Checksum e.g. `|207D`
 
 	Very simple checksum to make sure the level is valid – get the
 	ASCII value of the previous sections, add them all together and
@@ -49,4 +49,4 @@ Seventh section: Checksum e.g. |207D
 	hasn’t been entered incorrectly, or, if we make a level designer,
 	hasn’t been tampered with – not really intended to be secure or anything.
 
- Final level code: 3~2|My%20Level|1,2,5,0,0,3~4,1,1,0,0,5|4,6,0,0,This%20is%20a%20sign~4,6,100,300,Press%20right%20to%20move|53|4,2~1,10|207D
+Final level code: `3~2|My%20Level|1,2,5,0,0,3~4,1,1,0,0,5|4,6,0,0,This%20is%20a%20sign~4,6,100,300,Press%20right%20to%20move|53|4,2~1,10|207D`
