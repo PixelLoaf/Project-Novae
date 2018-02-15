@@ -9,7 +9,7 @@ const CHAR_TIME_MAX_JUMP = 0.12
 # Time after pressing the jump button that the player can still jump for
 const CHAR_TIME_JUMP_WITHOLD = 0.2
 # If the player is not moving, stop the player if they are moving slower than this
-const CHAR_INERT_STOP_SPEED = 25
+const CHAR_INERT_STOP_SPEED = 5
 # If the player is moving, stop the player if they are moving slower than this
 const CHAR_MOVING_STOP_SPEED = 0
 # If the player is moving downhill, this is the maximum that their velocity can be multiplied by
@@ -72,26 +72,53 @@ func char_set_motion_vertical(normal, value):
 func char_is_on_floor():
 	return char_time_since_floor < CHAR_TIME_MAX_JUMP
 
-func _input(event):
-	if event.is_action_pressed("action_jump"):
-		char_time_since_jump_button = 0.0
-
 # Project the player so that it moves by 'vec'
 func char_project_self(space, param, vec):
 	param.transform = get_node("CollisionShape2D").get_global_transform()
 	param.motion = vec
 	var result = space.cast_motion(param)
-	print(result)
 	if not result.empty() and result[1] != 1:
 		move_and_collide(vec * result[1])
 
+# Recalculate the player's normal vector
+func char_calc_normal():
+	if get_slide_count() > 0:
+		char_floor_normal = Vector2();
+		for i in range(get_slide_count()):
+			var col = get_slide_collision(i);
+			if abs(col.normal.dot(CHAR_UP)) > 0.2:
+				char_floor_normal += col.normal
+		if char_floor_normal == Vector2():
+			char_floor_normal = CHAR_UP;
+		else:
+			char_floor_normal = char_floor_normal.normalized()
+
+# Do character movement. Should be called once per physics process
 var _char_cast_param = Physics2DShapeQueryParameters.new();
 func char_do_movement(stop_speed):
-	var space_state = get_world_2d().get_direct_space_state()
+	var prev_normal = char_get_normal()
+	var prev_veloc = char_velocity
+	var prev_transform = transform
 	char_velocity = move_and_slide(char_velocity, CHAR_UP, stop_speed, 4, 0.8)
+	char_calc_normal()
 	if char_is_on_floor():
+		var space_state = get_world_2d().get_direct_space_state()
 		char_project_self(space_state, _char_cast_param, CHAR_UP * -4);
+	elif is_on_floor():
+		# If the player was in the air, but is now on a floor, we need to do some
+		# stuff so that the player stops on the slope. First, we return the player to
+		# their original position.
+		transform = prev_transform
+		# Rotate the player's velocity to match the new surface's normal
+		char_velocity = prev_veloc.rotated(char_floor_normal.angle() - prev_normal.angle())
+		# Redo the whole movement process
+		char_velocity = move_and_slide(char_velocity, CHAR_UP, stop_speed, 4, 0.8)
+		char_calc_normal()
+	# Detect if the player is touching a floor
+	if is_on_floor():
+		char_time_since_floor = 0.0
 
+# Every frame
 func _physics_process(delta):
 	CHAR_UP = Vector2(0, -1).rotated(get_rotation())
 	# Calculate movement
@@ -120,22 +147,7 @@ func _physics_process(delta):
 		char_time_since_floor = 1.0
 	# Actual movement here
 	char_do_movement(stop_speed)
-#	char_velocity = move_and_slide(char_velocity, CHAR_UP, stop_speed, 4, 0.8)
-	# Detect if the player is touching a floor
-	if is_on_floor():
-		char_time_since_floor = 0.0
-	# Calculate the player's normal if they are on the ground
-	if get_slide_count() > 0:
-		char_floor_normal = Vector2();
-		for i in range(get_slide_count()):
-			var col = get_slide_collision(i);
-			if abs(col.normal.dot(CHAR_UP)) > 0.2:
-				char_floor_normal += col.normal
-		if char_floor_normal == Vector2():
-			char_floor_normal = CHAR_UP;
-		else:
-			char_floor_normal = char_floor_normal.normalized()
-	# Change the player's horizontal movement according to the player's input
+	# Change player's acceleration if they are on a slope
 	var mult_accel = 1
 	if target_speed > veloc_h:
 		var mult_right = char_get_normal().dot(CHAR_UP.rotated(PI/2))
@@ -149,13 +161,21 @@ func _physics_process(delta):
 			mult_accel = lerp(1, CHAR_DOWNHILL_MULT_MAX, mult_left)
 		else:
 			mult_accel = lerp(1, CHAR_UPHILL_MULT_MIN, -mult_left)
+	# Player is more slippery when in the air
 	var slip = char_slipperiness
 	if not char_is_on_floor():
 		slip = CHAR_SLIP_AIR
+	# Change the player's horizontal movement according to the player's input
 	veloc_h = char_get_motion_horizontal(char_get_normal())
 	veloc_h += mult_accel * delta * (target_speed - veloc_h) / slip
 	char_set_motion_horizontal(char_get_normal(), veloc_h)
 
+# On input received
+func _input(event):
+	if event.is_action_pressed("action_jump"):
+		char_time_since_jump_button = 0.0
+
+# Character is ready
 func _ready():
 	$AnimationPlayer.play("idle")
 	_char_cast_param.collision_layer = self.collision_mask
