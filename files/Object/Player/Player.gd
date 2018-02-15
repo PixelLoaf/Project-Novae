@@ -20,7 +20,9 @@ const CHAR_UPHILL_MULT_MIN = 0.5
 const CHAR_SLIP_AIR = 0.4
 
 # Maximum movement speed for the player
-export var char_speed_max = 320
+export var char_speed_run = 320
+# Walking speed for the player
+export var char_speed_walk = 160
 # Jumping speed for the player
 export var char_jump_speed = 640
 
@@ -124,12 +126,16 @@ func _physics_process(delta):
 		if veloc_h <= 0:
 			$Sprite.flip_h = true
 			stop_speed = CHAR_MOVING_STOP_SPEED
-		target_speed = -char_speed_max
+		target_speed = -char_speed_walk
+		if Input.is_key_pressed(49):
+			target_speed = -char_speed_run
 	elif Input.is_action_pressed("move_right"):
 		if veloc_h >= 0:
 			$Sprite.flip_h = false
 			stop_speed = CHAR_MOVING_STOP_SPEED
-		target_speed = char_speed_max
+		target_speed = char_speed_walk
+		if Input.is_key_pressed(49):
+			target_speed = char_speed_run
 	# Increment timers
 	char_time_since_jump_button += delta
 	char_time_since_floor += delta
