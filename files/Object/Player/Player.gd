@@ -63,7 +63,7 @@ func char_is_on_floor():
 	return char_time_since_floor < CHAR_TIME_MAX_JUMP
 
 func _input(event):
-	if event.is_action_pressed("jump"):
+	if event.is_action_pressed("action_jump"):
 		char_time_since_jump_button = 0.0
 
 func _physics_process(delta):
@@ -72,12 +72,12 @@ func _physics_process(delta):
 	var stop_speed = CHAR_INERT_STOP_SPEED;
 	var target_speed = 0
 	var veloc_h = char_get_motion_horizontal(char_get_normal())
-	if Input.is_action_pressed("left"):
+	if Input.is_action_pressed("move_left"):
 		if veloc_h <= 0:
 			$Sprite.flip_h = true
 			stop_speed = CHAR_MOVING_STOP_SPEED
 		target_speed = -char_speed_max
-	elif Input.is_action_pressed("right"):
+	elif Input.is_action_pressed("move_right"):
 		if veloc_h >= 0:
 			$Sprite.flip_h = false
 			stop_speed = CHAR_MOVING_STOP_SPEED
