@@ -19,12 +19,13 @@ custom_solver_bias = 0.0
 a = Vector2( 48, -16 )
 b = Vector2( -16, 16 )
 
-[node name="Level" type="Node"]
+[node name="Level" type="Node" index="0"]
 
 _sections_unfolded = [ "Cell" ]
 
 [node name="FakeTileMap" type="Node2D" parent="." index="0"]
 
+editor/display_folded = true
 position = Vector2( 0, 408 )
 scale = Vector2( 0.5, 0.5 )
 _sections_unfolded = [ "Transform" ]

@@ -45,10 +45,6 @@ func char_get_normal():
 # Get the character's movement perpendicular to its normal
 func char_get_motion_horizontal(normal):
 	return normal.rotated(PI/2).dot(char_velocity)
-	
-# Get horizontal motion as a vector2
-func char_get_motion_horizontal_vec(normal):
-	return char_get_motion_horizontal(normal) * normal.rotated(PI/2)
 
 # Set the character's movement perpendicular to its normal
 func char_set_motion_horizontal(normal, value):
@@ -58,10 +54,6 @@ func char_set_motion_horizontal(normal, value):
 # Get the character's movement parallel to its normal
 func char_get_motion_vertical(normal):
 	return normal.dot(char_velocity)
-	
-# Get horizontal motion as a vector2
-func char_get_motion_vertical_vec(normal):
-	return char_get_motion_vertical(normal) * normal
 	
 # Set the character's movement parallel to its normal
 func char_set_motion_vertical(normal, value):
@@ -73,10 +65,12 @@ func char_is_on_floor():
 	return char_time_since_floor < CHAR_TIME_MAX_JUMP
 
 # Project the player so that it moves by 'vec'
-func char_project_self(space, param, vec):
-	param.transform = get_node("CollisionShape2D").get_global_transform()
-	param.motion = vec
-	var result = space.cast_motion(param)
+var _char_cast_param = Physics2DShapeQueryParameters.new();
+func char_project_self(vec):
+	var space = get_world_2d().get_direct_space_state()
+	_char_cast_param.transform = get_node("CollisionShape2D").get_global_transform()
+	_char_cast_param.motion = vec
+	var result = space.cast_motion(_char_cast_param)
 	if not result.empty() and result[1] != 1:
 		move_and_collide(vec * result[1])
 
@@ -94,7 +88,6 @@ func char_calc_normal():
 			char_floor_normal = char_floor_normal.normalized()
 
 # Do character movement. Should be called once per physics process
-var _char_cast_param = Physics2DShapeQueryParameters.new();
 func char_do_movement(stop_speed):
 	var prev_normal = char_get_normal()
 	var prev_veloc = char_velocity
@@ -102,13 +95,15 @@ func char_do_movement(stop_speed):
 	char_velocity = move_and_slide(char_velocity, CHAR_UP, stop_speed, 4, 0.8)
 	char_calc_normal()
 	if char_is_on_floor():
-		var space_state = get_world_2d().get_direct_space_state()
-		char_project_self(space_state, _char_cast_param, CHAR_UP * -4);
+		char_project_self(CHAR_UP * -4);
 	elif is_on_floor():
 		# If the player was in the air, but is now on a floor, we need to do some
 		# stuff so that the player stops on the slope. First, we return the player to
 		# their original position.
 		transform = prev_transform
+		# Project the player using the previously used velocity so that they don't
+		# go 'up' the slope when they should stay in place.
+		char_project_self(prev_veloc);
 		# Rotate the player's velocity to match the new surface's normal
 		char_velocity = prev_veloc.rotated(char_floor_normal.angle() - prev_normal.angle())
 		# Redo the whole movement process
@@ -135,16 +130,18 @@ func _physics_process(delta):
 			$Sprite.flip_h = false
 			stop_speed = CHAR_MOVING_STOP_SPEED
 		target_speed = char_speed_max
-	# Increment variables
-	char_velocity += CHAR_GRAVITY * -char_get_normal() * delta
+	# Increment timers
 	char_time_since_jump_button += delta
 	char_time_since_floor += delta
 	# Jump. The purpose of doing it this way is so that the player can press the
 	# jump button slightly before hitting the ground and still jump.
 	if char_is_on_floor() and char_time_since_jump_button < CHAR_TIME_JUMP_WITHOLD:
 		char_time_since_jump_button = 1.0
-		char_velocity.y = -char_jump_speed
+		char_set_motion_vertical(CHAR_UP, char_jump_speed)
+#		char_velocity.y = 
 		char_time_since_floor = 1.0
+	# Apply gravity
+	char_velocity += CHAR_GRAVITY * -char_get_normal() * delta
 	# Actual movement here
 	char_do_movement(stop_speed)
 	# Change player's acceleration if they are on a slope

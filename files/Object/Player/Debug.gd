@@ -20,8 +20,9 @@ func _input(event):
 func _physics_process(delta):
 	if not visible:
 		return
+	var offset_angle = player.rotation
 	panel.show_on_top = true
-	$Normal.rotation = player.char_get_normal().angle() + PI/2
+	$Normal.rotation = player.char_get_normal().angle() + PI/2 - offset_angle
 	label_xpos.text = "%.2f" % player.position.x
 	label_ypos.text = "%.2f" % player.position.y
 	label_xvel.text = "%.2f" % player.char_velocity.x
@@ -32,4 +33,4 @@ func _physics_process(delta):
 	else:
 		$Velocity.show()
 		$Velocity.scale = Vector2(scale, 0.25)
-		$Velocity.rotation = player.char_velocity.angle()
+		$Velocity.rotation = player.char_velocity.angle() - offset_angle
