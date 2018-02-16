@@ -10,6 +10,9 @@ _sections_unfolded = [ "Cell" ]
 [node name="player" parent="." index="0" instance=ExtResource( 1 )]
 
 position = Vector2( 128, 680 )
+char_jump_speed = 480
+char_accel_walk = 800
+char_accel_stop = 2400
 
 [node name="TileMap" type="TileMap" parent="." index="1"]
 

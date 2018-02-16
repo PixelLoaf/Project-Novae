@@ -4,10 +4,10 @@
 [ext_resource path="res://Object/Player/player.png" type="Texture" id=2]
 [ext_resource path="res://Object/Player/Debug.gd" type="Script" id=3]
 
-[sub_resource type="CircleShape2D" id=1]
+[sub_resource type="RectangleShape2D" id=4]
 
 custom_solver_bias = 0.0
-radius = 8.0
+extents = Vector2( 8, 8 )
 
 [sub_resource type="RectangleShape2D" id=2]
 
@@ -33,7 +33,7 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7 ]
 }
 
-[node name="player" type="KinematicBody2D"]
+[node name="player" type="KinematicBody2D" index="0"]
 
 z_index = 1
 input_pickable = false
@@ -44,11 +44,13 @@ script = ExtResource( 1 )
 _sections_unfolded = [ "Collision", "Z Index", "collision" ]
 char_speed_run = 320
 char_speed_walk = 160
-char_jump_speed = 640
+char_jump_speed = 480
+char_accel_walk = 800
+char_accel_stop = 2400
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." index="0"]
 
-shape = SubResource( 1 )
+shape = SubResource( 4 )
 
 [node name="Hitbox" type="Area2D" parent="." index="1"]
 
