@@ -1,0 +1,250 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://World/Test/tileset.png" type="Texture" id=1]
+
+[node name="TestTileset" type="Node"]
+
+[node name="Slope_Shallow_SE_L" type="Sprite" parent="." index="0"]
+
+texture = ExtResource( 1 )
+vframes = 2
+hframes = 5
+region_enabled = true
+region_rect = Rect2( 0, 0, 32, 32 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Slope_Shallow_SE_L" index="0"]
+
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Slope_Shallow_SE_L/StaticBody2D" index="0"]
+
+build_mode = 0
+polygon = PoolVector2Array( 16, 0, 16, 16, -16, 16 )
+
+[node name="Slope_Shallow_SE_H" type="Sprite" parent="." index="1"]
+
+position = Vector2( 32, 0 )
+texture = ExtResource( 1 )
+vframes = 2
+hframes = 5
+frame = 1
+region_enabled = true
+region_rect = Rect2( 32, 0, 32, 32 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Slope_Shallow_SE_H" index="0"]
+
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Slope_Shallow_SE_H/StaticBody2D" index="0"]
+
+build_mode = 0
+polygon = PoolVector2Array( -16, 0, 16, -16, 16, 16, -16, 16 )
+
+[node name="Slope_SE" type="Sprite" parent="." index="2"]
+
+position = Vector2( 64, 0 )
+texture = ExtResource( 1 )
+vframes = 2
+hframes = 5
+frame = 2
+region_enabled = true
+region_rect = Rect2( 64, 0, 32, 32 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Slope_SE" index="0"]
+
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Slope_SE/StaticBody2D" index="0"]
+
+build_mode = 0
+polygon = PoolVector2Array( 16, -16, 16, 16, -16, 16 )
+
+[node name="Slope_SW" type="Sprite" parent="." index="3"]
+
+position = Vector2( 96, 0 )
+texture = ExtResource( 1 )
+vframes = 2
+hframes = 5
+frame = 3
+region_enabled = true
+region_rect = Rect2( 96, 0, 32, 32 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Slope_SW" index="0"]
+
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Slope_SW/StaticBody2D" index="0"]
+
+build_mode = 0
+polygon = PoolVector2Array( -16, -16, 16, 16, -16, 16 )
+
+[node name="Block" type="Sprite" parent="." index="4"]
+
+position = Vector2( 128, 0 )
+texture = ExtResource( 1 )
+vframes = 2
+hframes = 5
+frame = 4
+region_enabled = true
+region_rect = Rect2( 128, 0, 32, 32 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Block" index="0"]
+
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Block/StaticBody2D" index="0"]
+
+build_mode = 0
+polygon = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
+
+[node name="Slope_Shallow_SW_H" type="Sprite" parent="." index="5"]
+
+position = Vector2( 0, 32 )
+texture = ExtResource( 1 )
+vframes = 2
+hframes = 5
+frame = 5
+region_enabled = true
+region_rect = Rect2( 0, 32, 32, 32 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Slope_Shallow_SW_H" index="0"]
+
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Slope_Shallow_SW_H/StaticBody2D" index="0"]
+
+build_mode = 0
+polygon = PoolVector2Array( -16, -16, 16, 0, 16, 16, -16, 16 )
+
+[node name="Slope_Shallow_SW_L" type="Sprite" parent="." index="6"]
+
+position = Vector2( 32, 32 )
+texture = ExtResource( 1 )
+vframes = 2
+hframes = 5
+frame = 6
+region_enabled = true
+region_rect = Rect2( 32, 32, 32, 32 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Slope_Shallow_SW_L" index="0"]
+
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Slope_Shallow_SW_L/StaticBody2D" index="0"]
+
+build_mode = 0
+polygon = PoolVector2Array( -16, 0, 16, 16, -16, 16 )
+
+[node name="Slope_NE" type="Sprite" parent="." index="7"]
+
+position = Vector2( 64, 32 )
+texture = ExtResource( 1 )
+vframes = 2
+hframes = 5
+frame = 7
+region_enabled = true
+region_rect = Rect2( 64, 32, 32, 32 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Slope_NE" index="0"]
+
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Slope_NE/StaticBody2D" index="0"]
+
+build_mode = 0
+polygon = PoolVector2Array( -16, -16, 16, -16, 16, 16 )
+
+[node name="Slope_NW" type="Sprite" parent="." index="8"]
+
+position = Vector2( 96, 32 )
+texture = ExtResource( 1 )
+vframes = 2
+hframes = 5
+frame = 8
+region_enabled = true
+region_rect = Rect2( 96, 32, 32, 32 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Slope_NW" index="0"]
+
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Slope_NW/StaticBody2D" index="0"]
+
+build_mode = 0
+polygon = PoolVector2Array( -16, -16, 16, -16, -16, 16 )
+
+[node name="tileset9" type="Sprite" parent="." index="9"]
+
+position = Vector2( 128, 32 )
+texture = ExtResource( 1 )
+vframes = 2
+hframes = 5
+frame = 9
+region_enabled = true
+region_rect = Rect2( 128, 32, 32, 32 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="tileset9" index="0"]
+
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+

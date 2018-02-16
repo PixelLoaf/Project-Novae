@@ -42,7 +42,8 @@ collision_mask = 1
 collision/safe_margin = 0.08
 script = ExtResource( 1 )
 _sections_unfolded = [ "Collision", "Z Index", "collision" ]
-char_speed_max = 320
+char_speed_run = 320
+char_speed_walk = 160
 char_jump_speed = 640
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." index="0"]
@@ -76,7 +77,7 @@ offset = Vector2( 0, -16 )
 vframes = 3
 hframes = 3
 frame = 4
-_sections_unfolded = [ "Animation" ]
+_sections_unfolded = [ "Animation", "Region" ]
 
 [node name="Camera2D" type="Camera2D" parent="." index="3"]
 
@@ -341,6 +342,7 @@ margin_top = 55.0
 margin_right = 200.0
 margin_bottom = 97.0
 rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = true
 mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
