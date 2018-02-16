@@ -5,7 +5,7 @@
 [ext_resource path="res://Object/Player/Debug.gd" type="Script" id=3]
 [ext_resource path="res://Object/Player/PlayerCamera.gd" type="Script" id=4]
 
-[sub_resource type="RectangleShape2D" id=4]
+[sub_resource type="RectangleShape2D" id=1]
 
 custom_solver_bias = 0.0
 extents = Vector2( 8, 8 )
@@ -45,15 +45,15 @@ collision_mask = 1
 collision/safe_margin = 0.08
 script = ExtResource( 1 )
 _sections_unfolded = [ "Collision", "Z Index", "collision" ]
-char_speed_run = 320
-char_speed_walk = 160
-char_jump_speed = 600
-char_accel_walk = 1200
-char_accel_stop = 2400
+player_speed_run = 320
+player_speed_walk = 160
+player_jump_speed = 500
+player_accel_walk = 1200
+player_accel_stop = 2400
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." index="0"]
 
-shape = SubResource( 4 )
+shape = SubResource( 1 )
 
 [node name="Hitbox" type="Area2D" parent="." index="1"]
 

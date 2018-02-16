@@ -31,9 +31,3 @@ func _physics_process(delta):
 	panel.get_node("YPos").text = "%.2f" % player.position.y
 	panel.get_node("XVel").text = "%.2f" % player.char_velocity.x
 	panel.get_node("YVel").text = "%.2f" % player.char_velocity.y
-		
-func _enter_tree():
-	print("YAY")
-	
-func _exit_tree():
-	print("BOO")

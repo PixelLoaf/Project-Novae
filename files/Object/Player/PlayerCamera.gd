@@ -2,10 +2,10 @@ extends Camera2D
 
 onready var player = get_parent()
 
-const DRAG_MARGIN_AIR = 0.6
+const DRAG_MARGIN_AIR = 0.75
 const DRAG_MARGIN_FLOOR_TOP = -0.1
 const DRAG_MARGIN_FLOOR_BOTTOM = 0.1
-const DRAG_MARGIN_FACING_AWAY = 0.6
+const DRAG_MARGIN_FACING_AWAY = 1.0
 const DRAG_MARGIN_FACING_TOWARD = -0.2
 const PLAYER_TEST_OFFSET = 160
 
