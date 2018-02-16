@@ -45,7 +45,7 @@ _sections_unfolded = [ "Collision", "Z Index", "collision" ]
 char_speed_run = 320
 char_speed_walk = 160
 char_jump_speed = 480
-char_accel_walk = 800
+char_accel_walk = 1200
 char_accel_stop = 2400
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." index="0"]

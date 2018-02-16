@@ -17,7 +17,7 @@ const CHAR_DOWNHILL_MULT_MAX = 1.5
 # If the player is moving uphill, this is the minimum that their velocity can be multiplied by
 const CHAR_UPHILL_MULT_MIN = 0.5
 # Slipperiness while in the air
-const CHAR_SLIP_AIR = 0.3
+const CHAR_SLIP_AIR = 1.0
 
 # Maximum movement speed for the player
 export var char_speed_run = 320
@@ -26,7 +26,7 @@ export var char_speed_walk = 160
 # Jumping speed for the player
 export var char_jump_speed = 480
 # Walking acceleration
-export var char_accel_walk = 800
+export var char_accel_walk = 1200
 # Acceleration when stopping on the ground
 export var char_accel_stop = 2400
 
@@ -38,8 +38,9 @@ var char_time_since_floor = 1.0
 var char_floor_normal = CHAR_UP
 # Time since pressing the jump button
 var char_time_since_jump_button = 1.0
-# Momentum and inertia hinge around this
-var char_slipperiness = 0.16
+# Slipperiness of the ground. 
+# The higher this is, the less control the player has.
+var char_slipperiness = 1.0
 
 # Get this character's normal vector
 func char_get_normal():
@@ -101,7 +102,6 @@ func char_do_movement(stop_speed):
 	char_velocity = move_and_slide(char_velocity, CHAR_UP, stop_speed, 4, 0.8)
 	char_calc_normal()
 	if not char_is_on_floor() and is_on_floor():
-		print("AAA")
 		# If the player was in the air, but is now on a floor, we need to do some
 		# stuff so that the player stops on the slope. First, we return the player to
 		# their original position.
@@ -179,13 +179,11 @@ func _physics_process(delta):
 	var walk_accel = char_accel_walk
 	if char_is_on_floor() and ((veloc_h < 0) != (target_speed < 0) and veloc_h != 0 or target_speed == 0):
 		walk_accel = char_accel_stop
-	walk_accel = clamp(delta * walk_accel, 0, abs(target_speed - veloc_h))
-	print((veloc_h < 0) != (target_speed < 0))
+	walk_accel = clamp(delta * walk_accel / slip, 0, abs(target_speed - veloc_h))
 	if veloc_h < target_speed:
 		veloc_h += walk_accel
 	elif veloc_h > target_speed:
 		veloc_h -= walk_accel
-#	veloc_h += mult_accel * delta * (target_speed - veloc_h) / slip
 	char_set_motion_horizontal(char_get_normal(), veloc_h)
 
 # On input received
