@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Object/Player/Player.gd" type="Script" id=1]
 [ext_resource path="res://Object/Player/player.png" type="Texture" id=2]
 [ext_resource path="res://Object/Player/Debug.gd" type="Script" id=3]
+[ext_resource path="res://Object/Player/PlayerCamera.gd" type="Script" id=4]
 
 [sub_resource type="RectangleShape2D" id=4]
 
@@ -33,7 +34,9 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7 ]
 }
 
-[node name="player" type="KinematicBody2D" index="0"]
+[node name="player" type="KinematicBody2D" index="0" groups=[
+"player",
+]]
 
 z_index = 1
 input_pickable = false
@@ -44,7 +47,7 @@ script = ExtResource( 1 )
 _sections_unfolded = [ "Collision", "Z Index", "collision" ]
 char_speed_run = 320
 char_speed_walk = 160
-char_jump_speed = 480
+char_jump_speed = 600
 char_accel_walk = 1200
 char_accel_stop = 2400
 
@@ -81,40 +84,12 @@ hframes = 3
 frame = 4
 _sections_unfolded = [ "Animation", "Region" ]
 
-[node name="Camera2D" type="Camera2D" parent="." index="3"]
+[node name="Debug" type="Node2D" parent="." index="3"]
 
 editor/display_folded = true
-position = Vector2( 0, -24 )
-anchor_mode = 1
-rotating = false
-current = true
-zoom = Vector2( 1, 1 )
-limit_left = -10000000
-limit_top = -10000000
-limit_right = 10000000
-limit_bottom = 10000000
-limit_smoothed = false
-drag_margin_h_enabled = false
-drag_margin_v_enabled = false
-smoothing_enabled = false
-smoothing_speed = 5.0
-offset_v = 0.0
-offset_h = 0.0
-drag_margin_left = 0.2
-drag_margin_top = 0.2
-drag_margin_right = 0.2
-drag_margin_bottom = 0.2
-editor_draw_screen = true
-editor_draw_limits = false
-editor_draw_drag_margin = false
-_sections_unfolded = [ "Drag Margin" ]
-
-[node name="Debug" type="Node2D" parent="Camera2D" index="0"]
-
-position = Vector2( 0, 24 )
 script = ExtResource( 3 )
 
-[node name="Velocity" type="Polygon2D" parent="Camera2D/Debug" index="0"]
+[node name="Velocity" type="Polygon2D" parent="Debug" index="0"]
 
 polygon = PoolVector2Array( 0, -6, 0, 6, 32, 6, 32, 12, 44, 0, 32, -12, 32, -6 )
 uv = PoolVector2Array(  )
@@ -129,7 +104,7 @@ texture_rotation_degrees = 0.0
 invert_enable = false
 invert_border = 100.0
 
-[node name="Normal" type="Polygon2D" parent="Camera2D/Debug" index="1"]
+[node name="Normal" type="Polygon2D" parent="Debug" index="1"]
 
 polygon = PoolVector2Array( 0, 8, -3, 7, 0, -8, 3, 7 )
 uv = PoolVector2Array(  )
@@ -145,16 +120,22 @@ invert_enable = false
 invert_border = 100.0
 _sections_unfolded = [ "Transform" ]
 
-[node name="Panel" type="Panel" parent="Camera2D/Debug" index="2"]
+[node name="CanvasLayer" type="CanvasLayer" parent="Debug" index="2"]
+
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+
+[node name="PlayerInfo" type="Panel" parent="Debug/CanvasLayer" index="0"]
 
 anchor_left = 1.0
 anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 0.0
-margin_left = 56.0
-margin_top = -204.0
-margin_right = 256.0
-margin_bottom = -104.0
+margin_left = -200.0
+margin_bottom = 100.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 0
 mouse_default_cursor_shape = 0
@@ -162,7 +143,7 @@ size_flags_horizontal = 1
 size_flags_vertical = 1
 _sections_unfolded = [ "Material", "Visibility" ]
 
-[node name="HLabel" type="Label" parent="Camera2D/Debug/Panel" index="0"]
+[node name="HLabel" type="Label" parent="Debug/CanvasLayer/PlayerInfo" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -185,7 +166,7 @@ lines_skipped = 0
 max_lines_visible = -1
 _sections_unfolded = [ "custom_colors" ]
 
-[node name="VLabel" type="Label" parent="Camera2D/Debug/Panel" index="1"]
+[node name="VLabel" type="Label" parent="Debug/CanvasLayer/PlayerInfo" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -208,7 +189,7 @@ lines_skipped = 0
 max_lines_visible = -1
 _sections_unfolded = [ "custom_colors" ]
 
-[node name="VelLabel" type="Label" parent="Camera2D/Debug/Panel" index="2"]
+[node name="VelLabel" type="Label" parent="Debug/CanvasLayer/PlayerInfo" index="2"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -229,7 +210,7 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="PosLabel" type="Label" parent="Camera2D/Debug/Panel" index="3"]
+[node name="PosLabel" type="Label" parent="Debug/CanvasLayer/PlayerInfo" index="3"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -250,7 +231,7 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="XPos" type="Label" parent="Camera2D/Debug/Panel" index="4"]
+[node name="XPos" type="Label" parent="Debug/CanvasLayer/PlayerInfo" index="4"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -271,7 +252,7 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="XVel" type="Label" parent="Camera2D/Debug/Panel" index="5"]
+[node name="XVel" type="Label" parent="Debug/CanvasLayer/PlayerInfo" index="5"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -292,7 +273,7 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="YVel" type="Label" parent="Camera2D/Debug/Panel" index="6"]
+[node name="YVel" type="Label" parent="Debug/CanvasLayer/PlayerInfo" index="6"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -313,7 +294,7 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="YPos" type="Label" parent="Camera2D/Debug/Panel" index="7"]
+[node name="YPos" type="Label" parent="Debug/CanvasLayer/PlayerInfo" index="7"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -334,7 +315,7 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="Label" type="RichTextLabel" parent="Camera2D/Debug/Panel" index="8"]
+[node name="Label" type="RichTextLabel" parent="Debug/CanvasLayer/PlayerInfo" index="8"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -366,7 +347,35 @@ selection_enabled = false
 override_selected_font_color = false
 _sections_unfolded = [ "BBCode" ]
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="4"]
+[node name="Camera2D" type="Camera2D" parent="." index="4"]
+
+position = Vector2( 0, -24 )
+anchor_mode = 1
+rotating = false
+current = true
+zoom = Vector2( 1, 1 )
+limit_left = -10000000
+limit_top = -10000000
+limit_right = 10000000
+limit_bottom = 10000000
+limit_smoothed = false
+drag_margin_h_enabled = true
+drag_margin_v_enabled = true
+smoothing_enabled = false
+smoothing_speed = 6.0
+offset_v = 0.0
+offset_h = 0.0
+drag_margin_left = 0.6
+drag_margin_top = 0.6
+drag_margin_right = 0.6
+drag_margin_bottom = 0.6
+editor_draw_screen = true
+editor_draw_limits = true
+editor_draw_drag_margin = true
+script = ExtResource( 4 )
+_sections_unfolded = [ "Drag Margin", "Editor", "Limit", "Material", "Offset", "Smoothing", "Visibility" ]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="5"]
 
 root_node = NodePath("..")
 autoplay = ""

@@ -18,13 +18,15 @@ const CHAR_DOWNHILL_MULT_MAX = 1.5
 const CHAR_UPHILL_MULT_MIN = 0.5
 # Slipperiness while in the air
 const CHAR_SLIP_AIR = 1.0
+# Maximum velocity
+const CHAR_TERMINAL_VELOCITY = 1024
 
 # Maximum movement speed for the player
 export var char_speed_run = 320
 # Walking speed for the player
 export var char_speed_walk = 160
 # Jumping speed for the player
-export var char_jump_speed = 480
+export var char_jump_speed = 600
 # Walking acceleration
 export var char_accel_walk = 1200
 # Acceleration when stopping on the ground
@@ -185,11 +187,20 @@ func _physics_process(delta):
 	elif veloc_h > target_speed:
 		veloc_h -= walk_accel
 	char_set_motion_horizontal(char_get_normal(), veloc_h)
+	# Enforce terminal velocity
+	var veloc_v = char_get_motion_vertical(CHAR_UP)
+	if abs(veloc_v) > CHAR_TERMINAL_VELOCITY:
+		char_set_motion_vertical(CHAR_UP, sign(veloc_v) * CHAR_TERMINAL_VELOCITY)
 
 # On input received
 func _input(event):
 	if event.is_action_pressed("action_jump"):
 		char_time_since_jump_button = 0.0
+	if event.is_action_released("action_jump") and not char_is_on_floor():
+		var veloc_v = char_get_motion_vertical(CHAR_UP)
+		if veloc_v > CHAR_GRAVITY / 10:
+			veloc_v = CHAR_GRAVITY / 10
+			char_set_motion_vertical(CHAR_UP, veloc_v)
 
 # Character is ready
 func _ready():
