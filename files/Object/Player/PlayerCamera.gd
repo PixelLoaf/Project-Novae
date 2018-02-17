@@ -8,7 +8,7 @@ const DRAG_MARGIN_FLOOR_TOP = -0.1
 const DRAG_MARGIN_FLOOR_BOTTOM = 0.1
 const DRAG_MARGIN_FACING_AWAY = 1.0
 const DRAG_MARGIN_FACING_TOWARD = -0.2
-const PLAYER_TEST_OFFSET = 160
+const PLAYER_TEST_OFFSET = 150
 
 var target_drag_margin_top
 var target_drag_margin_left
@@ -59,10 +59,10 @@ func _physics_process(delta):
 	if player_rel_bottom < drag_margin_bottom:
 		drag_margin_bottom = min(drag_margin_bottom, max(player_rel_bottom, target_drag_margin_bottom))
 	
-	drag_margin_top = lerp_abs(drag_margin_top, target_drag_margin_top, delta * 5)
-	drag_margin_left = lerp_abs(drag_margin_left, target_drag_margin_left, delta * 5)
-	drag_margin_right = lerp_abs(drag_margin_right, target_drag_margin_right, delta * 5)
-	drag_margin_bottom = lerp_abs(drag_margin_bottom, target_drag_margin_bottom, delta * 5)
+	drag_margin_top = lerp_abs(drag_margin_top, target_drag_margin_top, delta * 6)
+	drag_margin_left = lerp_abs(drag_margin_left, target_drag_margin_left, delta * 2)
+	drag_margin_right = lerp_abs(drag_margin_right, target_drag_margin_right, delta * 2)
+	drag_margin_bottom = lerp_abs(drag_margin_bottom, target_drag_margin_bottom, delta * 6)
 
 func _ready():
 	target_drag_margin_top = drag_margin_top

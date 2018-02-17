@@ -67,7 +67,8 @@ func char_project_movement(vec):
 
 # Recalculate the character's normal vector
 func char_calc_normal():
-	char_on_ground = is_on_floor()
+	if is_on_floor():
+		char_on_ground = true
 	if get_slide_count() == 0:
 		return
 	char_floor_normal = Vector2()
@@ -104,6 +105,7 @@ func char_do_movement(delta, stop_speed):
 	var prev_normal = char_get_normal()
 	var prev_transform = transform
 	var prev_veloc = char_velocity
+	char_on_ground = false
 	# Movement
 	char_velocity = move_and_slide(char_velocity, CHAR_UP, stop_speed, 4, 0.8)
 	char_calc_normal()

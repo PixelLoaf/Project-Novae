@@ -107,16 +107,16 @@ func _physics_process(delta):
 	if player_can_jump() and player_time_since_jump_button < PLAYER_TIME_JUMP_WITHOLD:
 		char_jump(player_jump_speed)
 		player_time_since_jump_button = 1.0
+	if not Input.is_action_pressed("action_jump") and not char_is_on_floor():
+		var veloc_v = char_get_motion_vertical(CHAR_UP)
+		if veloc_v > CHAR_GRAVITY / 10:
+			veloc_v = CHAR_GRAVITY / 10
+			char_set_motion_vertical(CHAR_UP, veloc_v)
 
 # On input received
 func _input(event):
 	if event.is_action_pressed("action_jump"):
 		player_time_since_jump_button = 0.0
-	if event.is_action_released("action_jump") and not char_is_on_floor():
-		var veloc_v = char_get_motion_vertical(CHAR_UP)
-		if veloc_v > CHAR_GRAVITY / 10:
-			veloc_v = CHAR_GRAVITY / 10
-			char_set_motion_vertical(CHAR_UP, veloc_v)
 
 # Player is ready
 func _ready():
