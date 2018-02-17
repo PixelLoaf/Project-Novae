@@ -104,7 +104,6 @@ func _physics_process(delta):
 	# Jump. The purpose of doing it this way is so that the player can press the
 	# jump button slightly before hitting the ground and still jump.
 	player_time_since_jump_button += delta
-	print(char_time_since_floor, " ")
 	if player_can_jump() and player_time_since_jump_button < PLAYER_TIME_JUMP_WITHOLD:
 		char_jump(player_jump_speed)
 		player_time_since_jump_button = 1.0
