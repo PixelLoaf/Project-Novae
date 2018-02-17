@@ -2,7 +2,8 @@ extends Camera2D
 
 onready var player = get_parent()
 
-const DRAG_MARGIN_AIR = 0.75
+const DRAG_MARGIN_AIR_TOP = 0.75
+const DRAG_MARGIN_AIR_BOTTOM = 0.25
 const DRAG_MARGIN_FLOOR_TOP = -0.1
 const DRAG_MARGIN_FLOOR_BOTTOM = 0.1
 const DRAG_MARGIN_FACING_AWAY = 1.0
@@ -26,8 +27,8 @@ func lerp_abs(from, to, speed):
 
 func _physics_process(delta):
 	if not player.char_is_on_floor():
-		target_drag_margin_bottom = DRAG_MARGIN_AIR
-		target_drag_margin_top = DRAG_MARGIN_AIR
+		target_drag_margin_bottom = DRAG_MARGIN_AIR_BOTTOM
+		target_drag_margin_top = DRAG_MARGIN_AIR_TOP
 	else:
 		target_drag_margin_bottom = DRAG_MARGIN_FLOOR_BOTTOM
 		target_drag_margin_top = DRAG_MARGIN_FLOOR_TOP
@@ -42,6 +43,8 @@ func _physics_process(delta):
 		target_drag_margin_left = DRAG_MARGIN_FACING_TOWARD
 		target_drag_margin_right = DRAG_MARGIN_FACING_AWAY
 	var window_size = get_viewport().get_size_override()
+	if (window_size == Vector2()):
+		window_size = get_viewport().size
 	var player_rel_right = (player_x - camera_x) / (window_size.x / 2)
 	var player_rel_bottom = (player_y - camera_y) / (window_size.y / 2)
 	var player_rel_top = -player_rel_bottom

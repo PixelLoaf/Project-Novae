@@ -31,3 +31,7 @@ func _physics_process(delta):
 	panel.get_node("YPos").text = "%.2f" % player.position.y
 	panel.get_node("XVel").text = "%.2f" % player.char_velocity.x
 	panel.get_node("YVel").text = "%.2f" % player.char_velocity.y
+
+func _on_Button_pressed():
+	player.rotation += PI/2
+	$CanvasLayer/PlayerInfo/ButtonRotate.release_focus()

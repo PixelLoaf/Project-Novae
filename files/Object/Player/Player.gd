@@ -15,9 +15,9 @@ const PLAYER_SLIP_AIR = 1.0
 # Maximum time after leaving a platform that a player may still jump for
 const PLAYER_TIME_MAX_JUMP = 0.12
 # Maximum movement speed for the player
-const player_speed_run = 300
+const PLAYER_SPEED_RUN = 300
 # Walking speed for the player
-const player_speed_walk = 180
+const PLAYER_SPEED_WALK = 180
 
 # Jumping speed for the player
 export var player_jump_speed = 500
@@ -35,26 +35,43 @@ var player_slipperiness = 1.0
 func player_can_jump():
 	return char_time_since_floor < PLAYER_TIME_MAX_JUMP
 
+func get_input_dir():
+	var rot = Vector2(1, 0).rotated(self.rotation)
+	var keyleft_dir  = round(rot.dot(Vector2(-1, 0)))
+	var keyup_dir    = round(rot.dot(Vector2(0, -1)))
+	var keyright_dir = round(rot.dot(Vector2(1, 0)))
+	var keydown_dir  = round(rot.dot(Vector2(0, 1)))
+	if Input.is_action_pressed("move_left") and keyleft_dir != 0:
+		return keyleft_dir
+	if Input.is_action_pressed("move_up") and keyup_dir != 0:
+		return keyup_dir
+	if Input.is_action_pressed("move_right") and keyright_dir != 0:
+		return keyright_dir
+	if Input.is_action_pressed("move_down") and keydown_dir != 0:
+		return keydown_dir
+	return 0
+
 # Every frame
 func _physics_process(delta):
 	# Calculate movement
 	var stop_speed = PLAYER_INERT_STOP_SPEED;
 	var target_speed = 0
 	var veloc_h = char_get_motion_horizontal(char_get_normal())
-	if Input.is_action_pressed("move_left"):
-		if veloc_h <= 0:
-			$Sprite.flip_h = true
-			stop_speed = PLAYER_MOVING_STOP_SPEED
-		target_speed = -player_speed_walk
-		if Input.is_action_pressed("action_run"):
-			target_speed = -player_speed_run
-	elif Input.is_action_pressed("move_right"):
+	var dir = get_input_dir()
+	if dir == 1:
 		if veloc_h >= 0:
 			$Sprite.flip_h = false
 			stop_speed = PLAYER_MOVING_STOP_SPEED
-		target_speed = player_speed_walk
-		if Input.is_action_pressed("action_run"):
-			target_speed = player_speed_run
+	elif dir == -1:
+		if veloc_h <= 0:
+			$Sprite.flip_h = true
+			stop_speed = PLAYER_MOVING_STOP_SPEED
+	if Input.is_action_pressed("action_run"):
+		target_speed = dir * PLAYER_SPEED_RUN
+	else:
+		target_speed = dir * PLAYER_SPEED_WALK
+	# Actual movement here
+	char_do_movement(delta, stop_speed)
 	# Change player's acceleration if they are on a slope
 	var mult_accel = 1
 	if target_speed > veloc_h:
@@ -84,11 +101,10 @@ func _physics_process(delta):
 	elif veloc_h > target_speed:
 		veloc_h -= walk_accel
 	char_set_motion_horizontal(char_get_normal(), veloc_h)
-	# Actual movement here
-	char_do_movement(delta, stop_speed)
 	# Jump. The purpose of doing it this way is so that the player can press the
 	# jump button slightly before hitting the ground and still jump.
 	player_time_since_jump_button += delta
+	print(char_time_since_floor, " ")
 	if player_can_jump() and player_time_since_jump_button < PLAYER_TIME_JUMP_WITHOLD:
 		char_jump(player_jump_speed)
 		player_time_since_jump_button = 1.0
