@@ -5,7 +5,7 @@
 [ext_resource path="res://Object/Player/Debug.gd" type="Script" id=3]
 [ext_resource path="res://Object/Player/PlayerCamera.gd" type="Script" id=4]
 
-[sub_resource type="RectangleShape2D" id=1]
+[sub_resource type="RectangleShape2D" id=4]
 
 custom_solver_bias = 0.0
 extents = Vector2( 8, 8 )
@@ -53,7 +53,7 @@ player_accel_stop = 2400
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." index="0"]
 
-shape = SubResource( 1 )
+shape = SubResource( 4 )
 
 [node name="Hitbox" type="Area2D" parent="." index="1"]
 
