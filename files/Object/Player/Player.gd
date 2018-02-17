@@ -14,11 +14,11 @@ const PLAYER_UPHILL_MULT_MIN = 0.5
 const PLAYER_SLIP_AIR = 1.0
 # Maximum time after leaving a platform that a player may still jump for
 const PLAYER_TIME_MAX_JUMP = 0.12
-
 # Maximum movement speed for the player
-export var player_speed_run = 320
+const player_speed_run = 300
 # Walking speed for the player
-export var player_speed_walk = 160
+const player_speed_walk = 180
+
 # Jumping speed for the player
 export var player_jump_speed = 500
 # Walking acceleration
