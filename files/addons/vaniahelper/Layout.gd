@@ -1,8 +1,11 @@
 tool
 extends Control
 
+const TILE_SIZE_ARRAY = [8, 12, 16, 24, 32, 48, 64]
+var tile_size_i = TILE_SIZE_ARRAY.find(32)
+
 # Size of a tile
-const TILE_SIZE = 32
+var TILE_SIZE = 32
 # Padding between tiles
 const TILE_PAD = 0
 # Width of a tile's border
@@ -25,10 +28,16 @@ var active_tile_key
 var dialog
 # Output path of the dialog
 var dialog_path
+# Last selected color
+var last_color = Color(0.5, 0.5, 0.5)
 # Whether the active tile is being dragged
 var is_dragging = false
 # Offset of the tile being dragged
 var drag_offset = Vector2(0, 0)
+# True if the window is being scrolled
+var is_scrolling = false
+# Scroll amount
+var scroll_amount = Vector2()
 
 # Reference to the panel node
 onready var canvas = $HSplitContainer/ScrollContainer/Panel
@@ -49,29 +58,40 @@ func check_dialog():
 		dialog.set_display_mode(EditorFileDialog.DISPLAY_LIST)
 		dialog.set_mode(EditorFileDialog.MODE_OPEN_FILE)
 		dialog.connect("file_selected", self, "_on_EditorFileDialog_selected")
+		dialog.connect("popup_hide", self, "_on_EditorFileDialog_hide")
 		dialog.add_filter("*.tscn, *.scn; Scene")
 		add_child(dialog)
 
 # Called when a path is selected via the dialog
 func _on_EditorFileDialog_selected(path):
+	print("PATH")
 	dialog_path = path
+	
+func _on_EditorFileDialog_hide():
+	print("HIDE")
 	emit_signal("dialog_wait")
 
 # Set the active tile
 func set_active_tile(pos):
 	active_tile_key = pos
+	if pos == null:
+		$PosLabel.text = ""
+	else:
+		$PosLabel.text = "%d, %d" % [pos.x, pos.y]
 	var tile = get_active_tile()
 	if tile != null:
 		properties.show()
 		$HSplitContainer/Properties/Color.color = tile.color
 		$HSplitContainer/Properties/Path.text = tile.path
+		$HSplitContainer/Properties/Width.value = tile.width
+		$HSplitContainer/Properties/Height.value = tile.height
 	else:
 		properties.hide()
 	canvas.update()
 
 # Convert a position to a valid key for a Vaniamap
 func pos_to_key(pos):
-	return (pos / TILE_SIZE).floor()
+	return ((pos - scroll_amount) / TILE_SIZE).floor()
 
 # Attempt to move a tile from prev_pos to target_pos
 func try_move_tile(prev_pos, target_pos):
@@ -120,7 +140,7 @@ func tile_draw(pos, tile):
 	var size = Vector2(1, 1)
 	if tile != null:
 		size = Vector2(tile.width, tile.height)
-	var rect = Rect2(pos * TILE_SIZE, size * TILE_SIZE)
+	var rect = Rect2(pos * TILE_SIZE + scroll_amount, size * TILE_SIZE)
 	rect = rect.grow(-TILE_PAD)
 	var outline = TILE_OUTLINE
 	if pos == active_tile_key:
@@ -145,6 +165,41 @@ func _on_Panel_draw():
 		var tile = get_active_tile()
 		tile_draw(active_tile_key, tile)
 
+# Scroll the view by 'amount' increments
+func scroll(amount, pos):
+	var pos_before = (pos - scroll_amount) / TILE_SIZE
+	tile_size_i = clamp(tile_size_i + amount, 0, TILE_SIZE_ARRAY.size()-1)
+	TILE_SIZE = TILE_SIZE_ARRAY[tile_size_i]
+	var pos_after = (pos - scroll_amount) / TILE_SIZE
+	scroll_amount += (pos_after - pos_before) * TILE_SIZE
+	canvas.update()
+
+# Delete the currently selected tile
+func delete_selected():
+	if active_tile_key != null:
+		vaniamap.set_tile(active_tile_key, null)
+		canvas.update()
+
+# Begin dragging active tile
+func begin_drag():
+	drag_offset = Vector2(0, 0)
+	is_dragging = true
+
+# Place active tile
+func end_drag(pos):
+	is_dragging = false
+	var from_pos = active_tile_key
+	var to_pos = pos_to_key(pos)
+	if try_move_tile(from_pos, to_pos):
+		set_active_tile(to_pos)
+	else:
+		set_active_tile(from_pos)
+	canvas.update()
+
+# Show the context menu
+func show_popup(pos):
+	$PopupMenu.rect_position = pos
+	$PopupMenu.popup()
 
 # When the canvas receives an input
 func _on_Panel_gui_input(event):
@@ -152,25 +207,41 @@ func _on_Panel_gui_input(event):
 		if is_dragging:
 			drag_offset += event.relative
 			canvas.update()
+			var pos = pos_to_key(event.position)
+			$PosLabel.text = "%d, %d" % [pos.x, pos.y]
+		if is_scrolling:
+			scroll_amount += event.relative
+			canvas.update()
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT:
+			if is_scrolling:
+				return
 			if event.pressed:
 				var pos = pos_to_key(event.position)
 				set_active_tile(pos)
-				drag_offset = Vector2(0, 0)
-				is_dragging = true
+				begin_drag()
 			else:
-				is_dragging = false
-				var from_pos = active_tile_key
-				var to_pos = pos_to_key(event.position)
-				if try_move_tile(from_pos, to_pos):
-					set_active_tile(to_pos)
-				canvas.update()
+				end_drag(event.position)
+			accept_event()
+		if event.button_index == BUTTON_MIDDLE:
+			if is_dragging:
+				return
+			is_scrolling = event.pressed
+		if event.button_index == BUTTON_RIGHT and event.pressed:
+			var pos = pos_to_key(event.position)
+			set_active_tile(pos)
+			show_popup(event.global_position)
+			accept_event()
+		if event.button_index == BUTTON_WHEEL_UP and event.pressed:
+			scroll(1, event.position)
+			accept_event()
+		if event.button_index == BUTTON_WHEEL_DOWN and event.pressed:
+			scroll(-1, event.position)
 			accept_event()
 	if event is InputEventKey:
 		if event.scancode == KEY_DELETE:
-			pass
-			# delete tile
+			delete_selected()
+			accept_event()
 
 # When a color is selected
 func _on_Color_color_changed(color):
@@ -200,3 +271,33 @@ func _on_PathButton_pressed():
 	if get_active_tile() == null:
 		print("No active tile!")
 	$HSplitContainer/Properties/Path.text = dialog_path
+
+const POPUP_NEW = 0
+const POPUP_DELETE = 1
+# When a popup menu's button is pressed
+func _on_PopupMenu_id_pressed( ID ):
+	if ID == POPUP_NEW:
+		dialog.current_file = ""
+		dialog.popup_centered()
+		yield(self, "dialog_wait")
+		var tile = vaniamap.Tile.new()
+		tile.path = dialog_path
+		tile.color = last_color
+		vaniamap.set_tile(active_tile_key, tile)
+		canvas.update()
+	elif ID == POPUP_DELETE:
+		delete_selected()
+
+func _on_Width_value_changed(value):
+	var tile = get_active_tile()
+	if tile == null:
+		return
+	tile.width = int(value)
+	canvas.update()
+
+func _on_Height_value_changed(value):
+	var tile = get_active_tile()
+	if tile == null:
+		return
+	tile.height = int(value)
+	canvas.update()

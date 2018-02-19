@@ -39,7 +39,7 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 640.0
+margin_right = 471.0
 margin_bottom = 360.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = true
@@ -60,7 +60,7 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 640.0
+margin_right = 471.0
 margin_bottom = 360.0
 rect_pivot_offset = Vector2( 0, 0 )
 focus_mode = 1
@@ -72,7 +72,6 @@ _sections_unfolded = [ "Focus", "Mouse" ]
 
 [node name="Properties" type="Panel" parent="HSplitContainer" index="1"]
 
-visible = false
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -94,9 +93,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 2.0
-margin_top = 3.0
+margin_top = 2.0
 margin_right = 40.0
-margin_bottom = 17.0
+margin_bottom = 16.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 2
 mouse_default_cursor_shape = 0
@@ -106,7 +105,7 @@ text = "color"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
-_sections_unfolded = [ "Size Flags" ]
+_sections_unfolded = [ "Anchor", "Focus", "Grow Direction", "Hint", "Margin", "Mouse", "Rect", "Size Flags" ]
 
 [node name="Color" type="ColorPickerButton" parent="HSplitContainer/Properties" index="1"]
 
@@ -115,7 +114,7 @@ anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 0.0
 margin_left = 42.0
-margin_bottom = 20.0
+margin_bottom = 28.0
 rect_pivot_offset = Vector2( 0, 0 )
 focus_mode = 2
 mouse_filter = 0
@@ -130,7 +129,7 @@ flat = true
 align = 1
 color = Color( 1, 1, 1, 1 )
 edit_alpha = false
-_sections_unfolded = [ "Size Flags" ]
+_sections_unfolded = [ "Margin", "Size Flags" ]
 
 [node name="LabelPath" type="Label" parent="HSplitContainer/Properties" index="2"]
 
@@ -139,9 +138,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 2.0
-margin_top = 24.0
+margin_top = 26.0
 margin_right = 40.0
-margin_bottom = 38.0
+margin_bottom = 40.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 2
 mouse_default_cursor_shape = 0
@@ -152,7 +151,7 @@ valign = 1
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
-_sections_unfolded = [ "Size Flags" ]
+_sections_unfolded = [ "Margin", "Size Flags" ]
 
 [node name="Path" type="LineEdit" parent="HSplitContainer/Properties" index="3"]
 
@@ -176,7 +175,7 @@ placeholder_alpha = 0.6
 caret_blink = false
 caret_blink_speed = 0.65
 caret_position = 0
-_sections_unfolded = [ "Placeholder", "Size Flags" ]
+_sections_unfolded = [ "Margin", "Placeholder", "Size Flags" ]
 
 [node name="PathButton" type="TextureButton" parent="HSplitContainer/Properties" index="4"]
 
@@ -184,9 +183,10 @@ anchor_left = 1.0
 anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 0.0
-margin_left = -31.0
-margin_top = 27.0
-margin_bottom = 50.0
+margin_left = -24.0
+margin_top = 32.0
+margin_right = -8.0
+margin_bottom = 49.0
 rect_pivot_offset = Vector2( 0, 0 )
 focus_mode = 2
 mouse_filter = 0
@@ -202,6 +202,142 @@ expand = true
 stretch_mode = 3
 _sections_unfolded = [ "Textures" ]
 
+[node name="LabelWidth" type="Label" parent="HSplitContainer/Properties" index="5"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 2.0
+margin_top = 56.0
+margin_right = 40.0
+margin_bottom = 70.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+text = "width"
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Margin", "Size Flags" ]
+
+[node name="Width" type="SpinBox" parent="HSplitContainer/Properties" index="6"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+margin_left = 48.0
+margin_top = 58.0
+margin_right = -8.0
+margin_bottom = 82.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+min_value = 1.0
+max_value = 100.0
+step = 1.0
+page = 0.0
+value = 1.0
+exp_edit = false
+rounded = true
+editable = true
+prefix = ""
+suffix = "tiles"
+_sections_unfolded = [ "Margin" ]
+
+[node name="LabelHeight" type="Label" parent="HSplitContainer/Properties" index="7"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 2.0
+margin_top = 86.0
+margin_right = 44.0
+margin_bottom = 100.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+text = "height"
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Margin", "Size Flags" ]
+
+[node name="Height" type="SpinBox" parent="HSplitContainer/Properties" index="8"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+margin_left = 48.0
+margin_top = 88.0
+margin_right = -8.0
+margin_bottom = 112.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+min_value = 1.0
+max_value = 100.0
+step = 1.0
+page = 0.0
+value = 1.0
+exp_edit = false
+rounded = false
+editable = true
+prefix = ""
+suffix = "tiles"
+_sections_unfolded = [ "Margin" ]
+
+[node name="PopupMenu" type="PopupMenu" parent="." index="3"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 72.0
+margin_top = 41.0
+margin_right = 135.0
+margin_bottom = 93.0
+rect_pivot_offset = Vector2( 0, 0 )
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+popup_exclusive = false
+items = [ "New", null, false, false, false, 0, 0, null, "", false, "Delete", null, false, false, false, 1, 0, null, "", false ]
+hide_on_state_item_selection = false
+_sections_unfolded = [ "Popup" ]
+
+[node name="PosLabel" type="Label" parent="." index="28"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 40.0
+margin_bottom = 14.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
 [connection signal="draw" from="HSplitContainer/ScrollContainer/Panel" to="." method="_on_Panel_draw"]
 
 [connection signal="gui_input" from="HSplitContainer/ScrollContainer/Panel" to="." method="_on_Panel_gui_input"]
@@ -211,5 +347,11 @@ _sections_unfolded = [ "Textures" ]
 [connection signal="text_changed" from="HSplitContainer/Properties/Path" to="." method="_on_Path_text_changed"]
 
 [connection signal="pressed" from="HSplitContainer/Properties/PathButton" to="." method="_on_PathButton_pressed"]
+
+[connection signal="value_changed" from="HSplitContainer/Properties/Width" to="." method="_on_Width_value_changed"]
+
+[connection signal="value_changed" from="HSplitContainer/Properties/Height" to="." method="_on_Height_value_changed"]
+
+[connection signal="id_pressed" from="PopupMenu" to="." method="_on_PopupMenu_id_pressed"]
 
 
