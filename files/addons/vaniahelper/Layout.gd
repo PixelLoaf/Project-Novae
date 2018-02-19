@@ -1,9 +1,10 @@
 tool
 extends Control
 
+# List of possible zoom amounts
 const TILE_SIZE_ARRAY = [8, 12, 16, 24, 32, 48, 64]
+# Currently selected zoom amount
 var tile_size_i = TILE_SIZE_ARRAY.find(32)
-
 # Size of a tile
 var TILE_SIZE = 32
 # Padding between tiles
@@ -42,17 +43,29 @@ var drag_start_pos = Vector2(0, 0)
 var is_scrolling = false
 # Scroll amount
 var scroll_amount = Vector2()
+# Dialog to confirm close
+var confirm_close_dialog
 
 # Reference to the panel node
-onready var canvas = $HSplitContainer/ScrollContainer/Panel
+onready var canvas = $HSplitContainer/Canvas
 # Reference to the properties node
-onready var properties = $HSplitContainer/Properties
-
-# Get the currently selected tile. Will return null if no tile is selected
-#func get_active_tile():
-#	if active_tile_key == null:
-#		return null
-#	return vaniamap.get_tile(active_tile_key)
+onready var properties = $HSplitContainer/VSplitContainer/Properties
+# Reference to global properties node
+onready var global_properties = $HSplitContainer/VSplitContainer/GlobalProperties
+# Refence to properties which only work on singular selections
+onready var single_proprties = $HSplitContainer/VSplitContainer/Properties/Single
+# Color node
+onready var node_color = $HSplitContainer/VSplitContainer/Properties/Color
+# Path node
+onready var node_path = $HSplitContainer/VSplitContainer/Properties/Single/Path
+# Width node
+onready var node_width = $HSplitContainer/VSplitContainer/Properties/Single/Width
+# Height node
+onready var node_height = $HSplitContainer/VSplitContainer/Properties/Single/Height
+# Room width node
+onready var node_room_width = $HSplitContainer/VSplitContainer/GlobalProperties/RoomWidth
+# Room height node
+onready var node_room_height = $HSplitContainer/VSplitContainer/GlobalProperties/RoomHeight
 
 # Make sure that the dialog node exists
 func check_dialog():
@@ -65,6 +78,27 @@ func check_dialog():
 		dialog.connect("popup_hide", self, "_on_EditorFileDialog_hide")
 		dialog.add_filter("*.tscn, *.scn; Scene")
 		add_child(dialog)
+	if confirm_close_dialog == null:
+		confirm_close_dialog = AcceptDialog.new()
+		confirm_close_dialog.add_cancel("Cancel")
+		confirm_close_dialog.get_ok().text = "Save & Close"
+		confirm_close_dialog.add_button("Don't Save", false, "nosave")
+		confirm_close_dialog.connect("custom_action", self, "_on_ConfirmCloseDialog_action") 
+		confirm_close_dialog.connect("confirmed", self, "_on_ConfirmCloseDialog_ok") 
+		add_child(confirm_close_dialog)
+
+# When confirmation dialog saves
+func _on_ConfirmCloseDialog_ok():
+	file_save()
+	confirm_close_dialog.hide()
+	queue_free()
+
+# When confirmation dialog does not save
+func _on_ConfirmCloseDialog_action(name):
+	print("RECEIVED ", name)
+	if name == "nosave":
+		confirm_close_dialog.hide()
+		queue_free()
 
 # Called when a path is selected via the dialog
 func _on_EditorFileDialog_selected(path):
@@ -88,28 +122,16 @@ func add_active_tile(pos, reset=false):
 	if tile != null:
 		selected_tiles.append(tile)
 		properties.show()
-		$HSplitContainer/Properties/Color.color = tile.color
-		$HSplitContainer/Properties/Path.text = tile.path
-		$HSplitContainer/Properties/Width.value = tile.width
-		$HSplitContainer/Properties/Height.value = tile.height
+		node_color.color = tile.color
+		node_path.text = tile.path
+		node_width.value = tile.width
+		node_height.value = tile.height
 	else:
 		properties.hide()
 	if selected_tiles.size() > 1:
-		$HSplitContainer/Properties/Path.hide()
-		$HSplitContainer/Properties/Width.hide()
-		$HSplitContainer/Properties/Height.hide()
-		$HSplitContainer/Properties/LabelPath.hide()
-		$HSplitContainer/Properties/PathButton.hide()
-		$HSplitContainer/Properties/LabelWidth.hide()
-		$HSplitContainer/Properties/LabelHeight.hide()
+		single_proprties.hide()
 	else:
-		$HSplitContainer/Properties/Path.show()
-		$HSplitContainer/Properties/Width.show()
-		$HSplitContainer/Properties/Height.show()
-		$HSplitContainer/Properties/LabelPath.show()
-		$HSplitContainer/Properties/PathButton.show()
-		$HSplitContainer/Properties/LabelWidth.show()
-		$HSplitContainer/Properties/LabelHeight.show()
+		single_proprties.show()
 	canvas.update()
 
 # Convert a position to a valid key for a Vaniamap
@@ -126,6 +148,9 @@ func _init():
 	add_child(vaniamap)
 	check_dialog()
 
+func _ready():
+	properties.hide()
+
 # When this editor leaves the tree
 func _exit_tree():
 	vaniamap.free()
@@ -136,7 +161,7 @@ func get_title():
 
 # Close this editor
 func file_close():
-	queue_free()
+	confirm_close_dialog.popup_centered()
 
 # Set this editor's file name
 func set_file(name):
@@ -153,6 +178,10 @@ func file_save():
 # Load data from the map
 func file_load():
 	vaniamap.load_from(file_name)
+	if canvas != null:
+		canvas.update()
+	node_room_width.value = vaniamap.room_width
+	node_room_height.value = vaniamap.room_height
 
 # Draw a tile
 func tile_draw(pos, tile):
@@ -283,8 +312,10 @@ func _on_PathButton_pressed():
 	dialog.current_dir = tile.path.get_base_dir()
 	dialog.current_path = tile.path
 	dialog.popup_centered()
+	dialog_path = ""
 	yield(self, "dialog_wait")
-	$HSplitContainer/Properties/Path.text = dialog_path
+	if dialog_path != "":
+		node_path.text = dialog_path
 
 const POPUP_NEW = 0
 const POPUP_DELETE = 1
@@ -293,11 +324,14 @@ func _on_PopupMenu_id_pressed( ID ):
 	if ID == POPUP_NEW:
 		dialog.current_file = ""
 		dialog.popup_centered()
+		dialog_path = ""
 		yield(self, "dialog_wait")
-		var tile = vaniamap.create_tile(selected_pos, last_color, dialog_path)
-		if tile != null:
-			add_active_tile(tile.position)
-		canvas.update()
+		if dialog_path != "":
+			node_path.text = dialog_path
+			var tile = vaniamap.create_tile(selected_pos, last_color, dialog_path)
+			if tile != null:
+				add_active_tile(tile.position)
+			canvas.update()
 	elif ID == POPUP_DELETE:
 		delete_selected()
 
@@ -315,16 +349,26 @@ func show_popup(pos):
 	$PopupMenu.rect_position = pos
 	$PopupMenu.popup()
 
+# Width of selected tile changes
 func _on_Width_value_changed(value):
 	if selected_tiles.size() != 1:
 		return
 	value = vaniamap.tile_set_width(selected_tiles[0].position, value)
-	$HSplitContainer/Properties/Width.value = value
+	node_width.value = value
 	canvas.update()
 
+# Height of selected tile changes
 func _on_Height_value_changed(value):
 	if selected_tiles.size() != 1:
 		return
 	value = vaniamap.tile_set_height(selected_tiles[0].position, value)
-	$HSplitContainer/Properties/Height.value = value
+	node_height.value = value
 	canvas.update()
+
+# Width of room changes
+func _on_RoomWidth_value_changed(value):
+	vaniamap.room_width = int(value)
+
+# Height of room changes
+func _on_RoomHeight_value_changed(value):
+	vaniamap.room_height = int(value)

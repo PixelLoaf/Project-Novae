@@ -63,6 +63,9 @@ func _on_EditorFileDialog_selected(path):
 	var editor
 	if create_new_editor:
 		editor = layout.instance()
+		$TabContainer.add_child(editor)
+		$TabContainer.current_tab = $TabContainer.get_tab_count() - 1
+		editor.set_owner($TabContainer)
 	else:
 		editor = get_current_editor()
 		if editor == null:
@@ -74,10 +77,6 @@ func _on_EditorFileDialog_selected(path):
 		editor.file_save_as(path)
 	if do_load_file:
 		editor.file_load()
-	if create_new_editor:
-		$TabContainer.add_child(editor)
-		$TabContainer.current_tab = $TabContainer.get_tab_count() - 1
-		editor.set_owner($TabContainer)
 	$TabContainer.set_tab_title($TabContainer.current_tab, editor.get_title())
 
 # New

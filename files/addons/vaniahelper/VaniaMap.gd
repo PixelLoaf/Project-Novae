@@ -29,19 +29,6 @@ var tile_map = {}
 var room_width = 1024
 # Height of each tile in pixels
 var room_height = 600
-# Total size of this map
-var total_size = Vector2()
-
-func update_size():
-	total_size = Vector2()
-	for pos in tile_map:
-		total_size.x = max(total_size.x, pos.x)
-		total_size.y = max(total_size.y, pos.y)
-	total_size.x += 1
-	total_size.y += 1
-
-func get_size():
-	return total_size
 
 # Get the tile at the given position
 func get_tile(pos):
@@ -55,7 +42,6 @@ func _set_tile(pos, tile):
 		tile_map.erase(pos)
 	else:
 		tile_map[pos] = tile
-	update_size()
 
 # Put a tile into the map with regards to its width and height
 func _push_tile(pos, tile):
