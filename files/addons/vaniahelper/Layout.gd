@@ -1,21 +1,33 @@
 tool
 extends Control
 
-const VERSION = "1.0"
+# Size of a tile
 const TILE_SIZE = 32
+# Padding between tiles
 const TILE_PAD = 0
+# Width of a tile's border
 const TILE_BORDER = 2
+# Color of a tile's outline
 const TILE_OUTLINE = Color(0, 0, 0)
+# Color of a tile's outline when it is selected
 const TILE_OUTLINE_SELECTED = Color(1, 1, 1)
 
+# File name for this editor
 var file_name = "";
+# Reference to the VaniaMap node
 var vaniamap
+# Position of the actively selected tile. Null if none selected
 var active_tile_key
+# File load dialog
 var dialog
+# Whether the active tile is being dragged
 var is_dragging = false
+# Offset of the tile being dragged
 var drag_offset = Vector2(0, 0)
 
+# Reference to the panel node
 onready var canvas = $HSplitContainer/ScrollContainer/Panel
+# Reference to the properties node
 onready var properties = $HSplitContainer/Properties
 
 # Get the currently selected tile. Will return null if no tile is selected
@@ -58,6 +70,8 @@ func pos_to_key(pos):
 	return (pos / TILE_SIZE).floor()
 
 func try_move_tile(prev_pos, target_pos):
+	if prev_pos == target_pos:
+		return
 	if not vaniamap.tiles.has(prev_pos):
 		return false
 	if vaniamap.tiles.has(target_pos):

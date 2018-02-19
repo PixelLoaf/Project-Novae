@@ -3,16 +3,27 @@ extends Node
 
 const VERSION = "1.0"
 
+# Represents a singular tile
 class Tile:
+	# Color of this tile
 	var color = Color(0.5, 0.5, 0.5, 1)
+	# Path to the scene for this tile
 	var path = ""
+	# Width of this tile
 	var width = 1
+	# Height of this tile
 	var height = 1
 
+# All tiles within this map.
+# Keys represent the position of the tile as an integer Vector2
+# Values are instances of the Tile class
 var tiles = {}
+# Width of each tile in pixels
 var room_width = 1024
+# Height of each tile in pixels
 var room_height = 600
 
+# Save this map to the given file
 func save_to(path):
 	var tiledata = []
 	for k in tiles:
@@ -36,7 +47,8 @@ func save_to(path):
 	fh.open(path, File.WRITE)
 	fh.store_line(outstr)
 	fh.close()
-	
+
+# Load for version 1.0
 func load_from_v1_0(data):
 	var new_tiles = {}
 	for tile in data.tiles:
@@ -48,7 +60,8 @@ func load_from_v1_0(data):
 		v.path = tile.path
 		new_tiles[k] = v
 	tiles = new_tiles
-	
+
+# Load a map from the given file
 func load_from(path):
 	var fh = File.new()
 	if not fh.file_exists(path):
