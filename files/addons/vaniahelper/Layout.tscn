@@ -1,0 +1,214 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/vaniahelper/Layout.gd" type="Script" id=1]
+[ext_resource path="res://addons/vaniahelper/img/file.png" type="Texture" id=2]
+
+[node name="Layout" type="Control" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( 0, 0 )
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+script = ExtResource( 1 )
+_sections_unfolded = [ "Focus", "Hint", "Rect", "Size Flags", "Theme" ]
+
+[node name="HSplitContainer" type="HSplitContainer" parent="." index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+split_offset = 0
+collapsed = false
+dragger_visibility = 0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HSplitContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 640.0
+margin_bottom = 360.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = true
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 3.0
+scroll_horizontal_enabled = true
+scroll_horizontal = 0
+scroll_vertical_enabled = true
+scroll_vertical = 0
+_sections_unfolded = [ "Rect", "Scroll", "Size Flags" ]
+
+[node name="Panel" type="Panel" parent="HSplitContainer/ScrollContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 640.0
+margin_bottom = 360.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+_sections_unfolded = [ "Size Flags", "Theme" ]
+
+[node name="Properties" type="Panel" parent="HSplitContainer" index="1"]
+
+visible = false
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 483.0
+margin_right = 640.0
+margin_bottom = 360.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="LabelColor" type="Label" parent="HSplitContainer/Properties" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 2.0
+margin_top = 3.0
+margin_right = 40.0
+margin_bottom = 17.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+text = "color"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="Color" type="ColorPickerButton" parent="HSplitContainer/Properties" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+margin_left = 42.0
+margin_bottom = 20.0
+rect_pivot_offset = Vector2( 0, 0 )
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = true
+align = 1
+color = Color( 1, 1, 1, 1 )
+edit_alpha = false
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="LabelPath" type="Label" parent="HSplitContainer/Properties" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 2.0
+margin_top = 24.0
+margin_right = 40.0
+margin_bottom = 38.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+text = "scene"
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="Path" type="LineEdit" parent="HSplitContainer/Properties" index="3"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+margin_left = 48.0
+margin_top = 28.0
+margin_right = -29.0
+margin_bottom = 52.0
+rect_pivot_offset = Vector2( 0, 0 )
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 1
+size_flags_horizontal = 3
+size_flags_vertical = 1
+focus_mode = 2
+context_menu_enabled = true
+placeholder_alpha = 0.6
+caret_blink = false
+caret_blink_speed = 0.65
+caret_position = 0
+_sections_unfolded = [ "Placeholder", "Size Flags" ]
+
+[node name="PathButton" type="TextureButton" parent="HSplitContainer/Properties" index="4"]
+
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+margin_left = -31.0
+margin_top = 27.0
+margin_bottom = 50.0
+rect_pivot_offset = Vector2( 0, 0 )
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+texture_normal = ExtResource( 2 )
+expand = true
+stretch_mode = 3
+_sections_unfolded = [ "Textures" ]
+
+[connection signal="draw" from="HSplitContainer/ScrollContainer/Panel" to="." method="_on_Panel_draw"]
+
+[connection signal="gui_input" from="HSplitContainer/ScrollContainer/Panel" to="." method="_on_Panel_gui_input"]
+
+[connection signal="color_changed" from="HSplitContainer/Properties/Color" to="." method="_on_Color_color_changed"]
+
+[connection signal="text_changed" from="HSplitContainer/Properties/Path" to="." method="_on_Path_text_changed"]
+
+[connection signal="pressed" from="HSplitContainer/Properties/PathButton" to="." method="_on_PathButton_pressed"]
+
+

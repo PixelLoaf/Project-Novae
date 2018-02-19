@@ -101,10 +101,10 @@ func char_do_movement(delta, stop_speed):
 	else:
 		char_velocity += CHAR_GRAVITY * -char_get_normal() * delta
 	# Keep track of previous values, they are important
+	var prev_veloc = char_velocity
 	var prev_on_ground = char_on_ground
 	var prev_normal = char_get_normal()
 	var prev_transform = transform
-	var prev_veloc = char_velocity
 	char_on_ground = false
 	# Movement
 	char_velocity = move_and_slide(char_velocity, CHAR_UP, stop_speed, 4, 0.8)
@@ -145,6 +145,7 @@ func char_do_movement(delta, stop_speed):
 	if char_on_ground:
 		char_set_motion_vertical(char_get_normal(), 0)
 		char_time_since_floor = 0.0
+#	position = position.snapped(Vector2(1, 1))
 	# Enforce terminal velocity
 	var veloc_v = char_get_motion_vertical(CHAR_UP)
 	if abs(veloc_v) > CHAR_TERMINAL_VELOCITY:
@@ -160,4 +161,8 @@ func char_jump(speed):
 func _ready():
 	_char_cast_param.collision_layer = self.collision_mask
 	_char_cast_param.margin = 0.08
-	_char_cast_param.set_shape(get_node("CollisionShape2D").shape)
+#	_char_cast_param.set_shape(get_node("CollisionShape2D").shape)
+	if Physics2DServer.body_get_shape_count(self.get_rid()) > 0:
+		var shape = Physics2DServer.body_get_shape(self.get_rid(), 0)
+		_char_cast_param.shape_rid = shape
+	add_to_group("character", true)
