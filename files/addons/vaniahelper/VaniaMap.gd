@@ -77,11 +77,10 @@ func _pop_tile(pos):
 			var t = get_tile(gridpos)
 			if t == tile:
 				_set_tile(pos, null)
-	tile.position = null
 	return tile
 
 # Returns true if the tile at the given position can move to another location
-func can_move_tile(pos_from, pos_to):
+func can_move_tile(pos_from, pos_to, exceptions=null):
 	var tile = get_tile(pos_from)
 	if tile == null:
 		return false
@@ -89,7 +88,8 @@ func can_move_tile(pos_from, pos_to):
 		for iy in range(pos_to.y, pos_to.y + tile.height):
 			var other = get_tile(Vector2(ix, iy))
 			if other != null && other != tile:
-				return false
+				if exceptions == null or not other in exceptions:
+					return false
 	return true
 
 # Delate the tile at the given position
@@ -109,6 +109,19 @@ func move_tile(pos_from, pos_to):
 		_push_tile(pos_to, tile)
 		return true
 	return false
+
+# move the given tiles by offset
+func move_tiles(tiles, offset):
+	if tiles.empty() or offset == Vector2():
+		return false
+	for tile in tiles:
+		if not can_move_tile(tile.position, tile.position + offset, tiles):
+			return false
+	for tile in tiles:
+		_pop_tile(tile.position)
+	for tile in tiles:
+		_push_tile(tile.position+offset, tile)
+	return true
 
 # Create a new tile at the tiven position
 func create_tile(pos, color=null, path=null):
@@ -143,7 +156,7 @@ func tile_set_width(pos, new_width):
 	if tile == null:
 		return 0
 	while tile.width < new_width:
-		var test_x = tile.position.x + tile.width + 1
+		var test_x = tile.position.x + tile.width
 		for iy in range(tile.position.y, tile.position.y + tile.height):
 			if get_tile(Vector2(test_x, iy)) != null:
 				return tile.width
@@ -152,7 +165,7 @@ func tile_set_width(pos, new_width):
 			_set_tile(Vector2(test_x, iy), tile)
 	while tile.width > new_width:
 		for iy in range(tile.position.y, tile.position.y + tile.height):
-			_set_tile(Vector2(tile.position.x + tile.width, iy), null)
+			_set_tile(Vector2(tile.position.x + tile.width - 1, iy), null)
 		tile.width -= 1
 	return tile.width
 
@@ -165,7 +178,7 @@ func tile_set_height(pos, new_height):
 	if tile == null:
 		return 0
 	while tile.height < new_height:
-		var test_y = tile.position.y + tile.height + 1
+		var test_y = tile.position.y + tile.height
 		for ix in range(tile.position.x, tile.position.x + tile.width):
 			if get_tile(Vector2(ix, test_y)) != null:
 				return tile.height
@@ -174,7 +187,7 @@ func tile_set_height(pos, new_height):
 			_set_tile(Vector2(ix, test_y), tile)
 	while tile.height > new_height:
 		for ix in range(tile.position.x, tile.position.x + tile.width):
-			_set_tile(Vector2(ix, tile.position.y + tile.height), null)
+			_set_tile(Vector2(ix, tile.position.y + tile.height - 1), null)
 		tile.height -= 1
 	return tile.height
 

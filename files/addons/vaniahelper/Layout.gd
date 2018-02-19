@@ -22,8 +22,10 @@ signal dialog_wait
 var file_name = "";
 # Reference to the VaniaMap node
 var vaniamap
-# Position of the actively selected tile. Null if none selected
-var active_tile_key
+# List of selected tiles
+var selected_tiles = []
+# Currently selected position
+var selected_pos = Vector2()
 # File load dialog
 var dialog
 # Output path of the dialog
@@ -34,6 +36,8 @@ var last_color = Color(0.5, 0.5, 0.5)
 var is_dragging = false
 # Offset of the tile being dragged
 var drag_offset = Vector2(0, 0)
+# Position of drag start
+var drag_start_pos = Vector2(0, 0)
 # True if the window is being scrolled
 var is_scrolling = false
 # Scroll amount
@@ -45,10 +49,10 @@ onready var canvas = $HSplitContainer/ScrollContainer/Panel
 onready var properties = $HSplitContainer/Properties
 
 # Get the currently selected tile. Will return null if no tile is selected
-func get_active_tile():
-	if active_tile_key == null:
-		return null
-	return vaniamap.get_tile(active_tile_key)
+#func get_active_tile():
+#	if active_tile_key == null:
+#		return null
+#	return vaniamap.get_tile(active_tile_key)
 
 # Make sure that the dialog node exists
 func check_dialog():
@@ -69,15 +73,20 @@ func _on_EditorFileDialog_selected(path):
 func _on_EditorFileDialog_hide():
 	emit_signal("dialog_wait")
 
-# Set the active tile
-func set_active_tile(pos):
-	active_tile_key = vaniamap.get_base_position(pos)
+# Add an active tile
+func add_active_tile(pos, reset=false):
+	selected_pos = pos
+	var tile = vaniamap.get_tile(pos)
 	if pos == null:
 		$PosLabel.text = ""
 	else:
 		$PosLabel.text = "%d, %d" % [pos.x, pos.y]
-	var tile = get_active_tile()
+	if tile != null and tile in selected_tiles:
+		return
+	if reset:
+		selected_tiles.clear()
 	if tile != null:
+		selected_tiles.append(tile)
 		properties.show()
 		$HSplitContainer/Properties/Color.color = tile.color
 		$HSplitContainer/Properties/Path.text = tile.path
@@ -85,6 +94,22 @@ func set_active_tile(pos):
 		$HSplitContainer/Properties/Height.value = tile.height
 	else:
 		properties.hide()
+	if selected_tiles.size() > 1:
+		$HSplitContainer/Properties/Path.hide()
+		$HSplitContainer/Properties/Width.hide()
+		$HSplitContainer/Properties/Height.hide()
+		$HSplitContainer/Properties/LabelPath.hide()
+		$HSplitContainer/Properties/PathButton.hide()
+		$HSplitContainer/Properties/LabelWidth.hide()
+		$HSplitContainer/Properties/LabelHeight.hide()
+	else:
+		$HSplitContainer/Properties/Path.show()
+		$HSplitContainer/Properties/Width.show()
+		$HSplitContainer/Properties/Height.show()
+		$HSplitContainer/Properties/LabelPath.show()
+		$HSplitContainer/Properties/PathButton.show()
+		$HSplitContainer/Properties/LabelWidth.show()
+		$HSplitContainer/Properties/LabelHeight.show()
 	canvas.update()
 
 # Convert a position to a valid key for a Vaniamap
@@ -100,10 +125,6 @@ func _init():
 	vaniamap = preload("VaniaMap.gd").new()
 	add_child(vaniamap)
 	check_dialog()
-
-# Whent his editor is ready
-func _ready():
-	set_active_tile(null)
 
 # When this editor leaves the tree
 func _exit_tree():
@@ -141,7 +162,7 @@ func tile_draw(pos, tile):
 	var rect = Rect2(pos * TILE_SIZE + scroll_amount, size * TILE_SIZE)
 	rect = rect.grow(-TILE_PAD)
 	var outline = TILE_OUTLINE
-	if pos == active_tile_key:
+	if tile == null or tile in selected_tiles:
 		outline = TILE_OUTLINE_SELECTED
 		if is_dragging:
 			rect.position += drag_offset
@@ -156,12 +177,14 @@ func tile_draw(pos, tile):
 # When the canvas draws
 func _on_Panel_draw():
 	for tile in vaniamap.tile_list:
-		var pos = tile.position
-		if pos != active_tile_key:
+		if not tile in selected_tiles:
+			var pos = tile.position
 			tile_draw(pos, tile)
-	if active_tile_key != null:
-		var tile = get_active_tile()
-		tile_draw(active_tile_key, tile)
+	if not selected_tiles.empty():
+		for tile in selected_tiles:
+			tile_draw(tile.position, tile)
+	else:
+		tile_draw(selected_pos, null)
 
 # Scroll the view by 'amount' increments
 func scroll(amount, pos):
@@ -174,26 +197,28 @@ func scroll(amount, pos):
 
 # Delete the currently selected tile
 func delete_selected():
-	if active_tile_key != null:
-		vaniamap.delete_tile(active_tile_key)
+	for tile in selected_tiles:
+		vaniamap.delete_tile(tile.position)
 		canvas.update()
+	selected_tiles.clear()
 
 # Begin dragging active tile
-func begin_drag():
-	if get_active_tile() != null:
+func begin_drag(pos):
+	if not selected_tiles.empty():
 		drag_offset = Vector2(0, 0)
 		is_dragging = true
+		drag_start_pos = pos_to_key(pos)
 
 # Place active tile
 func end_drag(pos):
 	if is_dragging:
 		is_dragging = false
-		var from_pos = active_tile_key
 		var to_pos = pos_to_key(pos)
-		if try_move_tile(from_pos, to_pos):
-			set_active_tile(to_pos)
+		var offset = to_pos - drag_start_pos
+		if vaniamap.move_tiles(selected_tiles, offset):
+			add_active_tile(to_pos, false)
 		else:
-			set_active_tile(from_pos)
+			add_active_tile(selected_pos, false)
 		canvas.update()
 
 # When the canvas receives an input
@@ -213,8 +238,8 @@ func _on_Panel_gui_input(event):
 				return
 			if event.pressed:
 				var pos = pos_to_key(event.position)
-				set_active_tile(pos)
-				begin_drag()
+				add_active_tile(pos, not event.shift)
+				begin_drag(event.position)
 			else:
 				end_drag(event.position)
 			accept_event()
@@ -224,7 +249,7 @@ func _on_Panel_gui_input(event):
 			is_scrolling = event.pressed
 		if event.button_index == BUTTON_RIGHT and event.pressed:
 			var pos = pos_to_key(event.position)
-			set_active_tile(pos)
+			add_active_tile(pos, true)
 			show_popup(event.global_position)
 			accept_event()
 		if event.button_index == BUTTON_WHEEL_UP and event.pressed:
@@ -240,31 +265,25 @@ func _on_Panel_gui_input(event):
 
 # When a color is selected
 func _on_Color_color_changed(color):
-	var tile = get_active_tile()
-	if tile == null:
-		return
-	tile.color = color
+	for tile in selected_tiles:
+		tile.color = color
 	canvas.update()
 
 # When the path changes
 func _on_Path_text_changed(new_text):
-	var tile = get_active_tile()
-	if tile == null:
-		return
-	tile.path = new_text
+	for tile in selected_tiles:
+		tile.path = new_text
 
 # When the change path button is pressed
 func _on_PathButton_pressed():
-	var tile = get_active_tile()
-	if tile == null:
+	if selected_tiles.size() != 1:
 		return
+	var tile = selected_tiles[0]
 	dialog.current_file = tile.path.get_file()
 	dialog.current_dir = tile.path.get_base_dir()
 	dialog.current_path = tile.path
 	dialog.popup_centered()
 	yield(self, "dialog_wait")
-	if get_active_tile() == null:
-		print("No active tile!")
 	$HSplitContainer/Properties/Path.text = dialog_path
 
 const POPUP_NEW = 0
@@ -275,29 +294,37 @@ func _on_PopupMenu_id_pressed( ID ):
 		dialog.current_file = ""
 		dialog.popup_centered()
 		yield(self, "dialog_wait")
-		vaniamap.create_tile(active_tile_key, last_color, dialog_path)
+		var tile = vaniamap.create_tile(selected_pos, last_color, dialog_path)
+		if tile != null:
+			add_active_tile(tile.position)
 		canvas.update()
 	elif ID == POPUP_DELETE:
 		delete_selected()
 
 # Show the context menu
 func show_popup(pos):
-	var tile = get_active_tile()
+	var tile = vaniamap.get_tile(selected_pos)
 	if tile == null:
 		$PopupMenu.set_item_disabled($PopupMenu.get_item_index(POPUP_NEW), false)
-		$PopupMenu.set_item_disabled($PopupMenu.get_item_index(POPUP_DELETE), true)
 	else:
 		$PopupMenu.set_item_disabled($PopupMenu.get_item_index(POPUP_NEW), true)
+	if selected_tiles.empty():
+		$PopupMenu.set_item_disabled($PopupMenu.get_item_index(POPUP_DELETE), true)
+	else:
 		$PopupMenu.set_item_disabled($PopupMenu.get_item_index(POPUP_DELETE), false)
 	$PopupMenu.rect_position = pos
 	$PopupMenu.popup()
 
 func _on_Width_value_changed(value):
-	value = vaniamap.tile_set_width(active_tile_key, value)
+	if selected_tiles.size() != 1:
+		return
+	value = vaniamap.tile_set_width(selected_tiles[0].position, value)
 	$HSplitContainer/Properties/Width.value = value
 	canvas.update()
 
 func _on_Height_value_changed(value):
-	value = vaniamap.tile_set_height(active_tile_key, value)
+	if selected_tiles.size() != 1:
+		return
+	value = vaniamap.tile_set_height(selected_tiles[0].position, value)
 	$HSplitContainer/Properties/Height.value = value
 	canvas.update()
