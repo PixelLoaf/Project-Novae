@@ -49,7 +49,6 @@ func _enter_tree():
 
 # When a path is selected through the dialog
 func _on_EditorFileDialog_selected(path):
-	print(path)
 	var fh = File.new()
 	var do_load_file = false
 	if fh.file_exists(path):

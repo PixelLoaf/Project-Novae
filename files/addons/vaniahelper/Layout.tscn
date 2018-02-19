@@ -39,7 +39,7 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 471.0
+margin_right = 640.0
 margin_bottom = 360.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = true
@@ -60,7 +60,7 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 471.0
+margin_right = 640.0
 margin_bottom = 360.0
 rect_pivot_offset = Vector2( 0, 0 )
 focus_mode = 1
@@ -72,6 +72,7 @@ _sections_unfolded = [ "Focus", "Mouse" ]
 
 [node name="Properties" type="Panel" parent="HSplitContainer" index="1"]
 
+visible = false
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -302,6 +303,7 @@ _sections_unfolded = [ "Margin" ]
 
 [node name="PopupMenu" type="PopupMenu" parent="." index="3"]
 
+visible = false
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -321,7 +323,7 @@ items = [ "New", null, false, false, false, 0, 0, null, "", false, "Delete", nul
 hide_on_state_item_selection = false
 _sections_unfolded = [ "Popup" ]
 
-[node name="PosLabel" type="Label" parent="." index="28"]
+[node name="PosLabel" type="Label" parent="." index="4"]
 
 anchor_left = 0.0
 anchor_top = 0.0

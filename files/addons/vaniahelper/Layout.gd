@@ -64,16 +64,14 @@ func check_dialog():
 
 # Called when a path is selected via the dialog
 func _on_EditorFileDialog_selected(path):
-	print("PATH")
 	dialog_path = path
 	
 func _on_EditorFileDialog_hide():
-	print("HIDE")
 	emit_signal("dialog_wait")
 
 # Set the active tile
 func set_active_tile(pos):
-	active_tile_key = pos
+	active_tile_key = vaniamap.get_base_position(pos)
 	if pos == null:
 		$PosLabel.text = ""
 	else:
@@ -95,7 +93,7 @@ func pos_to_key(pos):
 
 # Attempt to move a tile from prev_pos to target_pos
 func try_move_tile(prev_pos, target_pos):
-	return vaniamap.swap_tiles(prev_pos, target_pos)
+	return vaniamap.move_tile(prev_pos, target_pos)
 
 # When this editor is created
 func _init():
@@ -157,8 +155,8 @@ func tile_draw(pos, tile):
 
 # When the canvas draws
 func _on_Panel_draw():
-	for pos in vaniamap.tiles:
-		var tile = vaniamap.tiles[pos]
+	for tile in vaniamap.tile_list:
+		var pos = tile.position
 		if pos != active_tile_key:
 			tile_draw(pos, tile)
 	if active_tile_key != null:
@@ -177,29 +175,26 @@ func scroll(amount, pos):
 # Delete the currently selected tile
 func delete_selected():
 	if active_tile_key != null:
-		vaniamap.set_tile(active_tile_key, null)
+		vaniamap.delete_tile(active_tile_key)
 		canvas.update()
 
 # Begin dragging active tile
 func begin_drag():
-	drag_offset = Vector2(0, 0)
-	is_dragging = true
+	if get_active_tile() != null:
+		drag_offset = Vector2(0, 0)
+		is_dragging = true
 
 # Place active tile
 func end_drag(pos):
-	is_dragging = false
-	var from_pos = active_tile_key
-	var to_pos = pos_to_key(pos)
-	if try_move_tile(from_pos, to_pos):
-		set_active_tile(to_pos)
-	else:
-		set_active_tile(from_pos)
-	canvas.update()
-
-# Show the context menu
-func show_popup(pos):
-	$PopupMenu.rect_position = pos
-	$PopupMenu.popup()
+	if is_dragging:
+		is_dragging = false
+		var from_pos = active_tile_key
+		var to_pos = pos_to_key(pos)
+		if try_move_tile(from_pos, to_pos):
+			set_active_tile(to_pos)
+		else:
+			set_active_tile(from_pos)
+		canvas.update()
 
 # When the canvas receives an input
 func _on_Panel_gui_input(event):
@@ -280,24 +275,29 @@ func _on_PopupMenu_id_pressed( ID ):
 		dialog.current_file = ""
 		dialog.popup_centered()
 		yield(self, "dialog_wait")
-		var tile = vaniamap.Tile.new()
-		tile.path = dialog_path
-		tile.color = last_color
-		vaniamap.set_tile(active_tile_key, tile)
+		vaniamap.create_tile(active_tile_key, last_color, dialog_path)
 		canvas.update()
 	elif ID == POPUP_DELETE:
 		delete_selected()
 
-func _on_Width_value_changed(value):
+# Show the context menu
+func show_popup(pos):
 	var tile = get_active_tile()
 	if tile == null:
-		return
-	tile.width = int(value)
+		$PopupMenu.set_item_disabled($PopupMenu.get_item_index(POPUP_NEW), false)
+		$PopupMenu.set_item_disabled($PopupMenu.get_item_index(POPUP_DELETE), true)
+	else:
+		$PopupMenu.set_item_disabled($PopupMenu.get_item_index(POPUP_NEW), true)
+		$PopupMenu.set_item_disabled($PopupMenu.get_item_index(POPUP_DELETE), false)
+	$PopupMenu.rect_position = pos
+	$PopupMenu.popup()
+
+func _on_Width_value_changed(value):
+	value = vaniamap.tile_set_width(active_tile_key, value)
+	$HSplitContainer/Properties/Width.value = value
 	canvas.update()
 
 func _on_Height_value_changed(value):
-	var tile = get_active_tile()
-	if tile == null:
-		return
-	tile.height = int(value)
+	value = vaniamap.tile_set_height(active_tile_key, value)
+	$HSplitContainer/Properties/Height.value = value
 	canvas.update()
