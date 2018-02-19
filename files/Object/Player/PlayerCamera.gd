@@ -63,6 +63,14 @@ func _physics_process(delta):
 	drag_margin_left = lerp_abs(drag_margin_left, target_drag_margin_left, delta * 2)
 	drag_margin_right = lerp_abs(drag_margin_right, target_drag_margin_right, delta * 2)
 	drag_margin_bottom = lerp_abs(drag_margin_bottom, target_drag_margin_bottom, delta * 6)
+	
+	var maps = get_tree().get_nodes_in_group("map")
+	if not maps.empty():
+		var bounds = maps[0].get_bounds(global_position)
+		limit_left = bounds.position.x
+		limit_top = bounds.position.y
+		limit_right = bounds.end.x
+		limit_bottom = bounds.end.y
 
 func _ready():
 	target_drag_margin_top = drag_margin_top
