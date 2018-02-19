@@ -14,7 +14,7 @@ class Tile:
 	# Height of this tile
 	var height = 1
 
-# All tiles within this map.
+# All tiles within this map. There are no duplicates.
 # Keys represent the position of the tile as an integer Vector2
 # Values are instances of the Tile class
 var tiles = {}
@@ -22,6 +22,42 @@ var tiles = {}
 var room_width = 1024
 # Height of each tile in pixels
 var room_height = 600
+
+var total_size = Vector2()
+
+func update_size():
+	total_size = Vector2()
+	for pos in tiles:
+		total_size.x = max(total_size.x, pos.x)
+		total_size.y = max(total_size.y, pos.y)
+	total_size.x += 1
+	total_size.y += 1
+
+func get_size():
+	return total_size
+
+func get_tile(pos):
+	if tiles.has(pos):
+		return tiles[pos]
+	return null
+
+func set_tile(pos, value):
+	if value == null:
+		self.tiles.erase(pos)
+	else:
+		self.tiles[pos] = value
+	update_size()
+
+func swap_tiles(a, b):
+	if a == b:
+		return
+	var tile_a = get_tile(a)
+	var tile_b = get_tile(b)
+	if tile_a == tile_b:
+		return false
+	set_tile(b, tile_a)
+	set_tile(a, tile_b)
+	return true
 
 # Save this map to the given file
 func save_to(path):
@@ -39,7 +75,9 @@ func save_to(path):
 		tiledata.append(data)
 	var data = {
 		"tiles": tiledata,
-		"version": VERSION
+		"version": VERSION,
+		"width": room_width,
+		"height": room_height
 	}
 	
 	var outstr = JSON.print(data, "    ", true)
@@ -59,6 +97,8 @@ func load_from_v1_0(data):
 		v.height = int(tile.height)
 		v.path = tile.path
 		new_tiles[k] = v
+	room_width = data.width
+	room_height = data.height
 	tiles = new_tiles
 
 # Load a map from the given file

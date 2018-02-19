@@ -12,6 +12,9 @@ const TILE_OUTLINE = Color(0, 0, 0)
 # Color of a tile's outline when it is selected
 const TILE_OUTLINE_SELECTED = Color(1, 1, 1)
 
+# Signal that is called when a file is chosen
+signal dialog_wait
+
 # File name for this editor
 var file_name = "";
 # Reference to the VaniaMap node
@@ -20,6 +23,8 @@ var vaniamap
 var active_tile_key
 # File load dialog
 var dialog
+# Output path of the dialog
+var dialog_path
 # Whether the active tile is being dragged
 var is_dragging = false
 # Offset of the tile being dragged
@@ -34,9 +39,7 @@ onready var properties = $HSplitContainer/Properties
 func get_active_tile():
 	if active_tile_key == null:
 		return null
-	if vaniamap.tiles.has(active_tile_key):
-		return vaniamap.tiles[active_tile_key]
-	return null
+	return vaniamap.get_tile(active_tile_key)
 
 # Make sure that the dialog node exists
 func check_dialog():
@@ -49,12 +52,12 @@ func check_dialog():
 		dialog.add_filter("*.tscn, *.scn; Scene")
 		add_child(dialog)
 
-# Called when 
+# Called when a path is selected via the dialog
 func _on_EditorFileDialog_selected(path):
-	if get_active_tile() == null:
-		print("No active tile!")
-	$HSplitContainer/Properties/Path.text = path
+	dialog_path = path
+	emit_signal("dialog_wait")
 
+# Set the active tile
 func set_active_tile(pos):
 	active_tile_key = pos
 	var tile = get_active_tile()
@@ -66,69 +69,84 @@ func set_active_tile(pos):
 		properties.hide()
 	canvas.update()
 
+# Convert a position to a valid key for a Vaniamap
 func pos_to_key(pos):
 	return (pos / TILE_SIZE).floor()
 
+# Attempt to move a tile from prev_pos to target_pos
 func try_move_tile(prev_pos, target_pos):
-	if prev_pos == target_pos:
-		return
-	if not vaniamap.tiles.has(prev_pos):
-		return false
-	if vaniamap.tiles.has(target_pos):
-		var tile_a = vaniamap.tiles[prev_pos]
-		var tile_b = vaniamap.tiles[target_pos]
-		vaniamap.tiles[prev_pos] = tile_b
-		vaniamap.tiles[target_pos] = tile_a
-		return true
-	else:
-		vaniamap.tiles[target_pos] = vaniamap.tiles[prev_pos]
-		vaniamap.tiles.erase(prev_pos)
-		return true
+	return vaniamap.swap_tiles(prev_pos, target_pos)
 
+# When this editor is created
 func _init():
 	vaniamap = preload("VaniaMap.gd").new()
 	add_child(vaniamap)
 	check_dialog()
 
+# Whent his editor is ready
 func _ready():
 	set_active_tile(null)
 
+# When this editor leaves the tree
 func _exit_tree():
 	vaniamap.free()
 
+# Get this editor's title
 func get_title():
 	return file_name.get_file()
 
+# Close this editor
 func file_close():
 	queue_free()
 
+# Set this editor's file name
 func set_file(name):
 	file_name = name
 
+# Save the map as a different file
 func file_save_as(path):
 	vaniamap.save_to(path)
-	
+
+# Save the map
 func file_save():
 	file_save_as(file_name)
 
+# Load data from the map
 func file_load():
 	vaniamap.load_from(file_name)
 
+# Draw a tile
+func tile_draw(pos, tile):
+	var size = Vector2(1, 1)
+	if tile != null:
+		size = Vector2(tile.width, tile.height)
+	var rect = Rect2(pos * TILE_SIZE, size * TILE_SIZE)
+	rect = rect.grow(-TILE_PAD)
+	var outline = TILE_OUTLINE
+	if pos == active_tile_key:
+		outline = TILE_OUTLINE_SELECTED
+		if is_dragging:
+			rect.position += drag_offset
+	if tile != null:
+		canvas.draw_rect(rect, outline, true)
+	else:
+		canvas.draw_rect(rect, outline, false)
+	rect = rect.grow(-TILE_BORDER)
+	if tile != null:
+		canvas.draw_rect(rect, tile.color, true)
+
+# When the canvas draws
 func _on_Panel_draw():
 	for pos in vaniamap.tiles:
 		var tile = vaniamap.tiles[pos]
-		var size = Vector2(tile.width, tile.height)
-		var rect = Rect2(pos * TILE_SIZE, size * TILE_SIZE)
-		rect = rect.grow(-TILE_PAD)
-		var outline = TILE_OUTLINE
-		if pos == active_tile_key:
-			outline = TILE_OUTLINE_SELECTED
-			if is_dragging:
-				rect.position += drag_offset
-		canvas.draw_rect(rect, outline, true)
-		rect = rect.grow(-TILE_BORDER)
-		canvas.draw_rect(rect, tile.color, true)
+		if pos != active_tile_key:
+			tile_draw(pos, tile)
+	if active_tile_key != null:
+		var tile = get_active_tile()
+		tile_draw(active_tile_key, tile)
 
+
+# When the canvas receives an input
 func _on_Panel_gui_input(event):
 	if event is InputEventMouseMotion:
 		if is_dragging:
@@ -138,11 +156,7 @@ func _on_Panel_gui_input(event):
 		if event.button_index == BUTTON_LEFT:
 			if event.pressed:
 				var pos = pos_to_key(event.position)
-				print(pos)
-				if vaniamap.tiles.has(pos):
-					set_active_tile(pos)
-				else:
-					set_active_tile(null)
+				set_active_tile(pos)
 				drag_offset = Vector2(0, 0)
 				is_dragging = true
 			else:
@@ -158,6 +172,7 @@ func _on_Panel_gui_input(event):
 			pass
 			# delete tile
 
+# When a color is selected
 func _on_Color_color_changed(color):
 	var tile = get_active_tile()
 	if tile == null:
@@ -165,12 +180,14 @@ func _on_Color_color_changed(color):
 	tile.color = color
 	canvas.update()
 
+# When the path changes
 func _on_Path_text_changed(new_text):
 	var tile = get_active_tile()
 	if tile == null:
 		return
 	tile.path = new_text
 
+# When the change path button is pressed
 func _on_PathButton_pressed():
 	var tile = get_active_tile()
 	if tile == null:
@@ -179,3 +196,7 @@ func _on_PathButton_pressed():
 	dialog.current_dir = tile.path.get_base_dir()
 	dialog.current_path = tile.path
 	dialog.popup_centered()
+	yield(self, "dialog_wait")
+	if get_active_tile() == null:
+		print("No active tile!")
+	$HSplitContainer/Properties/Path.text = dialog_path

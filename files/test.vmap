@@ -1,0 +1,39 @@
+{
+    "height": 360,
+    "tiles": [
+        {
+            "color": "ff808080",
+            "height": 1,
+            "path": "",
+            "width": 1,
+            "x": 0,
+            "y": 3
+        },
+        {
+            "color": "ff808080",
+            "height": 1,
+            "path": "res://World/Test/TestLevel.tscn",
+            "width": 1,
+            "x": 3,
+            "y": 4
+        },
+        {
+            "color": "ffbc7f7f",
+            "height": 1,
+            "path": "",
+            "width": 1,
+            "x": 6,
+            "y": 5
+        },
+        {
+            "color": "ff808080",
+            "height": 1,
+            "path": "res://Menu/RebindKey.tscn",
+            "width": 1,
+            "x": 2,
+            "y": 3
+        }
+    ],
+    "version": "1.0",
+    "width": 640
+}
