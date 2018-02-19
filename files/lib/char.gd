@@ -160,8 +160,7 @@ func char_jump(speed):
 # Character is ready
 func _ready():
 	_char_cast_param.collision_layer = self.collision_mask
-	_char_cast_param.margin = 0.08
-#	_char_cast_param.set_shape(get_node("CollisionShape2D").shape)
+	_char_cast_param.margin = 0.05
 	if Physics2DServer.body_get_shape_count(self.get_rid()) > 0:
 		var shape = Physics2DServer.body_get_shape(self.get_rid(), 0)
 		_char_cast_param.shape_rid = shape

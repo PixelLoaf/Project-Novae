@@ -1,0 +1,47 @@
+{
+    "height": 288,
+    "tiles": [
+        {
+            "color": "ff87bc7f",
+            "height": 1,
+            "path": "res://World/WorldTest/Area1.tscn",
+            "width": 1,
+            "x": 0,
+            "y": 0
+        },
+        {
+            "color": "ff87bc7f",
+            "height": 1,
+            "path": "res://World/WorldTest/Area1.tscn",
+            "width": 2,
+            "x": 1,
+            "y": 0
+        },
+        {
+            "color": "ffaa5a5a",
+            "height": 3,
+            "path": "res://World/WorldTest/Tall.tscn",
+            "width": 1,
+            "x": 1,
+            "y": 1
+        },
+        {
+            "color": "ffaa5a5a",
+            "height": 1,
+            "path": "res://World/WorldTest/Tall.tscn",
+            "width": 1,
+            "x": 2,
+            "y": 3
+        },
+        {
+            "color": "ff87bc7f",
+            "height": 1,
+            "path": "res://World/WorldTest/Area1.tscn",
+            "width": 1,
+            "x": 2,
+            "y": 1
+        }
+    ],
+    "version": "1.0",
+    "width": 512
+}

@@ -11,13 +11,13 @@ const PLAYER_DOWNHILL_MULT_MAX = 1.5
 # If the chatacter is moving uphill, this is the minimum that their velocity can be multiplied by
 const PLAYER_UPHILL_MULT_MIN = 0.5
 # Slipperiness while in the air
-const PLAYER_SLIP_AIR = 1.0
+const PLAYER_SLIP_AIR = 1.5
 # Maximum time after leaving a platform that a player may still jump for
 const PLAYER_TIME_MAX_JUMP = 0.12
 # Maximum movement speed for the player
-const PLAYER_SPEED_RUN = 300
+const PLAYER_SPEED_RUN = 240
 # Walking speed for the player
-const PLAYER_SPEED_WALK = 180
+const PLAYER_SPEED_WALK = 120
 
 # Jumping speed for the player
 export var player_jump_speed = 500

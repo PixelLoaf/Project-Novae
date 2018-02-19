@@ -34,7 +34,7 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7 ]
 }
 
-[node name="player" type="KinematicBody2D" index="0" groups=[
+[node name="player" type="KinematicBody2D" groups=[
 "player",
 ]]
 
@@ -42,7 +42,7 @@ z_index = 1
 input_pickable = false
 collision_layer = 0
 collision_mask = 1
-collision/safe_margin = 0.08
+collision/safe_margin = 0.05
 script = ExtResource( 1 )
 _sections_unfolded = [ "Collision", "Z Index", "collision" ]
 player_jump_speed = 500
@@ -52,6 +52,7 @@ player_accel_stop = 2400
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." index="0"]
 
 shape = SubResource( 1 )
+_sections_unfolded = [ "Transform", "Z Index" ]
 
 [node name="Hitbox" type="Area2D" parent="." index="1"]
 
