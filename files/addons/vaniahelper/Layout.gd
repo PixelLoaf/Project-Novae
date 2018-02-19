@@ -15,6 +15,12 @@ const TILE_BORDER = 2
 const TILE_OUTLINE = Color(0, 0, 0)
 # Color of a tile's outline when it is selected
 const TILE_OUTLINE_SELECTED = Color(1, 1, 1)
+# Color of X bar
+const GRID_COLOR_X = Color(0.8, 0.2, 0.2, 0.5)
+# Color of Y bar
+const GRID_COLOR_Y = Color(0.2, 0.8, 0.2, 0.5)
+# Color of grid
+const GRID_COLOR = Color(1.0, 1.0, 1.0, 0.1)
 
 # Signal that is called when a file is chosen
 signal dialog_wait
@@ -85,6 +91,7 @@ func check_dialog():
 		confirm_close_dialog.add_button("Don't Save", false, "nosave")
 		confirm_close_dialog.connect("custom_action", self, "_on_ConfirmCloseDialog_action") 
 		confirm_close_dialog.connect("confirmed", self, "_on_ConfirmCloseDialog_ok") 
+		confirm_close_dialog.window_title = "Save changes?"
 		add_child(confirm_close_dialog)
 
 # When confirmation dialog saves
@@ -138,6 +145,10 @@ func add_active_tile(pos, reset=false):
 func pos_to_key(pos):
 	return ((pos - scroll_amount) / TILE_SIZE).floor()
 
+# Inverse of pos_to_key
+func key_to_pos(pos):
+	return pos * TILE_SIZE + scroll_amount
+
 # Attempt to move a tile from prev_pos to target_pos
 func try_move_tile(prev_pos, target_pos):
 	return vaniamap.move_tile(prev_pos, target_pos)
@@ -161,6 +172,7 @@ func get_title():
 
 # Close this editor
 func file_close():
+	confirm_close_dialog.dialog_text = "Save changes to %s before closing?" % file_name
 	confirm_close_dialog.popup_centered()
 
 # Set this editor's file name
@@ -214,6 +226,26 @@ func _on_Panel_draw():
 			tile_draw(tile.position, tile)
 	else:
 		tile_draw(selected_pos, null)
+	var start = Vector2()
+	var end = start + canvas.rect_size
+	var pos_start = pos_to_key(start)
+	var pos_end = pos_to_key(end) + Vector2(2, 2)
+	for ix in range(pos_start.x, pos_end.x):
+		var a = key_to_pos(Vector2(ix, 0))
+		a.y = start.y
+		var b = Vector2(a.x, end.y)
+		var color = GRID_COLOR
+		if ix == 0:
+			color = GRID_COLOR_Y
+		canvas.draw_line(a, b, color)
+	for iy in range(pos_start.y, pos_end.y):
+		var a = key_to_pos(Vector2(0, iy))
+		a.x = start.x
+		var b = Vector2(end.x, a.y)
+		var color = GRID_COLOR
+		if iy == 0:
+			color = GRID_COLOR_X
+		canvas.draw_line(a, b, color)
 
 # Scroll the view by 'amount' increments
 func scroll(amount, pos):
