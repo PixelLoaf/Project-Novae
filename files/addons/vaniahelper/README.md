@@ -237,8 +237,7 @@ The API for the VaniaMap node.
 | `tile_map` | Dictionary of tiles in the map, where keys are Vector2 positions and values are Tiles. |
 | `room_width` | Width of a single grid cell in pixels. |
 | `room_height` | Height of a single grid cell in pixels. |
-| `loaded_rooms` | Dictionary of all rooms that have been loaded, where keys are
-Tiles and values are Nodes. |
+| `loaded_rooms` | Dictionary of all rooms that have been loaded, where keys are Tiles and values are Nodes. |
 
 #### Functions (For normal use)
 
@@ -249,9 +248,7 @@ Tiles and values are Nodes. |
 | `pos_to_tilepos(pos)` | Takes a position in pixels, and converts it into a grid position that can be used to refer to tiles. |
 | `tilepos_to_pos(pos)` | Inverse of `pos_to_tilepos`; Takes a grid position and converts it into a position in pixels. |
 | `get_tile(pos)` | Gets the tile at the given grid position. Returns false if no tile exists at the given position. |
-| `get_tile_connections()` | Get all tiles connections. Keys are references to
-tiles, and values are arrays of tile references which represent all tiles that
-are next to the given tile. |
+| `get_tile_connections()` | Get all tiles connections. Keys are references to tiles, and values are arrays of tile references which represent all tiles that are next to the given tile. |
 | `load_from(path)` | Load a map from the given file. |
 
 #### Functions (For editor development uses)
@@ -265,11 +262,8 @@ are next to the given tile. |
 | `delete_tile(pos)` | Deletes the tile at the given grid position, completely removing it and its tile id from existence. This will change all tile IDs that occur after the ID of the tile that was deleted. Returns true if a tile exists at the given position and was removed. |
 | `move_tile(pos_from, pos_to)` | Moves the tile from the given grid position to another location. Returns false if the tile could not be moved. |
 | `move_tiles(tiles, offset)` | Moves all of the tiles in the given 'tiles' array by 'offset' grid positions. Returns false if the tile could not be moved. |
-| `create_tile(pos, color=null, path=null)` | Create and return a new tile at the given grid position. Optionally, a color and a path can also be specified to
-give to this tile. This function will return null if no tile could be created at
-the given position. |
-| `tile_set_width(pos, new_width)` | Sets the width of the tile at the given
-grid position. Returns the new width of the tile, or 0 if no tile exists at the given position. If another tile occupies a position required for this tile to grow, then the new width may not match up to the given width; instead, this tile will only grow as much as it can. |
+| `create_tile(pos, color=null, path=null)` | Create and return a new tile at the given grid position. Optionally, a color and a path can also be specified to give to this tile. This function will return null if no tile could be created at the given position. |
+| `tile_set_width(pos, new_width)` | Sets the width of the tile at the given grid position. Returns the new width of the tile, or 0 if no tile exists at the given position. If another tile occupies a position required for this tile to grow, then the new width may not match up to the given width; instead, this tile will only grow as much as it can. |
 | `tile_set_height(pos, new_height)` | Similar to `tile_set_width`, but instead changes the height of the given tile. |
 | `save_to(path)` | Save the map to the given file path. |
 | `load_from_vX_X(data)` | Functions for loading specific versions of a map. For example, `load_from_v1_0` will load a map that is version 1.0. |
