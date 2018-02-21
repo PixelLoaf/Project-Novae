@@ -44,7 +44,7 @@ var is_dragging = false
 # Offset of the tile being dragged
 var drag_offset = Vector2(0, 0)
 # Position of drag start
-var drag_start_pos = Vector2(0, 0)
+#var drag_start_pos = Vector2(0, 0)
 # True if the window is being scrolled
 var is_scrolling = false
 # Scroll amount
@@ -147,6 +147,10 @@ func add_active_tile(pos, reset=false):
 # Convert a position to a valid key for a Vaniamap
 func pos_to_key(pos):
 	return ((pos - scroll_amount) / TILE_SIZE).floor()
+
+# Convert an offset to a valid key offset for a Vaniamap.
+func offset_to_key(pos):
+	return ((pos) / TILE_SIZE).snapped(Vector2(1, 1))
 
 # Inverse of pos_to_key
 func key_to_pos(pos):
@@ -271,16 +275,14 @@ func begin_drag(pos):
 	if not selected_tiles.empty():
 		drag_offset = Vector2(0, 0)
 		is_dragging = true
-		drag_start_pos = pos_to_key(pos)
 
 # Place active tile
 func end_drag(pos):
 	if is_dragging:
 		is_dragging = false
-		var to_pos = pos_to_key(pos)
-		var offset = to_pos - drag_start_pos
+		var offset = offset_to_key(drag_offset)
 		if vaniamap.move_tiles(selected_tiles, offset):
-			add_active_tile(to_pos, false)
+			add_active_tile(selected_pos + offset, false)
 		else:
 			add_active_tile(selected_pos, false)
 		canvas.update()

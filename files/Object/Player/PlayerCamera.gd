@@ -7,8 +7,8 @@ const DRAG_MARGIN_AIR_BOTTOM = 0.25
 const DRAG_MARGIN_FLOOR_TOP = -0.1
 const DRAG_MARGIN_FLOOR_BOTTOM = 0.1
 const DRAG_MARGIN_FACING_AWAY = 1.0
-const DRAG_MARGIN_FACING_TOWARD = -0.2
-const PLAYER_TEST_OFFSET = 150
+const DRAG_MARGIN_FACING_TOWARD = -0.1
+const PLAYER_TEST_OFFSET = 50
 
 var target_drag_margin_top
 var target_drag_margin_left
