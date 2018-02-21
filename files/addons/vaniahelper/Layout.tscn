@@ -3,7 +3,7 @@
 [ext_resource path="res://addons/vaniahelper/Layout.gd" type="Script" id=1]
 [ext_resource path="res://addons/vaniahelper/img/file.png" type="Texture" id=2]
 
-[node name="Layout" type="Control" index="0"]
+[node name="Layout" type="Control"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -20,6 +20,7 @@ _sections_unfolded = [ "Focus", "Hint", "Rect", "Size Flags", "Theme" ]
 
 [node name="HSplitContainer" type="HSplitContainer" parent="." index="0"]
 
+editor/display_folded = true
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 1.0
@@ -39,8 +40,8 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 471.0
-margin_bottom = 360.0
+margin_right = 375.0
+margin_bottom = 288.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = true
 focus_mode = 1
@@ -57,9 +58,9 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 483.0
-margin_right = 640.0
-margin_bottom = 360.0
+margin_left = 387.0
+margin_right = 512.0
+margin_bottom = 288.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 0
 mouse_default_cursor_shape = 0
@@ -72,6 +73,7 @@ _sections_unfolded = [ "Size Flags" ]
 
 [node name="Properties" type="Panel" parent="HSplitContainer/VSplitContainer" index="0"]
 
+visible = false
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -99,7 +101,7 @@ mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 4
-text = "Properties"
+text = "Tile Properties"
 align = 1
 percent_visible = 1.0
 lines_skipped = 0
@@ -339,9 +341,8 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 220.0
-margin_right = 157.0
-margin_bottom = 360.0
+margin_right = 125.0
+margin_bottom = 288.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = true
 mouse_filter = 0
@@ -468,7 +469,7 @@ prefix = ""
 suffix = "px"
 _sections_unfolded = [ "Margin" ]
 
-[node name="PopupMenu" type="PopupMenu" parent="." index="3"]
+[node name="PopupMenu" type="PopupMenu" parent="." index="2"]
 
 visible = false
 anchor_left = 0.0
@@ -486,11 +487,11 @@ mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
 popup_exclusive = false
-items = [ "New", null, false, false, false, 0, 0, null, "", false, "Delete", null, false, false, false, 1, 0, null, "", false ]
+items = [ "New Tile", null, false, false, false, 0, 0, null, "", false, "Delete Tile", null, false, false, false, 1, 0, null, "", false, "Open In Editor", null, false, false, false, 2, 0, null, "", false ]
 hide_on_state_item_selection = false
 _sections_unfolded = [ "Popup" ]
 
-[node name="PosLabel" type="Label" parent="." index="4"]
+[node name="PosLabel" type="Label" parent="." index="3"]
 
 anchor_left = 0.0
 anchor_top = 0.0

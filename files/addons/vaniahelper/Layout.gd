@@ -129,9 +129,6 @@ func add_active_tile(pos, reset=false):
 	if reset:
 		selected_tiles.clear()
 	if tile != null:
-		var fh = File.new()
-		if fh.file_exists(tile.path):
-			editor_plugin.get_editor_interface().open_scene_from_path(tile.path)
 		selected_tiles.append(tile)
 		properties.show()
 	else:
@@ -299,33 +296,38 @@ func _on_Panel_gui_input(event):
 		if is_scrolling:
 			scroll_amount += event.relative
 			canvas.update()
-	if event is InputEventMouseButton:
+	elif event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT:
 			if is_scrolling:
 				return
 			if event.pressed:
 				var pos = pos_to_key(event.position)
+				var tile = vaniamap.get_tile(pos)
+				if event.shift and tile != null and tile in selected_tiles:
+					selected_tiles.erase(tile)
+					canvas.update()
+					return
 				add_active_tile(pos, not event.shift)
 				begin_drag(event.position)
 			else:
 				end_drag(event.position)
 			accept_event()
-		if event.button_index == BUTTON_MIDDLE:
+		elif event.button_index == BUTTON_MIDDLE:
 			if is_dragging:
 				return
 			is_scrolling = event.pressed
-		if event.button_index == BUTTON_RIGHT and event.pressed:
+		elif event.button_index == BUTTON_RIGHT and event.pressed:
 			var pos = pos_to_key(event.position)
 			add_active_tile(pos, true)
 			show_popup(event.global_position)
 			accept_event()
-		if event.button_index == BUTTON_WHEEL_UP and event.pressed:
+		elif event.button_index == BUTTON_WHEEL_UP and event.pressed:
 			scroll(1, event.position)
 			accept_event()
-		if event.button_index == BUTTON_WHEEL_DOWN and event.pressed:
+		elif event.button_index == BUTTON_WHEEL_DOWN and event.pressed:
 			scroll(-1, event.position)
 			accept_event()
-	if event is InputEventKey:
+	elif event is InputEventKey:
 		if event.scancode == KEY_DELETE:
 			delete_selected()
 			accept_event()
@@ -357,6 +359,12 @@ func _on_PathButton_pressed():
 
 const POPUP_NEW = 0
 const POPUP_DELETE = 1
+const POPUP_OPEN = 2
+
+onready var POPUP_NEW_ID = $PopupMenu.get_item_index(POPUP_NEW)
+onready var POPUP_DELETE_ID = $PopupMenu.get_item_index(POPUP_DELETE)
+onready var POPUP_OPEN_ID = $PopupMenu.get_item_index(POPUP_OPEN)
+
 # When a popup menu's button is pressed
 func _on_PopupMenu_id_pressed( ID ):
 	if ID == POPUP_NEW:
@@ -372,18 +380,25 @@ func _on_PopupMenu_id_pressed( ID ):
 			canvas.update()
 	elif ID == POPUP_DELETE:
 		delete_selected()
+	elif ID == POPUP_OPEN:
+		var tile = vaniamap.get_tile(selected_pos)
+		if tile != null:
+			editor_plugin.get_editor_interface().open_scene_from_path(tile.path)
 
 # Show the context menu
 func show_popup(pos):
 	var tile = vaniamap.get_tile(selected_pos)
 	if tile == null:
-		$PopupMenu.set_item_disabled($PopupMenu.get_item_index(POPUP_NEW), false)
+		$PopupMenu.set_item_disabled(POPUP_NEW_ID, false)
+		$PopupMenu.set_item_disabled(POPUP_OPEN_ID, true)
 	else:
-		$PopupMenu.set_item_disabled($PopupMenu.get_item_index(POPUP_NEW), true)
+		$PopupMenu.set_item_disabled(POPUP_NEW_ID, true)
+		var fh = File.new()
+		$PopupMenu.set_item_disabled(POPUP_OPEN_ID, not fh.file_exists(tile.path))
 	if selected_tiles.empty():
-		$PopupMenu.set_item_disabled($PopupMenu.get_item_index(POPUP_DELETE), true)
+		$PopupMenu.set_item_disabled(POPUP_DELETE_ID, true)
 	else:
-		$PopupMenu.set_item_disabled($PopupMenu.get_item_index(POPUP_DELETE), false)
+		$PopupMenu.set_item_disabled(POPUP_DELETE_ID, false)
 	$PopupMenu.rect_position = pos
 	$PopupMenu.popup()
 

@@ -66,6 +66,24 @@ var tile_map = {}
 var room_width = 1024
 # Height of each tile in pixels
 var room_height = 600
+# Rooms which have been loaded
+var loaded_rooms = {}
+
+# Load a room into this map
+func load_room(tile):
+	if not tile in loaded_rooms:
+		var x = tile.position.x * room_width
+		var y = tile.position.y * room_height
+		var room = load(tile.path).instance()
+		room.position = Vector2(x, y)
+		add_child(room)
+		loaded_rooms[tile] = room
+
+# Unload a room from this maps
+func unload_room(tile):
+	if tile in loaded_rooms:
+		loaded_rooms[tile].queue_free()
+		loaded_rooms.erase(tile)
 
 # Convert a position to a valid key for a Vaniamap
 func pos_to_tilepos(pos):
@@ -172,16 +190,6 @@ func create_tile(pos, color=null, path=null):
 	_push_tile(pos, tile)
 	return tile
 
-# Get the base position of the given tile
-func get_base_position(pos):
-	if pos == null:
-		return null
-	var tile = get_tile(pos)
-	if tile == null:
-		return pos
-	else:
-		return tile.position
-
 # Set the width of the given tile
 # Returns the new width of the tile
 # If there is no tile at the given position, returns 0
@@ -278,6 +286,9 @@ func load_from_v1_0(data):
 	room_width = data.width
 	room_height = data.height
 	tile_list = new_tiles
+	for tile in loaded_rooms:
+		unload_room(tile)
+	loaded_rooms.clear()
 	tile_map.clear()
 	for tile in tile_list:
 		_push_tile(tile.position, tile)

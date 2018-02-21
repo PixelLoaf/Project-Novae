@@ -3,8 +3,6 @@ extends Node
 onready var map = $VaniaMap
 export(String, FILE, "*.vmap") var map_file;
 
-var loaded_rooms = {}
-var player_position = Vector2()
 var connections;
 var load_position;
 
@@ -21,20 +19,6 @@ func get_room_nearby(tile, depth=1, data=null):
 				get_room_nearby(t, depth-1, data)
 	return data
 
-func load_room(tile):
-	if not tile in loaded_rooms:
-		var x = tile.position.x * map.room_width
-		var y = tile.position.y * map.room_height
-		var room = load(tile.path).instance()
-		room.position = Vector2(x, y)
-		map.add_child(room)
-		loaded_rooms[tile] = room
-
-func unload_room(tile):
-	if tile in loaded_rooms:
-		loaded_rooms[tile].queue_free()
-		loaded_rooms.erase(tile)
-
 func _ready():
 	map.load_from(map_file)
 	connections = map.get_tile_connections()
@@ -47,12 +31,12 @@ func set_load_position(pos):
 		var tile = map.get_tile(pos)
 		if tile != null:
 			var connections = get_room_nearby(tile, 2)
-			for unloadtile in loaded_rooms:
+			for unloadtile in map.loaded_rooms:
 				if not unloadtile in connections:
-					unload_room(unloadtile)
+					map.unload_room(unloadtile)
 			for loadtile in connections:
 				if connections[loadtile] <= 1:
-					load_room(loadtile)
+					map.load_room(loadtile)
 
 func get_room_size():
 	return Vector2(map.room_width, map.room_height)
