@@ -51,6 +51,8 @@ var is_scrolling = false
 var scroll_amount = Vector2()
 # Dialog to confirm close
 var confirm_close_dialog
+# Reference to the plugin
+var editor_plugin
 
 # Reference to the panel node
 onready var canvas = $HSplitContainer/Canvas
@@ -102,7 +104,6 @@ func _on_ConfirmCloseDialog_ok():
 
 # When confirmation dialog does not save
 func _on_ConfirmCloseDialog_action(name):
-	print("RECEIVED ", name)
 	if name == "nosave":
 		confirm_close_dialog.hide()
 		queue_free()
@@ -123,21 +124,26 @@ func add_active_tile(pos, reset=false):
 	else:
 		$PosLabel.text = "%d, %d" % [pos.x, pos.y]
 	if tile != null and tile in selected_tiles:
+		canvas.update()
 		return
 	if reset:
 		selected_tiles.clear()
 	if tile != null:
+		var fh = File.new()
+		if fh.file_exists(tile.path):
+			editor_plugin.get_editor_interface().open_scene_from_path(tile.path)
 		selected_tiles.append(tile)
 		properties.show()
-		node_color.color = tile.color
-		node_path.text = tile.path
-		node_width.value = tile.width
-		node_height.value = tile.height
 	else:
 		properties.hide()
 	if selected_tiles.size() > 1:
 		single_proprties.hide()
 	else:
+		if tile != null:
+			node_color.color = tile.color
+			node_path.text = tile.path
+			node_width.value = tile.width
+			node_height.value = tile.height
 		single_proprties.show()
 	canvas.update()
 

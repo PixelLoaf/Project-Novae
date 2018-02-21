@@ -13,6 +13,8 @@ var create_new_editor = false
 var overwrite_file = false
 # Whether the file should be saved to
 var should_save = false
+# Reference to the editor plugin
+var editor_plugin
 
 # Make sure that the dialog exists
 func check_dialog():
@@ -63,6 +65,7 @@ func _on_EditorFileDialog_selected(path):
 	var editor
 	if create_new_editor:
 		editor = layout.instance()
+		editor.editor_plugin = editor_plugin
 		$TabContainer.add_child(editor)
 		$TabContainer.current_tab = $TabContainer.get_tab_count() - 1
 		editor.set_owner($TabContainer)

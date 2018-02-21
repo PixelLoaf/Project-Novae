@@ -71,6 +71,7 @@ func _physics_process(delta):
 		limit_top = bounds.position.y
 		limit_right = bounds.end.x
 		limit_bottom = bounds.end.y
+		maps[0].set_load_position(global_position)
 
 func _ready():
 	target_drag_margin_top = drag_margin_top

@@ -20,6 +20,43 @@ class Tile:
 	var height = 1
 	# Position of this tile
 	var position = Vector2()
+	# Calculate nearby tiles
+	# Returns an array of tiles that are next to this tile
+	func calculate_nearby(map):
+		var ret = []
+		var pos = Vector2(self.position.x, self.position.y - 1)
+		while pos.x < self.position.x + self.width:
+			var tile = map.get_tile(pos)
+			if tile != null:
+				ret.append(tile)
+				pos.x += tile.width
+			else:
+				pos.x += 1
+		pos = Vector2(self.position.x, self.position.y + self.height)
+		while pos.x < self.position.x + self.width:
+			var tile = map.get_tile(pos)
+			if tile != null:
+				ret.append(tile)
+				pos.x += tile.width
+			else:
+				pos.x += 1
+		pos = Vector2(self.position.x - 1, self.position.y)
+		while pos.y < self.position.y + self.height:
+			var tile = map.get_tile(pos)
+			if tile != null:
+				ret.append(tile)
+				pos.y += tile.height
+			else:
+				pos.y += 1
+		pos = Vector2(self.position.x + self.width, self.position.y)
+		while pos.y < self.position.y + self.height:
+			var tile = map.get_tile(pos)
+			if tile != null:
+				ret.append(tile)
+				pos.y += tile.height
+			else:
+				pos.y += 1
+		return ret
 
 # Tiles within the map
 var tile_list = []
@@ -29,6 +66,18 @@ var tile_map = {}
 var room_width = 1024
 # Height of each tile in pixels
 var room_height = 600
+
+# Convert a position to a valid key for a Vaniamap
+func pos_to_tilepos(pos):
+	pos.x /= room_width
+	pos.y /= room_height
+	return pos.floor()
+
+# Inverse of pos_to_key
+func tilepos_to_pos(pos):
+	pos.x *= room_width
+	pos.y *= room_height
+	return pos
 
 # Get the tile at the given position
 func get_tile(pos):
@@ -62,7 +111,7 @@ func _pop_tile(pos):
 			var gridpos = Vector2(ix, iy)
 			var t = get_tile(gridpos)
 			if t == tile:
-				_set_tile(pos, null)
+				_set_tile(gridpos, null)
 	return tile
 
 # Returns true if the tile at the given position can move to another location
@@ -177,6 +226,16 @@ func tile_set_height(pos, new_height):
 		tile.height -= 1
 	return tile.height
 
+# Get all tile connections.
+# Keys are a reference to the tile
+# Values are an array of tile references
+func get_tile_connections():
+	var ret = {}
+	for tile in tile_list:
+		var connections = tile.calculate_nearby(self)
+		ret[tile] = connections
+	return ret
+
 # Save this map to the given file
 func save_to(path):
 	var tiledata = []
@@ -214,6 +273,7 @@ func load_from_v1_0(data):
 		v.height = int(tile.height)
 		v.path = tile.path
 		v.position = pos
+		v.id = new_tiles.size()
 		new_tiles.append(v)
 	room_width = data.width
 	room_height = data.height
