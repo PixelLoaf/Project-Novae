@@ -42,7 +42,7 @@
             "y": 1
         },
         {
-            "color": "ff87bc7f",
+            "color": "ff767bca",
             "height": 1,
             "path": "res://World/WorldTest/JumpTest.tscn",
             "width": 1,
@@ -50,12 +50,20 @@
             "y": 1
         },
         {
-            "color": "ff87bc7f",
+            "color": "ff767bca",
             "height": 1,
             "path": "res://World/WorldTest/HJumpTest.tscn",
             "width": 3,
             "x": 4,
             "y": 1
+        },
+        {
+            "color": "ff767bca",
+            "height": 1,
+            "path": "res://World/WorldTest/CeilingTest.tscn",
+            "width": 1,
+            "x": 3,
+            "y": 0
         }
     ],
     "version": "1.0",
