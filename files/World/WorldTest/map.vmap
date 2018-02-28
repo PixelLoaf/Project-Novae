@@ -64,6 +64,14 @@
             "width": 1,
             "x": 3,
             "y": 0
+        },
+        {
+            "color": "ffaa5a5a",
+            "height": 1,
+            "path": "res://World/WorldTest/EnemyTest.tscn",
+            "width": 1,
+            "x": 2,
+            "y": 2
         }
     ],
     "version": "1.0",

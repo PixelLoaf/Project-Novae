@@ -69,6 +69,11 @@ var room_height = 600
 # Rooms which have been loaded
 var loaded_rooms = {}
 
+# Signal called when a room is loaded
+signal room_loaded(node, tile)
+# Signal called when a room is unloaded
+signal room_unloaded(node, tile)
+
 # Load a room into this map
 func load_room(tile):
 	if not tile in loaded_rooms:
@@ -78,10 +83,12 @@ func load_room(tile):
 		room.position = Vector2(x, y)
 		add_child(room)
 		loaded_rooms[tile] = room
+		emit_signal("room_loaded", room, tile)
 
 # Unload a room from this maps
 func unload_room(tile):
 	if tile in loaded_rooms:
+		emit_signal("room_unloaded", loaded_rooms[tile], tile)
 		loaded_rooms[tile].queue_free()
 		loaded_rooms.erase(tile)
 
