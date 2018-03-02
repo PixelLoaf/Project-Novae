@@ -3,7 +3,7 @@
 [ext_resource path="res://World/Test/TestTileset_x16.tres" type="TileSet" id=1]
 [ext_resource path="res://Object/enemy/Spider/EnemySpider.tscn" type="PackedScene" id=2]
 
-[node name="Node2D" type="Node2D"]
+[node name="Node2D" type="Node2D" index="0"]
 
 [node name="TileMap" type="TileMap" parent="." index="0"]
 
@@ -28,6 +28,6 @@ _sections_unfolded = [ "Cell" ]
 
 [node name="EnemySpider" parent="." index="1" instance=ExtResource( 2 )]
 
-position = Vector2( 272, 264 )
+position = Vector2( 240, 264 )
 
 

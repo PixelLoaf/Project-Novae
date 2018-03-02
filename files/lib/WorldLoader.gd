@@ -5,6 +5,15 @@ export(String, FILE, "*.vmap") var map_file;
 
 var connections;
 var load_position;
+var active_node;
+
+func _on_room_load(room, tile):
+	room.set_process(false)
+	room.set_process_internal(false)
+
+func _on_room_unload(room, tile):
+	if room == active_node:
+		active_node = null
 
 func get_room_nearby(tile, depth=1, data=null):
 	if data == null:
@@ -23,6 +32,7 @@ func _ready():
 	map.load_from(map_file)
 	connections = map.get_tile_connections()
 	add_to_group("map")
+	map.connect("room_loaded", self, "_on_room_load")
 
 func set_load_position(pos):
 	pos = map.pos_to_tilepos(pos)
@@ -37,6 +47,13 @@ func set_load_position(pos):
 			for loadtile in connections:
 				if connections[loadtile] <= 1:
 					map.load_room(loadtile)
+				if connections[loadtile] == 0:
+					var node = map.loaded_rooms[loadtile]
+					if node != active_node:
+						if active_node != null:
+							remove_child(active_node)
+						active_node = node
+						add_child(active_node)
 
 func get_room_size():
 	return Vector2(map.room_width, map.room_height)

@@ -81,7 +81,7 @@ func load_room(tile):
 		var y = tile.position.y * room_height
 		var room = load(tile.path).instance()
 		room.position = Vector2(x, y)
-		add_child(room)
+#		add_child(room)
 		loaded_rooms[tile] = room
 		emit_signal("room_loaded", room, tile)
 

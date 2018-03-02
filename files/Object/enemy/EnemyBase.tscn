@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[sub_resource type="RectangleShape2D" id=1]
+[sub_resource type="RectangleShape2D" id=3]
 
 custom_solver_bias = 0.0
 extents = Vector2( 7, 7 )
@@ -20,7 +20,7 @@ _sections_unfolded = [ "Collision", "collision" ]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." index="0"]
 
-shape = SubResource( 1 )
+shape = SubResource( 3 )
 
 [node name="Hitbox" type="Area2D" parent="." index="1"]
 
