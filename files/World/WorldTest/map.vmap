@@ -64,6 +64,22 @@
             "width": 1,
             "x": 3,
             "y": 0
+        },
+        {
+            "color": "ffaa5a5a",
+            "height": 1,
+            "path": "res://World/WorldTest/EnemyTest.tscn",
+            "width": 1,
+            "x": 2,
+            "y": 2
+        },
+        {
+            "color": "ffaa5a5a",
+            "height": 1,
+            "path": "res://World/WorldTest/SpiderHallway.tscn",
+            "width": 2,
+            "x": -1,
+            "y": 3
         }
     ],
     "version": "1.0",

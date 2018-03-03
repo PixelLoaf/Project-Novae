@@ -34,7 +34,7 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7 ]
 }
 
-[node name="player" type="KinematicBody2D" groups=[
+[node name="player" type="KinematicBody2D" index="0" groups=[
 "player",
 ]]
 
@@ -54,19 +54,14 @@ player_accel_stop = 2400
 shape = SubResource( 1 )
 _sections_unfolded = [ "Transform", "Z Index" ]
 
-[node name="Hitbox" type="Area2D" parent="." index="1"]
+[node name="Hitbox" type="KinematicBody2D" parent="." index="1"]
 
 editor/display_folded = true
 input_pickable = true
-gravity_vec = Vector2( 0, 1 )
-gravity = 98.0
-linear_damp = 0.1
-angular_damp = 1.0
 collision_layer = 2
 collision_mask = 0
-audio_bus_override = false
-audio_bus_name = "Master"
-_sections_unfolded = [ "Collision" ]
+collision/safe_margin = 0.08
+_sections_unfolded = [ "Collision", "collision" ]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" index="0"]
 
@@ -86,6 +81,7 @@ _sections_unfolded = [ "Animation", "Region" ]
 [node name="Debug" type="Node2D" parent="." index="3"]
 
 editor/display_folded = true
+visible = false
 script = ExtResource( 3 )
 
 [node name="Velocity" type="Polygon2D" parent="Debug" index="0"]
@@ -129,6 +125,8 @@ transform = Transform2D( 1, 0, 0, 1, 0, 0 )
 
 [node name="PlayerInfo" type="Panel" parent="Debug/CanvasLayer" index="0"]
 
+editor/display_folded = true
+visible = false
 anchor_left = 1.0
 anchor_top = 0.0
 anchor_right = 1.0

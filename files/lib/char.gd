@@ -3,20 +3,22 @@ extends KinematicBody2D
 # Gravity
 const CHAR_GRAVITY = 1200
 # Up direction
-var CHAR_UP = Vector2(0, -1)
+onready var CHAR_UP = Vector2(0, -1).rotated(get_rotation())
 # Maximum velocity
 const CHAR_TERMINAL_VELOCITY = 640
 # Maximum amount of time after leaving a floor where the player can still snap to the floor
 const CHAR_TIME_MAX_SNAP = 0.12
 # Gravity multiplier on the ground
 const CHAR_GRAVITY_MULT_GROUND = 16
+# Maximum floor angle
+const CHAR_MAX_FLOOR_ANGLE = 0.8
 
 # The character's velocity
-var char_velocity = Vector2()
+onready var char_velocity = -CHAR_UP
 # Normal vector of the floor that the character is touching
-var char_floor_normal = CHAR_UP
+onready var char_floor_normal = CHAR_UP
 # True if the character is on the ground
-var char_on_ground = false
+var char_on_ground = true
 # Time since character has been on ground
 var char_time_since_floor = 0.0
 
@@ -74,7 +76,8 @@ func char_calc_normal():
 	char_floor_normal = Vector2()
 	for i in range(get_slide_count()):
 		var col = get_slide_collision(i)
-		if col.normal.dot(CHAR_UP) > 0.2:
+		var adiff = acos(col.normal.dot(CHAR_UP))
+		if adiff < CHAR_MAX_FLOOR_ANGLE:
 			char_floor_normal += col.normal
 			char_on_ground = true
 	if char_floor_normal == Vector2():
@@ -84,7 +87,7 @@ func char_calc_normal():
 
 # Determine if the character can snap to the floor
 func char_apply_velocity(veloc, stop_speed):
-	var ret = move_and_slide(veloc, CHAR_UP, stop_speed, 4, 0.8)
+	var ret = move_and_slide(veloc, CHAR_UP, stop_speed, 4, CHAR_MAX_FLOOR_ANGLE)
 	char_calc_normal()
 	return ret
 
