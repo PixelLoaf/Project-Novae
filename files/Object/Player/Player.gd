@@ -56,7 +56,7 @@ func _physics_process(delta):
 	# Calculate movement
 	var stop_speed = PLAYER_INERT_STOP_SPEED;
 	var target_speed = 0
-	var veloc_h = char_get_motion_horizontal(char_get_normal())
+	var veloc_h = char_get_motion_horizontal()
 	var dir = get_input_dir()
 	if dir == 1:
 		if veloc_h >= 0:
@@ -91,7 +91,7 @@ func _physics_process(delta):
 	if not char_is_on_floor():
 		slip = PLAYER_SLIP_AIR
 	# Change the player's horizontal movement according to the player's input
-	veloc_h = char_get_motion_horizontal(char_get_normal())
+	veloc_h = char_get_motion_horizontal()
 	var walk_accel = player_accel_walk
 	if char_is_on_floor() and ((veloc_h < 0) != (target_speed < 0) and veloc_h != 0 or target_speed == 0):
 		walk_accel = player_accel_stop
@@ -100,7 +100,7 @@ func _physics_process(delta):
 		veloc_h += walk_accel
 	elif veloc_h > target_speed:
 		veloc_h -= walk_accel
-	char_set_motion_horizontal(char_get_normal(), veloc_h)
+	char_set_motion_horizontal(veloc_h)
 	# Jump. The purpose of doing it this way is so that the player can press the
 	# jump button slightly before hitting the ground and still jump.
 	player_time_since_jump_button += delta
@@ -108,10 +108,10 @@ func _physics_process(delta):
 		char_jump(player_jump_speed)
 		player_time_since_jump_button = 1.0
 	if not Input.is_action_pressed("action_jump") and not char_is_on_floor():
-		var veloc_v = char_get_motion_vertical(CHAR_UP)
-		if veloc_v > CHAR_GRAVITY / 10:
-			veloc_v = CHAR_GRAVITY / 10
-			char_set_motion_vertical(CHAR_UP, veloc_v)
+		var veloc_v = char_get_motion_vertical()
+		if veloc_v < -CHAR_GRAVITY / 10:
+			veloc_v = -CHAR_GRAVITY / 10
+			char_set_motion_vertical(veloc_v)
 
 # On input received
 func _input(event):
@@ -121,3 +121,4 @@ func _input(event):
 # Player is ready
 func _ready():
 	$AnimationPlayer.play("idle")
+	char_velocity_rotation_method = ROT_NORMAL

@@ -103,7 +103,7 @@ func _physics_process(delta):
 			if char_is_on_floor() or dir != 0:
 				speed = dir * SPEED
 	if speed != null:
-		char_set_motion_horizontal(char_get_normal(), speed)
+		char_set_motion_horizontal(speed)
 		if speed > 0:
 			$Sprite.flip_h = true
 		elif speed < 0:

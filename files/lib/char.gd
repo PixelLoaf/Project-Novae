@@ -6,12 +6,9 @@ const CHAR_GRAVITY = 1200
 onready var CHAR_UP = Vector2(0, -1).rotated(get_rotation())
 # Maximum velocity
 const CHAR_TERMINAL_VELOCITY = 640
-# Maximum amount of time after leaving a floor where the player can still snap to the floor
-const CHAR_TIME_MAX_SNAP = 0.12
-# Gravity multiplier on the ground
-const CHAR_GRAVITY_MULT_GROUND = 16
 # Maximum floor angle
 const CHAR_MAX_FLOOR_ANGLE = 0.8
+# How the character should handle rotation
 
 # The character's velocity
 onready var char_velocity = -CHAR_UP
@@ -21,6 +18,9 @@ onready var char_floor_normal = CHAR_UP
 var char_on_ground = true
 # Time since character has been on ground
 var char_time_since_floor = 0.0
+# How the character handles velocity rotation
+enum CharRotationMethod {ROT_NONE, ROT_CHARUP, ROT_NORMAL}
+var char_velocity_rotation_method = ROT_NORMAL
 
 # Get this character's normal vector
 func char_get_normal():
@@ -30,22 +30,20 @@ func char_get_normal():
 		return CHAR_UP
 
 # Get the character's movement perpendicular to its normal
-func char_get_motion_horizontal(normal):
-	return normal.rotated(PI/2).dot(char_velocity)
+func char_get_motion_horizontal():
+	return char_velocity.x
 
 # Set the character's movement perpendicular to its normal
-func char_set_motion_horizontal(normal, value):
-	char_velocity = char_velocity.slide(normal.rotated(PI/2))
-	char_velocity += value * normal.rotated(PI/2)
+func char_set_motion_horizontal(value):
+	char_velocity.x = value
 
 # Get the character's movement parallel to its normal
-func char_get_motion_vertical(normal):
-	return normal.dot(char_velocity)
+func char_get_motion_vertical():
+	return char_velocity.y
 	
 # Set the character's movement parallel to its normal
-func char_set_motion_vertical(normal, value):
-	char_velocity = char_velocity.slide(normal)
-	char_velocity += value * normal
+func char_set_motion_vertical(value):
+	char_velocity.y = value
 
 # Return true if the character is on the ground
 func char_is_on_floor():
@@ -91,72 +89,41 @@ func char_apply_velocity(veloc, stop_speed):
 	char_calc_normal()
 	return ret
 
-# Do character movement. Should be called once per physics process.
+# Function that does character movement. Should be called once per frame
 func char_do_movement(delta, stop_speed):
 	CHAR_UP = Vector2(0, -1).rotated(get_rotation())
-	# Increment timer
 	char_time_since_floor += delta
-	# Apply gravity
-	if char_is_on_floor():
-		# Sometimes the character doesn't update their normal normally when on the
-		# ground, so applying extra downward velocity helps.
-		char_velocity += CHAR_GRAVITY * -char_get_normal() * delta * CHAR_GRAVITY_MULT_GROUND
-	else:
-		char_velocity += CHAR_GRAVITY * -char_get_normal() * delta
-	# Keep track of previous values, they are important
-	var prev_veloc = char_velocity
+	char_velocity += CHAR_GRAVITY * Vector2(0, 1) * delta
 	var prev_on_ground = char_on_ground
-	var prev_normal = char_get_normal()
-	var prev_transform = transform
-	char_on_ground = false
+	var prev_pos = position
 	# Movement
-	char_velocity = move_and_slide(char_velocity, CHAR_UP, stop_speed, 4, 0.8)
+	var rot = 0;
+	if char_velocity_rotation_method == ROT_CHARUP:
+		rot = CHAR_UP.angle() + PI/2
+	elif char_velocity_rotation_method == ROT_NORMAL:
+		rot = char_get_normal().angle() + PI/2
+	char_velocity = move_and_slide(char_velocity.rotated(rot), CHAR_UP, stop_speed, 4, 0.8).rotated(-rot)
+	# Calculate ground
+	char_on_ground = false
 	char_calc_normal()
-	# If the character was in the air, but is now on a floor, we need to do some
-	# stuff so that the character doesn't slide down slopes.
-	if char_is_on_floor() and not prev_on_ground:
-		#First, return the character to their original position.
-		transform = prev_transform
-		# Project the character using the previously used velocity so that they don't
-		# go 'up' the slope when they should stay in place.
-		char_project_movement(prev_veloc);
-		# Rotate the character's velocity to match the new surface's normal
-		char_velocity = prev_veloc.rotated(char_get_normal().angle() - prev_normal.angle())
-		# Remove character's vertical velocity component
-		char_set_motion_vertical(char_get_normal(), -CHAR_GRAVITY/60)
-		# Redo the whole movement process
-		char_velocity = char_apply_velocity(char_velocity, stop_speed)
-	# If a character is on the ground and their normal changes, then adjust accordingly.
-	elif abs(char_get_normal().angle() - prev_normal.angle()) > 1e-5 and char_is_on_floor():
-		transform = prev_transform
-		char_velocity = prev_veloc.rotated(char_get_normal().angle() - prev_normal.angle())
-		char_velocity = char_apply_velocity(char_velocity, stop_speed)
-	# If the character was on the ground but no longer is, 
-	# try and put the character back onto the ground.
-	elif not char_is_on_floor() and prev_on_ground:
+	# Make sure player is on the ground
+	if (char_on_ground or prev_on_ground) and char_time_since_floor < 0.5:
 		var result = char_project_movement(CHAR_UP * -8)
 		if result.empty() or result[1] != 1:
+			move_and_slide(-CHAR_UP, CHAR_UP, 0, 4, 0.8)
+			char_calc_normal()
 			char_on_ground = true
-		else:
-			# However, if the character could not be placed on the ground, then assume
-			# it walked off of a cliff. In this case, since gravity is increased when on
-			# the ground, the vertical velocity has to be reset.
-			char_set_motion_vertical(char_get_normal(), 0)
-			transform = prev_transform
-			char_velocity = char_apply_velocity(char_velocity, stop_speed)
-	# Reset vertical velocity
+	# Check if on ground
 	if char_on_ground:
-		char_set_motion_vertical(char_get_normal(), 0)
 		char_time_since_floor = 0.0
-#	position = position.snapped(Vector2(1, 1))
 	# Enforce terminal velocity
-	var veloc_v = char_get_motion_vertical(CHAR_UP)
+	var veloc_v = char_get_motion_vertical()
 	if abs(veloc_v) > CHAR_TERMINAL_VELOCITY:
-		char_set_motion_vertical(CHAR_UP, sign(veloc_v) * CHAR_TERMINAL_VELOCITY)
+		char_set_motion_vertical(sign(veloc_v) * CHAR_TERMINAL_VELOCITY)
 
 # Jump up in the air
 func char_jump(speed):
-	char_set_motion_vertical(CHAR_UP, speed)
+	char_set_motion_vertical(-speed)
 	char_on_ground = false
 	char_time_since_floor = 1.0
 
