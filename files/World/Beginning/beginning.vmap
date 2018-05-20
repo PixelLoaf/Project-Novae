@@ -1,0 +1,15 @@
+{
+    "height": 288,
+    "tiles": [
+        {
+            "color": "ff563775",
+            "height": 1,
+            "path": "res://World/Beginning/CityLevel.tscn",
+            "width": 4,
+            "x": 0,
+            "y": 0
+        }
+    ],
+    "version": "1.0",
+    "width": 512
+}

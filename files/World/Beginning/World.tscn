@@ -8,7 +8,7 @@
 [node name="Node" type="Node"]
 
 script = ExtResource( 1 )
-map_file = "res://World/WorldTest/map.vmap"
+map_file = "res://World/Beginning/beginning.vmap"
 
 [node name="VaniaMap" type="Node" parent="." index="0"]
 
@@ -19,6 +19,7 @@ __meta__ = {
 
 [node name="player" parent="." index="1" instance=ExtResource( 4 )]
 
-position = Vector2( 256, 232 )
+position = Vector2( 40, 216 )
+char_disabled = false
 
 

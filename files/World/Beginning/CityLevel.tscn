@@ -1,0 +1,691 @@
+[gd_scene load_steps=21 format=2]
+
+[ext_resource path="res://World/Beginning/CityLevel.gd" type="Script" id=1]
+[ext_resource path="res://World/City/city-tileset.tres" type="TileSet" id=2]
+[ext_resource path="res://World/Beginning/weird-smile.png" type="Texture" id=3]
+[ext_resource path="res://World/Beginning/Face.gd" type="Script" id=4]
+[ext_resource path="res://World/Beginning/grass.png" type="Texture" id=5]
+[ext_resource path="res://World/Beginning/fountain.png" type="Texture" id=6]
+[ext_resource path="res://World/Beginning/sky.png" type="Texture" id=7]
+[ext_resource path="res://World/Beginning/noise.png" type="Texture" id=8]
+[ext_resource path="res://World/Beginning/sun.png" type="Texture" id=9]
+[ext_resource path="res://World/City/city-backdrop1.png" type="Texture" id=10]
+[ext_resource path="res://World/City/city-backdrop2.png" type="Texture" id=11]
+[ext_resource path="res://World/City/city-backdrop3.png" type="Texture" id=12]
+
+[sub_resource type="Animation" id=7]
+
+resource_name = "Init"
+length = 1.0
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Face:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.6, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3 ]
+}
+
+[sub_resource type="Animation" id=8]
+
+resource_name = "Loop"
+length = 0.8
+loop = true
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Face:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 4, 5, 6, 7 ]
+}
+
+[sub_resource type="Shader" id=1]
+
+code = "shader_type canvas_item;
+render_mode unshaded;
+
+void fragment() {
+	vec2 my_uv = UV + vec2(sin((TIME+UV.y*6.0)*1.0)*0.05, 0);
+	COLOR = texture(TEXTURE, my_uv);
+	vec4 one4 = vec4(1, 1, 1, 1);
+	float hue = mod(TIME + UV.y * 5.0, 3.0);
+	vec4 huevalue = vec4(0, 0, 0, 0);
+	if (hue < 1.0) { // red
+		huevalue.r = 1.0 - abs(hue - 0.0);
+	}
+	if (hue > 2.0) { // red
+		huevalue.r = 1.0 - abs(hue - 3.0);
+	}
+	if (hue < 2.0) { // green
+		huevalue.g = 1.0 - abs(hue - 1.0);
+	}
+	if (hue > 1.0) { // blue
+		huevalue.b = 1.0 - abs(hue - 2.0);
+	}
+	
+	COLOR = one4 - ((one4 - COLOR * COLOR) * (one4 - huevalue * 0.5));
+}
+"
+
+[sub_resource type="ShaderMaterial" id=2]
+
+render_priority = 0
+shader = SubResource( 1 )
+
+[sub_resource type="RectangleShape2D" id=3]
+
+custom_solver_bias = 0.0
+extents = Vector2( 16, 152 )
+
+[sub_resource type="Shader" id=4]
+
+code = "shader_type canvas_item;
+render_mode unshaded;
+
+uniform vec4 color_base = vec4(0,0,0,1);
+uniform float value = 0.0;
+
+void fragment() {
+	float threshold = texture(NORMAL_TEXTURE, UV).r;
+	if (value > threshold) {
+		COLOR = color_base;
+	} else {
+		COLOR = texture(TEXTURE, UV);
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id=5]
+
+render_priority = 0
+shader = SubResource( 4 )
+shader_param/color_base = null
+shader_param/value = 0.0
+_sections_unfolded = [ "shader_param" ]
+
+[sub_resource type="Animation" id=6]
+
+length = 10.0
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("ParallaxBackground/ParallaxLayer/Sun:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 4, 4.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0, 0, 3 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("ParallaxBackground/ParallaxLayer/Sun:position")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 3.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 80 ), Vector2( 0, -64 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("ParallaxBackground/ParallaxLayer/Sky:material:shader_param/value")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 4, 5.6 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 0.0, 1.0 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("ParallaxForeground/ParallaxLayerTop/Polygon2D:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 5.6, 9.3 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/4/type = "method"
+tracks/4/path = NodePath(".")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 5.8, 9.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [  ],
+"method": "begin_succ"
+}, {
+"args": [  ],
+"method": "next_level"
+} ]
+}
+tracks/5/type = "method"
+tracks/5/path = NodePath("Faces/AnimationPlayer")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 4.1, 5.6 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [ "Init" ],
+"method": "play"
+}, {
+"args": [ "Loop" ],
+"method": "play"
+} ]
+}
+
+[node name="CityLevel" type="Node2D" index="0"]
+
+script = ExtResource( 1 )
+
+[node name="TileMap" type="TileMap" parent="." index="0"]
+
+mode = 0
+tile_set = ExtResource( 2 )
+cell_size = Vector2( 32, 32 )
+cell_quadrant_size = 16
+cell_custom_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+cell_half_offset = 2
+cell_tile_origin = 0
+cell_y_sort = false
+cell_clip_uv = false
+collision_use_kinematic = false
+collision_friction = 1.0
+collision_bounce = 0.0
+collision_layer = 1
+collision_mask = 1
+occluder_light_mask = 1
+format = 1
+tile_data = PoolIntArray( 327697, 536870915, 0, 327698, 0, 0, 327699, 0, 0, 327700, 0, 0, 327701, 0, 0, 327702, 0, 0, 327703, 0, 0, 327704, 0, 0, 327705, 0, 0, 327706, 0, 0, 327707, 0, 0, 327708, 3, 0, 393216, 0, 0, 393217, 0, 0, 393218, 1, 0, 393219, 0, 0, 393220, 0, 0, 393221, 0, 0, 393222, 0, 0, 393223, 0, 0, 393224, 0, 0, 393225, 0, 0, 393226, 0, 0, 393227, 0, 0, 393228, 0, 0, 393229, 0, 0, 393230, 0, 0, 393231, 0, 0, 393232, 536870924, 0, 393233, 536870923, 0, 393234, 8, 0, 393235, 8, 0, 393236, 8, 0, 393237, 8, 0, 393238, 8, 0, 393239, 8, 0, 393240, 8, 0, 393241, 8, 0, 393242, 8, 0, 393243, 8, 0, 393244, 11, 0, 393245, 12, 0, 393246, 0, 0, 393247, 0, 0, 393248, 0, 0, 393249, 0, 0, 393250, 0, 0, 393251, 0, 0, 393252, 0, 0, 393253, 0, 0, 393254, 0, 0, 393255, 0, 0, 393256, 0, 0, 393257, 0, 0, 393258, 0, 0, 393259, 0, 0, 393260, 0, 0, 393261, 0, 0, 393262, 0, 0, 393263, 0, 0, 393264, 0, 0, 458752, 8, 0, 458753, 8, 0, 458754, 9, 0, 458755, 8, 0, 458756, 8, 0, 458757, 8, 0, 458758, 8, 0, 458759, 8, 0, 458760, 18, 0, 458761, 8, 0, 458762, 8, 0, 458763, 8, 0, 458764, 8, 0, 458765, 8, 0, 458766, 8, 0, 458767, 8, 0, 458768, 536870932, 0, 458769, 536870931, 0, 458770, 17, 0, 458771, 17, 0, 458772, 17, 0, 458773, 17, 0, 458774, 17, 0, 458775, 17, 0, 458776, 17, 0, 458777, 17, 0, 458778, 17, 0, 458779, 17, 0, 458780, 19, 0, 458781, 20, 0, 458782, 8, 0, 458783, 8, 0, 458784, 8, 0, 458785, 8, 0, 458786, 8, 0, 458787, 8, 0, 458788, 8, 0, 458789, 8, 0, 458790, 8, 0, 458791, 8, 0, 458792, 8, 0, 458793, 8, 0, 458794, 8, 0, 458795, 8, 0, 458796, 8, 0, 458797, 8, 0, 458798, 8, 0, 458799, 8, 0, 458800, 16, 0, 458801, 16, 0, 458802, 16, 0, 458803, 16, 0, 458804, 16, 0, 458805, 16, 0, 458806, 16, 0, 458807, 16, 0, 458808, 16, 0, 458809, 16, 0, 458810, 16, 0, 458811, 16, 0, 458812, 16, 0, 458813, 16, 0, 458814, 16, 0, 458815, 16, 0, 524288, 17, 0, 524289, 17, 0, 524290, 17, 0, 524291, 17, 0, 524292, 17, 0, 524293, 17, 0, 524294, 17, 0, 524295, 17, 0, 524296, 17, 0, 524297, 17, 0, 524298, 17, 0, 524299, 17, 0, 524300, 17, 0, 524301, 17, 0, 524302, 17, 0, 524303, 17, 0, 524304, 536870922, 0, 524305, 16, 0, 524306, 16, 0, 524307, 16, 0, 524308, 16, 0, 524309, 16, 0, 524310, 16, 0, 524311, 16, 0, 524312, 16, 0, 524313, 16, 0, 524314, 16, 0, 524315, 16, 0, 524316, 16, 0, 524317, 10, 0, 524318, 17, 0, 524319, 17, 0, 524320, 17, 0, 524321, 17, 0, 524322, 17, 0, 524323, 17, 0, 524324, 17, 0, 524325, 17, 0, 524326, 17, 0, 524327, 17, 0, 524328, 17, 0, 524329, 17, 0, 524330, 17, 0, 524331, 17, 0, 524332, 17, 0, 524333, 17, 0, 524334, 17, 0, 524335, 17, 0, 524336, 16, 0, 524337, 16, 0, 524338, 16, 0, 524339, 16, 0, 524340, 16, 0, 524341, 16, 0, 524342, 16, 0, 524343, 16, 0, 524344, 16, 0, 524345, 16, 0, 524346, 16, 0, 524347, 16, 0, 524348, 16, 0, 524349, 16, 0, 524350, 16, 0, 524351, 16, 0 )
+_sections_unfolded = [ "Cell" ]
+
+[node name="Faces" type="Node2D" parent="." index="1"]
+
+position = Vector2( 1792, 120 )
+
+[node name="Face" type="Sprite" parent="Faces" index="0"]
+
+position = Vector2( -85, -14 )
+texture = ExtResource( 3 )
+vframes = 2
+hframes = 4
+script = ExtResource( 4 )
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face2" type="Sprite" parent="Faces" index="1" groups=[
+"weird-face",
+]]
+
+position = Vector2( -84, 36 )
+texture = ExtResource( 3 )
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset", "Region" ]
+
+[node name="Face3" type="Sprite" parent="Faces" index="2" groups=[
+"weird-face",
+]]
+
+position = Vector2( -181, 14 )
+texture = ExtResource( 3 )
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face4" type="Sprite" parent="Faces" index="3" groups=[
+"weird-face",
+]]
+
+position = Vector2( -197, 30 )
+texture = ExtResource( 3 )
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face5" type="Sprite" parent="Faces" index="4" groups=[
+"weird-face",
+]]
+
+position = Vector2( -139, 37 )
+texture = ExtResource( 3 )
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face6" type="Sprite" parent="Faces" index="5" groups=[
+"weird-face",
+]]
+
+position = Vector2( -197, 68 )
+texture = ExtResource( 3 )
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face7" type="Sprite" parent="Faces" index="6" groups=[
+"weird-face",
+]]
+
+position = Vector2( -234, 42 )
+texture = ExtResource( 3 )
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face8" type="Sprite" parent="Faces" index="7" groups=[
+"weird-face",
+]]
+
+position = Vector2( -123, 72 )
+texture = ExtResource( 3 )
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face9" type="Sprite" parent="Faces" index="8" groups=[
+"weird-face",
+]]
+
+position = Vector2( -261, 24 )
+texture = ExtResource( 3 )
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face10" type="Sprite" parent="Faces" index="9" groups=[
+"weird-face",
+]]
+
+position = Vector2( -269, 52 )
+texture = ExtResource( 3 )
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face11" type="Sprite" parent="Faces" index="10" groups=[
+"weird-face",
+]]
+
+position = Vector2( -37, 30 )
+texture = ExtResource( 3 )
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face12" type="Sprite" parent="Faces" index="11" groups=[
+"weird-face",
+]]
+
+position = Vector2( -24, 52 )
+texture = ExtResource( 3 )
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face13" type="Sprite" parent="Faces" index="12" groups=[
+"weird-face",
+]]
+
+position = Vector2( 22, 40 )
+texture = ExtResource( 3 )
+flip_h = true
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face14" type="Sprite" parent="Faces" index="13" groups=[
+"weird-face",
+]]
+
+position = Vector2( -3, 20 )
+texture = ExtResource( 3 )
+flip_h = true
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face15" type="Sprite" parent="Faces" index="14" groups=[
+"weird-face",
+]]
+
+position = Vector2( 59, 26 )
+texture = ExtResource( 3 )
+flip_h = true
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face16" type="Sprite" parent="Faces" index="15" groups=[
+"weird-face",
+]]
+
+position = Vector2( 71, 14 )
+texture = ExtResource( 3 )
+flip_h = true
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face17" type="Sprite" parent="Faces" index="16" groups=[
+"weird-face",
+]]
+
+position = Vector2( 56, 68 )
+texture = ExtResource( 3 )
+flip_h = true
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face18" type="Sprite" parent="Faces" index="17" groups=[
+"weird-face",
+]]
+
+position = Vector2( 130, 68 )
+texture = ExtResource( 3 )
+flip_h = true
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face19" type="Sprite" parent="Faces" index="18" groups=[
+"weird-face",
+]]
+
+position = Vector2( 114, 40 )
+texture = ExtResource( 3 )
+flip_h = true
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face20" type="Sprite" parent="Faces" index="19" groups=[
+"weird-face",
+]]
+
+position = Vector2( 168, -15 )
+texture = ExtResource( 3 )
+flip_h = true
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face21" type="Sprite" parent="Faces" index="20" groups=[
+"weird-face",
+]]
+
+position = Vector2( 169, 36 )
+texture = ExtResource( 3 )
+flip_h = true
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face22" type="Sprite" parent="Faces" index="21" groups=[
+"weird-face",
+]]
+
+position = Vector2( 216, 30 )
+texture = ExtResource( 3 )
+flip_h = true
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face23" type="Sprite" parent="Faces" index="22" groups=[
+"weird-face",
+]]
+
+position = Vector2( 232, 56 )
+texture = ExtResource( 3 )
+flip_h = true
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="Face24" type="Sprite" parent="Faces" index="23" groups=[
+"weird-face",
+]]
+
+position = Vector2( 252, 24 )
+texture = ExtResource( 3 )
+flip_h = true
+vframes = 2
+hframes = 4
+frame = 3
+_sections_unfolded = [ "Animation", "Offset" ]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Faces" index="24"]
+
+root_node = NodePath("..")
+autoplay = ""
+playback_process_mode = 1
+playback_default_blend_time = 0.0
+playback_speed = 4.0
+anims/Init = SubResource( 7 )
+anims/Loop = SubResource( 8 )
+blend_times = [  ]
+_sections_unfolded = [ "Playback Options" ]
+
+[node name="Grass" type="Sprite" parent="." index="2"]
+
+position = Vector2( 1792, 256 )
+texture = ExtResource( 5 )
+
+[node name="Fountain" type="Sprite" parent="." index="3"]
+
+material = SubResource( 2 )
+position = Vector2( 1784, 160 )
+texture = ExtResource( 6 )
+_sections_unfolded = [ "Animation", "Material", "Offset", "Region", "Transform", "Z Index" ]
+
+[node name="Area2D" type="Area2D" parent="." index="4"]
+
+position = Vector2( 1808, 152 )
+input_pickable = true
+gravity_vec = Vector2( 0, 1 )
+gravity = 98.0
+linear_damp = 0.1
+angular_damp = 1.0
+collision_layer = 0
+collision_mask = 2
+audio_bus_override = false
+audio_bus_name = "Master"
+_sections_unfolded = [ "Collision" ]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" index="0"]
+
+position = Vector2( 8, 0 )
+shape = SubResource( 3 )
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="." index="5"]
+
+layer = -1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+scroll_offset = Vector2( 0, 0 )
+scroll_base_offset = Vector2( 0, 0 )
+scroll_base_scale = Vector2( 1, 1 )
+scroll_limit_begin = Vector2( 0, 0 )
+scroll_limit_end = Vector2( 0, 0 )
+scroll_ignore_camera_zoom = true
+_sections_unfolded = [ "Scroll" ]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground" index="0"]
+
+motion_scale = Vector2( 0, 0 )
+motion_offset = Vector2( 0, 0 )
+motion_mirroring = Vector2( 0, 0 )
+_sections_unfolded = [ "Motion", "Transform" ]
+
+[node name="Sky" type="Sprite" parent="ParallaxBackground/ParallaxLayer" index="0"]
+
+material = SubResource( 5 )
+texture = ExtResource( 7 )
+normal_map = ExtResource( 8 )
+_sections_unfolded = [ "Animation", "Material", "Offset" ]
+
+[node name="Sun" type="Sprite" parent="ParallaxBackground/ParallaxLayer" index="1"]
+
+position = Vector2( 0, 80 )
+texture = ExtResource( 9 )
+hframes = 4
+_sections_unfolded = [ "Animation", "Transform" ]
+
+[node name="Backdrop3" type="ParallaxLayer" parent="ParallaxBackground" index="1"]
+
+editor/display_folded = true
+motion_scale = Vector2( 0.4, 0 )
+motion_offset = Vector2( 0, 0 )
+motion_mirroring = Vector2( 0, 0 )
+_sections_unfolded = [ "Motion" ]
+
+[node name="Sprite" type="Sprite" parent="ParallaxBackground/Backdrop3" index="0"]
+
+position = Vector2( -256, -112 )
+texture = ExtResource( 10 )
+centered = false
+region_enabled = true
+region_rect = Rect2( 0, 0, 2560, 256 )
+
+[node name="Backdrop2" type="ParallaxLayer" parent="ParallaxBackground" index="2"]
+
+editor/display_folded = true
+motion_scale = Vector2( 0.6, 0 )
+motion_offset = Vector2( 0, 0 )
+motion_mirroring = Vector2( 0, 0 )
+_sections_unfolded = [ "Motion" ]
+
+[node name="Sprite" type="Sprite" parent="ParallaxBackground/Backdrop2" index="0"]
+
+position = Vector2( -256, -112 )
+texture = ExtResource( 11 )
+centered = false
+region_enabled = true
+region_rect = Rect2( 0, 0, 2560, 256 )
+
+[node name="Backdrop1" type="ParallaxLayer" parent="ParallaxBackground" index="3"]
+
+motion_scale = Vector2( 0.8, 0 )
+motion_offset = Vector2( 0, 0 )
+motion_mirroring = Vector2( 0, 0 )
+_sections_unfolded = [ "Motion" ]
+
+[node name="Sprite" type="Sprite" parent="ParallaxBackground/Backdrop1" index="0"]
+
+position = Vector2( -256, -112 )
+texture = ExtResource( 12 )
+centered = false
+region_enabled = true
+region_rect = Rect2( 0, 0, 2560, 256 )
+_sections_unfolded = [ "Animation", "Region" ]
+
+[node name="ParallaxForeground" type="ParallaxBackground" parent="." index="6"]
+
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+scroll_offset = Vector2( 0, 0 )
+scroll_base_offset = Vector2( 0, 0 )
+scroll_base_scale = Vector2( 1, 1 )
+scroll_limit_begin = Vector2( 0, 0 )
+scroll_limit_end = Vector2( 0, 0 )
+scroll_ignore_camera_zoom = true
+_sections_unfolded = [ "Scroll" ]
+
+[node name="ParallaxLayerTop" type="ParallaxLayer" parent="ParallaxForeground" index="0"]
+
+z_index = 4096
+motion_scale = Vector2( 0, 0 )
+motion_offset = Vector2( 0, 0 )
+motion_mirroring = Vector2( 0, 0 )
+_sections_unfolded = [ "Motion", "Transform", "Z Index" ]
+
+[node name="Polygon2D" type="Polygon2D" parent="ParallaxForeground/ParallaxLayerTop" index="0"]
+
+modulate = Color( 1, 1, 1, 0 )
+z_index = 1000
+polygon = PoolVector2Array( -256, -144, 256, -144, 256, 144, -256, 144 )
+uv = PoolVector2Array(  )
+color = Color( 1, 1, 1, 1 )
+vertex_colors = PoolColorArray(  )
+offset = Vector2( 0, 0 )
+antialiased = false
+texture = null
+texture_offset = Vector2( 0, 0 )
+texture_scale = Vector2( 1, 1 )
+texture_rotation_degrees = 0.0
+invert_enable = false
+invert_border = 100.0
+_sections_unfolded = [ "Invert", "Material", "Texture", "Visibility", "Z Index" ]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="7"]
+
+root_node = NodePath("..")
+autoplay = ""
+playback_process_mode = 1
+playback_default_blend_time = 0.0
+playback_speed = 1.0
+anims/Anim = SubResource( 6 )
+blend_times = [  ]
+_sections_unfolded = [ "Playback Options" ]
+
+[connection signal="frame_changed" from="Faces/Face" to="Faces/Face" method="_on_Face_frame_changed"]
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]
+
+

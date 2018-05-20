@@ -1,5 +1,12 @@
 extends KinematicBody2D
 
+export var char_disabled = false setget _char_disable_set;
+func _char_disable_set(value):
+	set_process_input(not value)
+	set_process(not value)
+	set_physics_process(not value)
+	char_disabled = value
+
 # Gravity
 const CHAR_GRAVITY = 1200
 # Up direction
@@ -135,3 +142,4 @@ func _ready():
 		var shape = Physics2DServer.body_get_shape(self.get_rid(), 0)
 		_char_cast_param.shape_rid = shape
 	add_to_group("character", true)
+	_char_disable_set(char_disabled)

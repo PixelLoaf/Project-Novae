@@ -1,0 +1,152 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://World/Test/TestTileset_x16.tres" type="TileSet" id=1]
+[ext_resource path="res://Object/Player/player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Object/Player/player.png" type="Texture" id=3]
+[ext_resource path="res://World/Beginning/IntroDialogThing.gd" type="Script" id=4]
+[ext_resource path="res://Object/Dialog/DialogBase.tscn" type="PackedScene" id=5]
+
+[sub_resource type="Shader" id=1]
+
+code = "shader_type canvas_item;
+render_mode unshaded;
+
+void fragment() {
+	COLOR = vec4(1, 1, 1, texture(TEXTURE, UV).a);
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+
+render_priority = 0
+shader = SubResource( 1 )
+
+[sub_resource type="Animation" id=3]
+
+resource_name = "Anim"
+length = 1.0
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Polygon2D:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 0, 0, 0, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath("Sprite")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 1 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "change_level"
+} ]
+}
+
+[node name="IntroLevel" type="Node2D"]
+
+_sections_unfolded = [ "Cell" ]
+
+[node name="Polygon2D" type="Polygon2D" parent="." index="0"]
+
+position = Vector2( -1.20262, 20.4698 )
+scale = Vector2( 0.983965, 0.944072 )
+polygon = PoolVector2Array( 1.22222, -21.6825, 521.566, -21.6825, 521.566, 283.379, 1.22222, 283.379 )
+uv = PoolVector2Array(  )
+color = Color( 0, 0, 0, 1 )
+vertex_colors = PoolColorArray(  )
+offset = Vector2( 0, 0 )
+antialiased = false
+texture = null
+texture_offset = Vector2( 0, 0 )
+texture_scale = Vector2( 1, 1 )
+texture_rotation_degrees = 0.0
+invert_enable = false
+invert_border = 100.0
+
+[node name="TileMap" type="TileMap" parent="." index="1"]
+
+visible = false
+mode = 0
+tile_set = ExtResource( 1 )
+cell_size = Vector2( 16, 16 )
+cell_quadrant_size = 16
+cell_custom_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+cell_half_offset = 2
+cell_tile_origin = 0
+cell_y_sort = false
+cell_clip_uv = false
+collision_use_kinematic = false
+collision_friction = 1.0
+collision_bounce = 0.0
+collision_layer = 1
+collision_mask = 1
+occluder_light_mask = 1
+format = 1
+tile_data = PoolIntArray( 4, 8, 0, 5, 8, 0, 6, 8, 0, 7, 8, 0, 8, 8, 0, 9, 8, 0, 10, 8, 0, 11, 8, 0, 12, 8, 0, 13, 8, 0, 14, 8, 0, 15, 8, 0, 16, 8, 0, 17, 8, 0, 18, 8, 0, 19, 8, 0, 20, 8, 0, 21, 8, 0, 22, 8, 0, 23, 8, 0, 24, 8, 0, 25, 8, 0, 26, 8, 0, 27, 8, 0, 65540, 8, 0, 65563, 8, 0, 131076, 8, 0, 131099, 8, 0, 196612, 8, 0, 196635, 8, 0, 262148, 8, 0, 262171, 8, 0, 327684, 8, 0, 327707, 8, 0, 393220, 8, 0, 393243, 8, 0, 458756, 8, 0, 458779, 8, 0, 524292, 8, 0, 524315, 8, 0, 589828, 8, 0, 589851, 8, 0, 655364, 8, 0, 655387, 8, 0, 720900, 8, 0, 720923, 8, 0, 786436, 8, 0, 786459, 8, 0, 851968, 8, 0, 851969, 8, 0, 851970, 8, 0, 851971, 8, 0, 851972, 8, 0, 851973, 8, 0, 851974, 8, 0, 851975, 8, 0, 851976, 8, 0, 851977, 8, 0, 851978, 8, 0, 851979, 8, 0, 851980, 8, 0, 851981, 8, 0, 851982, 8, 0, 851983, 8, 0, 851984, 8, 0, 851985, 8, 0, 851986, 8, 0, 851987, 8, 0, 851988, 8, 0, 851989, 8, 0, 851990, 8, 0, 851991, 8, 0, 851992, 8, 0, 851993, 8, 0, 851994, 8, 0, 851995, 8, 0, 851996, 8, 0, 851997, 8, 0, 851998, 8, 0, 851999, 8, 0 )
+_sections_unfolded = [ "Cell" ]
+
+[node name="player" parent="." index="2" instance=ExtResource( 2 )]
+
+position = Vector2( 104, 200 )
+char_disabled = false
+
+[node name="Sprite" type="Sprite" parent="." index="3"]
+
+material = SubResource( 2 )
+position = Vector2( 410, 190 )
+texture = ExtResource( 3 )
+flip_h = true
+vframes = 3
+hframes = 3
+script = ExtResource( 4 )
+_sections_unfolded = [ "Animation", "Material", "Offset", "Region", "Visibility" ]
+
+[node name="Dialog" parent="Sprite" index="0" instance=ExtResource( 5 )]
+
+[node name="Camera2D" type="Camera2D" parent="." index="4"]
+
+anchor_mode = 0
+rotating = false
+current = true
+zoom = Vector2( 1, 1 )
+limit_left = -10000000
+limit_top = -10000000
+limit_right = 10000000
+limit_bottom = 10000000
+limit_smoothed = false
+drag_margin_h_enabled = true
+drag_margin_v_enabled = true
+smoothing_enabled = false
+smoothing_speed = 5.0
+offset_v = 0.0
+offset_h = 0.0
+drag_margin_left = 0.2
+drag_margin_top = 0.2
+drag_margin_right = 0.2
+drag_margin_bottom = 0.2
+editor_draw_screen = true
+editor_draw_limits = false
+editor_draw_drag_margin = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="5"]
+
+root_node = NodePath("..")
+autoplay = ""
+playback_process_mode = 1
+playback_default_blend_time = 0.0
+playback_speed = 1.0
+anims/Anim = SubResource( 3 )
+blend_times = [  ]
+
+
