@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Object/Player/Player.gd" type="Script" id=1]
 [ext_resource path="res://Object/Player/player.png" type="Texture" id=2]
 [ext_resource path="res://Object/Player/Debug.gd" type="Script" id=3]
 [ext_resource path="res://Object/Player/PlayerCamera.gd" type="Script" id=4]
+[ext_resource path="res://Object/Player/AttackHandler.gd" type="Script" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -46,7 +47,7 @@ collision/safe_margin = 0.05
 script = ExtResource( 1 )
 _sections_unfolded = [ "Collision", "Z Index", "collision" ]
 char_disabled = false
-player_jump_speed = 500
+player_jump_speed = 400
 player_accel_walk = 1200
 player_accel_stop = 2400
 
@@ -57,6 +58,7 @@ _sections_unfolded = [ "Transform", "Z Index" ]
 
 [node name="Hitbox" type="KinematicBody2D" parent="." index="1"]
 
+editor/display_folded = true
 input_pickable = true
 collision_layer = 2
 collision_mask = 0
@@ -80,6 +82,7 @@ _sections_unfolded = [ "Animation", "Region" ]
 
 [node name="Debug" type="Node2D" parent="." index="3"]
 
+editor/display_folded = true
 visible = false
 script = ExtResource( 3 )
 
@@ -415,6 +418,11 @@ playback_speed = 2.0
 anims/idle = SubResource( 3 )
 blend_times = [  ]
 _sections_unfolded = [ "Playback Options" ]
+
+[node name="Attacks" type="Node2D" parent="." index="6"]
+
+position = Vector2( 0, -8 )
+script = ExtResource( 5 )
 
 [connection signal="pressed" from="Debug/CanvasLayer/PlayerInfo/ButtonRotate" to="Debug" method="_on_Button_pressed"]
 

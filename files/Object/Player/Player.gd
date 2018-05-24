@@ -1,5 +1,18 @@
 extends "res://lib/char.gd"
 
+enum PlayerAttackState {
+	PASTATE_ANY, PASTATE_AIR, PASTATE_GROUND
+}
+
+class PlayerAttack:
+	var button
+	var scenes
+	var state
+	func _init(button, state, scenes):
+		self.button = button
+		self.state = state
+		self.scenes = scenes
+
 # Time after pressing the jump button that the player can still jump for
 const PLAYER_TIME_JUMP_WITHOLD = 0.2
 # If the player is not moving, stop the player if they are moving slower than this
@@ -18,9 +31,24 @@ const PLAYER_TIME_MAX_JUMP = 0.12
 const PLAYER_SPEED_RUN = 240
 # Walking speed for the player
 const PLAYER_SPEED_WALK = 120
+# Attacks
+const PLAYER_ATTACK_TIME_RESET = 0.4
+var PLAYER_ATTACKS = [
+	PlayerAttack.new(null, PASTATE_ANY, [
+		preload("res://Object/Player/Attack/Attack1.tscn"),
+		preload("res://Object/Player/Attack/Attack2.tscn"),
+		preload("res://Object/Player/Attack/AttackFinish.tscn")]),
+	PlayerAttack.new("move_down", PASTATE_AIR, [
+		preload("res://Object/Player/Attack/AttackAirDown.tscn")]),
+];
+var player_attack_current = 0
+var player_attack_combo = 0
+var player_attack_timer = 0
 
+# Direction that the player is facing
+var player_facing = 1
 # Jumping speed for the player
-export var player_jump_speed = 500
+export var player_jump_speed = 400
 # Walking acceleration
 export var player_accel_walk = 1200
 # Acceleration when stopping on the ground
@@ -31,6 +59,7 @@ var player_time_since_jump_button = 1.0
 # Slipperiness of the ground. 
 # The higher this is, the less control the player has.
 var player_slipperiness = 1.0
+# direction the player is looking in
 
 func player_can_jump():
 	return char_time_since_floor < PLAYER_TIME_MAX_JUMP
@@ -53,6 +82,11 @@ func get_input_dir():
 
 # Every frame
 func _physics_process(delta):
+	if player_attack_timer > -PLAYER_ATTACK_TIME_RESET:
+		player_attack_timer -= delta
+		if player_attack_timer <= -PLAYER_ATTACK_TIME_RESET:
+			player_attack_current = null
+			player_attack_combo = 0
 	# Calculate movement
 	var stop_speed = PLAYER_INERT_STOP_SPEED;
 	var target_speed = 0
@@ -61,10 +95,12 @@ func _physics_process(delta):
 	if dir == 1:
 		if veloc_h >= 0:
 			$Sprite.flip_h = false
+			player_facing = 1
 			stop_speed = PLAYER_MOVING_STOP_SPEED
 	elif dir == -1:
 		if veloc_h <= 0:
 			$Sprite.flip_h = true
+			player_facing = -1
 			stop_speed = PLAYER_MOVING_STOP_SPEED
 	if Input.is_action_pressed("action_run"):
 		target_speed = dir * PLAYER_SPEED_RUN
@@ -113,12 +149,43 @@ func _physics_process(delta):
 			veloc_v = -CHAR_GRAVITY / 10
 			char_set_motion_vertical(veloc_v)
 
+func player_get_next_attack():
+	for attack in PLAYER_ATTACKS:
+		if attack.button == null or Input.is_action_pressed(attack.button):
+			if attack.state == PASTATE_ANY\
+			or (char_is_on_floor() and attack.state == PASTATE_GROUND)\
+			or (not char_is_on_floor() and attack.state == PASTATE_AIR):
+				return attack
+
 # On input received
 func _input(event):
 	if event.is_action_pressed("action_jump"):
 		player_time_since_jump_button = 0.0
+	if player_attack_timer <= 0.0 and event.is_action_pressed("action_attack"):
+		var next_attack = player_get_next_attack()
+		if next_attack != player_attack_current:
+			player_attack_current = next_attack
+			player_attack_combo = 0
+		var node = next_attack.scenes[player_attack_combo].instance()
+		node.scale.x *= player_facing
+		$Attacks.add_child(node)
+		node.connect("on_attack", $Attacks, "_on_attack")
+#		char_velocity.y *= 0.1
+		player_attack_timer = node.get_duration()
+
+class PlayerAttackSorter:
+	static func sort(a, b):
+		assert(a.button != b.button or a.state != b.state)
+		if a.button == null and b.button != null:
+			return false
+		if b.button == null and a.button != null:
+			return true
+		if a.state != b.state:
+			return a.state > b.state
+		return a.get_instance_id() < b.get_instance_id()
 
 # Player is ready
 func _ready():
 	$AnimationPlayer.play("idle")
 	char_velocity_rotation_method = ROT_NORMAL
+	PLAYER_ATTACKS.sort_custom(PlayerAttackSorter, "sort")

@@ -52,7 +52,7 @@ func can_move_right():
 	return false
 
 func _physics_process(delta):
-	var speed = null
+	var target_speed = null
 	if get_target() == null:
 		time_since_player_left += delta
 		time_since_player_entered = 0.0
@@ -70,18 +70,18 @@ func _physics_process(delta):
 			if patrol_wait > 0:
 				patrol_wait -= delta
 				if char_is_on_floor():
-					speed = 0
+					target_speed = 0
 			else:
 				if patrol_dir < 0 and not can_move_left():
 					patrol_dir = 1
 					patrol_wait = CHANGE_DIR_TIME
-					speed = 0
+					target_speed = 0
 				elif patrol_dir > 0 and not can_move_right():
 					patrol_dir = -1
 					patrol_wait = CHANGE_DIR_TIME
-					speed = 0
+					target_speed = 0
 				else:
-					speed = patrol_dir * WALK_SPEED
+					target_speed = patrol_dir * WALK_SPEED
 		CHASING:
 			var dir = target.global_position - global_position
 			dir = char_get_normal().rotated(PI/2).dot(dir)
@@ -101,12 +101,22 @@ func _physics_process(delta):
 						char_jump(JUMP)
 						set_rotation(0)
 			if char_is_on_floor() or dir != 0:
-				speed = dir * SPEED
-	if speed != null:
-		char_set_motion_horizontal(speed)
-		if speed > 0:
+				target_speed = dir * SPEED
+	if target_speed != null:
+		var veloc_h = char_get_motion_horizontal()
+		var walk_accel = 200
+		if char_is_on_floor():
+			walk_accel = 400
+#		walk_accel = clamp(delta * walk_accel / slip, 0, abs(target_speed - veloc_h))
+		if veloc_h < target_speed:
+			veloc_h += walk_accel*delta#clamp(veloc_h + walk_accel, walk_accel, INF)
+		elif veloc_h > target_speed:
+			veloc_h -= walk_accel*delta#clamp(veloc_h - walk_accel, 0, walk_accel)
+		char_set_motion_horizontal(veloc_h)
+#		char_set_motion_horizontal(speed)
+		if target_speed > 0:
 			$Sprite.flip_h = true
-		elif speed < 0:
+		elif target_speed < 0:
 			$Sprite.flip_h = false
 	char_do_movement(delta, 5)
 	var target_rot = -CHAR_UP.angle() - PI/2

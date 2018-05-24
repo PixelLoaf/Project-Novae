@@ -8,7 +8,7 @@ func _char_disable_set(value):
 	char_disabled = value
 
 # Gravity
-const CHAR_GRAVITY = 1200
+const CHAR_GRAVITY = 960
 # Up direction
 onready var CHAR_UP = Vector2(0, -1).rotated(get_rotation())
 # Maximum velocity
@@ -28,6 +28,17 @@ var char_time_since_floor = 0.0
 # How the character handles velocity rotation
 enum CharRotationMethod {ROT_NONE, ROT_CHARUP, ROT_NORMAL}
 var char_velocity_rotation_method = ROT_NORMAL
+# Amount of time to ignore gravity
+var char_ignore_gravity_timer = 0.0
+
+# Deal damage to this character
+func char_do_damage(damage):
+	emit_signal("char_on_damage_taken", damage)
+signal char_on_damage_taken(amount)
+
+# Add the given velocity to this character
+func char_apply_force(amount):
+	char_velocity += amount
 
 # Get this character's normal vector
 func char_get_normal():
@@ -100,7 +111,11 @@ func char_apply_velocity(veloc, stop_speed):
 func char_do_movement(delta, stop_speed):
 	CHAR_UP = Vector2(0, -1).rotated(get_rotation())
 	char_time_since_floor += delta
-	char_velocity += CHAR_GRAVITY * Vector2(0, 1) * delta
+	if char_ignore_gravity_timer <= 0.0:
+		char_velocity += CHAR_GRAVITY * Vector2(0, 1) * delta
+	else:
+#		char_velocity += CHAR_GRAVITY * Vector2(0, 1) * delta * 0.25
+		char_ignore_gravity_timer -= delta
 	var prev_on_ground = char_on_ground
 	var prev_pos = position
 	# Movement

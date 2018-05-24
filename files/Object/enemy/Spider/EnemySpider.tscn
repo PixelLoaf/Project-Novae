@@ -21,11 +21,9 @@ extents = Vector2( 128, 48 )
 
 [node name="EnemySpider" index="0" instance=ExtResource( 1 )]
 
-collision_layer = 8
-collision_mask = 9
-collision/safe_margin = 0.05
 script = ExtResource( 2 )
 _sections_unfolded = [ "Collision", "Transform", "collision" ]
+char_disabled = false
 player_notice_delay = 0.3
 player_ignore_delay = 2.0
 

@@ -1,0 +1,84 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Object/enemy/EnemyBase.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Object/enemy/Test/TestScarecrow/EnemyScarecrow.gd" type="Script" id=2]
+[ext_resource path="res://Object/enemy/Test/TestPumpkin/enemy-pumpkin.png" type="Texture" id=3]
+
+
+
+[sub_resource type="RectangleShape2D" id=1]
+
+custom_solver_bias = 0.0
+extents = Vector2( 25, 16 )
+
+[sub_resource type="Animation" id=2]
+
+resource_name = "Hurt"
+length = 1.0
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 1, 0 ]
+}
+
+[sub_resource type="Animation" id=3]
+
+resource_name = "Idle"
+length = 1.0
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 0 ]
+}
+
+[node name="EnemyScarecrow" instance=ExtResource( 1 )]
+
+script = ExtResource( 2 )
+char_disabled = false
+
+[node name="CollisionShape2D" parent="Hitbox" index="0"]
+
+position = Vector2( 0, 0 )
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="." index="2"]
+
+position = Vector2( 0, -3 )
+texture = ExtResource( 3 )
+hframes = 2
+_sections_unfolded = [ "Animation", "Region" ]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="3"]
+
+root_node = NodePath("..")
+autoplay = ""
+playback_process_mode = 1
+playback_default_blend_time = 0.0
+playback_speed = 1.0
+anims/Hurt = SubResource( 2 )
+anims/Idle = SubResource( 3 )
+blend_times = [  ]
+
+[connection signal="area_entered" from="Push" to="Push" method="_on_Push_area_entered"]
+
+[connection signal="area_exited" from="Push" to="Push" method="_on_Push_area_exited"]
+
+

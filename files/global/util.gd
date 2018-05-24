@@ -13,3 +13,10 @@ func angle_to(from, to, amount):
 		return to
 	#var weight = amount / dis
 	return from + sign(dis)*amount
+
+func _ready():
+	pause_mode = PAUSE_MODE_PROCESS
+
+func _input(event):
+	if event.is_action_pressed("action_pause"):
+		get_tree().paused = not get_tree().paused
