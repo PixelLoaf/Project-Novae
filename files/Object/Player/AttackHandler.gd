@@ -4,8 +4,8 @@ func _on_attack(body, attack):
 	if attack.count > 1:
 		return
 	if not get_parent().char_is_on_floor():
-		get_parent().char_velocity = Vector2(0, 0)
-		get_parent().char_ignore_gravity_timer = attack.get_duration()
+		get_parent().char_velocity = Vector2(0, -50)
+		get_parent().char_ignore_gravity_timer = attack.length
 	else:
 		get_parent().char_velocity = Vector2()
 	if get_parent().player_attack_current != null:

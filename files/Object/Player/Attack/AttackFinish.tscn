@@ -6,7 +6,7 @@
 [sub_resource type="Animation" id=1]
 
 resource_name = "Play"
-length = 1.0
+length = 1.5
 loop = false
 step = 0.1
 tracks/0/type = "method"
@@ -28,6 +28,7 @@ tracks/0/keys = {
 
 damage = 10.0
 force = 400.0
+length = 0.15
 
 [node name="Area2D" parent="." index="0"]
 

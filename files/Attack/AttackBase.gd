@@ -3,6 +3,7 @@ extends Node2D
 export var damage = 1.0
 export var force = 10.0
 export var direction = Vector2(1, -1)
+export var length = 0.15
 
 var attacked_areas = []
 var count = 0

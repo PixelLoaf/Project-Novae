@@ -1,9 +1,11 @@
 extends "res://lib/char.gd"
 
+# The state that the player must have in order to use an attack
 enum PlayerAttackState {
 	PASTATE_ANY, PASTATE_AIR, PASTATE_GROUND
 }
 
+# Represents a potential attack that the player can perform
 class PlayerAttack:
 	var button
 	var scenes

@@ -47,6 +47,7 @@ collision/safe_margin = 0.05
 script = ExtResource( 1 )
 _sections_unfolded = [ "Collision", "Z Index", "collision" ]
 char_disabled = false
+char_maximum_health = 25
 player_jump_speed = 400
 player_accel_walk = 1200
 player_accel_stop = 2400

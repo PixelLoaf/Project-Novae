@@ -28,7 +28,7 @@ tracks/0/keys = {
 } ]
 }
 
-[node name="AttackBase" type="Node2D"]
+[node name="AttackBase" type="Node2D" index="0"]
 
 script = ExtResource( 1 )
 damage = 1.0

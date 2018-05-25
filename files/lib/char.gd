@@ -7,6 +7,9 @@ func _char_disable_set(value):
 	set_physics_process(not value)
 	char_disabled = value
 
+# Health
+export var char_maximum_health = 25
+var char_health = char_maximum_health
 # Gravity
 const CHAR_GRAVITY = 960
 # Up direction
@@ -33,7 +36,10 @@ var char_ignore_gravity_timer = 0.0
 
 # Deal damage to this character
 func char_do_damage(damage):
+	char_health = clamp(char_health - damage, 0, char_health)
 	emit_signal("char_on_damage_taken", damage)
+	if char_health == 0:
+		queue_free()
 signal char_on_damage_taken(amount)
 
 # Add the given velocity to this character
@@ -114,7 +120,7 @@ func char_do_movement(delta, stop_speed):
 	if char_ignore_gravity_timer <= 0.0:
 		char_velocity += CHAR_GRAVITY * Vector2(0, 1) * delta
 	else:
-#		char_velocity += CHAR_GRAVITY * Vector2(0, 1) * delta * 0.25
+		char_velocity += CHAR_GRAVITY * Vector2(0, 1) * delta * 0.25
 		char_ignore_gravity_timer -= delta
 	var prev_on_ground = char_on_ground
 	var prev_pos = position
