@@ -32,7 +32,7 @@ func get_direction():
 func _on_Area2D_area_entered(area):
 	if not area in attacked_areas:
 		var body = area.get_parent()
-		attacked_areas.append(area)
+		attacked_areas.append(weakref(area))
 		count += 1
 		emit_signal("on_attack", body, self)
 		var dir = get_direction().rotated(-body.global_rotation).normalized()
@@ -45,5 +45,6 @@ func attack_reset():
 	attacked_areas = []
 	count = 0
 	for area in old_areas:
-		if $Area2D.overlaps_area(area):
-			_on_Area2D_area_entered(area)
+		if area.get_ref() != null:
+			if $Area2D.overlaps_area(area.get_ref()):
+				_on_Area2D_area_entered(area.get_ref())
