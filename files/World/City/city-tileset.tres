@@ -7,12 +7,12 @@
 custom_solver_bias = 0.0
 points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 
-[sub_resource type="ConvexPolygonShape2D" id=63]
+[sub_resource type="ConvexPolygonShape2D" id=2]
 
 custom_solver_bias = 0.0
 points = PoolVector2Array( -16, -16, 16, 0, 16, 16, -16, 16 )
 
-[sub_resource type="ConvexPolygonShape2D" id=64]
+[sub_resource type="ConvexPolygonShape2D" id=3]
 
 custom_solver_bias = 0.0
 points = PoolVector2Array( -16, 0, 16, 16, -16, 16 )
@@ -103,6 +103,11 @@ custom_solver_bias = 0.0
 points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 
 [sub_resource type="ConvexPolygonShape2D" id=21]
+
+custom_solver_bias = 0.0
+points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
+
+[sub_resource type="ConvexPolygonShape2D" id=22]
 
 custom_solver_bias = 0.0
 points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
@@ -302,11 +307,6 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 custom_solver_bias = 0.0
 points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 
-[sub_resource type="ConvexPolygonShape2D" id=62]
-
-custom_solver_bias = 0.0
-points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
-
 [resource]
 
 0/name = "sidewalk-top"
@@ -361,7 +361,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 4/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 33 ),
+"shape": SubResource( 32 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 5/name = "city-tileset5"
@@ -375,7 +375,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 5/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 44 ),
+"shape": SubResource( 43 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 6/name = "city-tileset6"
@@ -389,7 +389,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 6/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 55 ),
+"shape": SubResource( 54 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 7/name = "city-tileset7"
@@ -403,7 +403,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 7/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 60 ),
+"shape": SubResource( 59 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 8/name = "sidewalk-bottom"
@@ -417,7 +417,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 8/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 61 ),
+"shape": SubResource( 60 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 9/name = "sidewalk-grate-bottom"
@@ -431,7 +431,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 9/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 62 ),
+"shape": SubResource( 61 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 10/name = "road-slope2"
@@ -459,7 +459,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 11/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 63 ),
+"shape": SubResource( 2 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 12/name = "sidewalk-slope3"
@@ -473,7 +473,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 12/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 64 ),
+"shape": SubResource( 3 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 13/name = "city-tileset13"
@@ -725,7 +725,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 30/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 23 ),
+"shape": SubResource( 22 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 31/name = "city-tileset31"
@@ -739,7 +739,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 31/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 24 ),
+"shape": SubResource( 23 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 32/name = "city-tileset32"
@@ -753,7 +753,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 32/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 25 ),
+"shape": SubResource( 24 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 33/name = "city-tileset33"
@@ -767,7 +767,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 33/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 26 ),
+"shape": SubResource( 25 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 34/name = "city-tileset34"
@@ -781,7 +781,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 34/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 27 ),
+"shape": SubResource( 26 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 35/name = "city-tileset35"
@@ -795,7 +795,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 35/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 28 ),
+"shape": SubResource( 27 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 36/name = "city-tileset36"
@@ -809,7 +809,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 36/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 29 ),
+"shape": SubResource( 28 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 37/name = "city-tileset37"
@@ -823,7 +823,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 37/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 30 ),
+"shape": SubResource( 29 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 38/name = "city-tileset38"
@@ -837,7 +837,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 38/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 31 ),
+"shape": SubResource( 30 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 39/name = "city-tileset39"
@@ -851,7 +851,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 39/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 32 ),
+"shape": SubResource( 31 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 40/name = "city-tileset40"
@@ -865,7 +865,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 40/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 34 ),
+"shape": SubResource( 33 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 41/name = "city-tileset41"
@@ -879,7 +879,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 41/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 35 ),
+"shape": SubResource( 34 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 42/name = "city-tileset42"
@@ -893,7 +893,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 42/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 36 ),
+"shape": SubResource( 35 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 43/name = "city-tileset43"
@@ -907,7 +907,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 43/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 37 ),
+"shape": SubResource( 36 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 44/name = "city-tileset44"
@@ -921,7 +921,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 44/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 38 ),
+"shape": SubResource( 37 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 45/name = "city-tileset45"
@@ -935,7 +935,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 45/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 39 ),
+"shape": SubResource( 38 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 46/name = "city-tileset46"
@@ -949,7 +949,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 46/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 40 ),
+"shape": SubResource( 39 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 47/name = "city-tileset47"
@@ -963,7 +963,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 47/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 41 ),
+"shape": SubResource( 40 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 48/name = "city-tileset48"
@@ -977,7 +977,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 48/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 42 ),
+"shape": SubResource( 41 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 49/name = "city-tileset49"
@@ -991,7 +991,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 49/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 43 ),
+"shape": SubResource( 42 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 50/name = "city-tileset50"
@@ -1005,7 +1005,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 50/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 45 ),
+"shape": SubResource( 44 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 51/name = "city-tileset51"
@@ -1019,7 +1019,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 51/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 46 ),
+"shape": SubResource( 45 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 52/name = "city-tileset52"
@@ -1033,7 +1033,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 52/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 47 ),
+"shape": SubResource( 46 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 53/name = "city-tileset53"
@@ -1047,7 +1047,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 53/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 48 ),
+"shape": SubResource( 47 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 54/name = "city-tileset54"
@@ -1061,7 +1061,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 54/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 49 ),
+"shape": SubResource( 48 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 55/name = "city-tileset55"
@@ -1075,7 +1075,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 55/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 50 ),
+"shape": SubResource( 49 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 56/name = "city-tileset56"
@@ -1089,7 +1089,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 56/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 51 ),
+"shape": SubResource( 50 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 57/name = "city-tileset57"
@@ -1103,7 +1103,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 57/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 52 ),
+"shape": SubResource( 51 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 58/name = "city-tileset58"
@@ -1117,7 +1117,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 58/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 53 ),
+"shape": SubResource( 52 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 59/name = "city-tileset59"
@@ -1131,7 +1131,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 59/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 54 ),
+"shape": SubResource( 53 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 60/name = "city-tileset60"
@@ -1145,7 +1145,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 60/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 56 ),
+"shape": SubResource( 55 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 61/name = "city-tileset61"
@@ -1159,7 +1159,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 61/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 57 ),
+"shape": SubResource( 56 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 62/name = "city-tileset62"
@@ -1173,7 +1173,7 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 62/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 58 ),
+"shape": SubResource( 57 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
 63/name = "city-tileset63"
@@ -1187,7 +1187,8 @@ points = PoolVector2Array( -16, -16, 16, -16, 16, 16, -16, 16 )
 63/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
-"shape": SubResource( 59 ),
+"shape": SubResource( 58 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 16, 16 )
 } ]
+_sections_unfolded = [ "0", "1" ]
 

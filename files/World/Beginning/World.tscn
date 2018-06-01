@@ -20,6 +20,5 @@ __meta__ = {
 [node name="player" parent="." index="1" instance=ExtResource( 4 )]
 
 position = Vector2( 40, 216 )
-char_disabled = false
 
 

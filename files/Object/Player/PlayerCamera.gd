@@ -78,3 +78,4 @@ func _ready():
 	target_drag_margin_left = drag_margin_left
 	target_drag_margin_right = drag_margin_right
 	target_drag_margin_bottom = drag_margin_bottom
+	_physics_process(0)

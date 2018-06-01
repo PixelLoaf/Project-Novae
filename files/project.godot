@@ -18,6 +18,7 @@ config/icon="res://icon.png"
 
 UserConfig="*res://global/config.gd"
 Util="*res://global/util.gd"
+GameData="*res://global/datamanger.gd"
 
 [display]
 
@@ -91,4 +92,5 @@ locale_filter=[ 0, [  ] ]
 [rendering]
 
 quality/2d/use_pixel_snap=true
+environment/default_clear_color=Color( 0.253906, 0.200348, 0.227964, 1 )
 environment/default_environment="res://default_env.tres"

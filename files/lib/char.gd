@@ -2,9 +2,9 @@ extends KinematicBody2D
 
 export var char_disabled = false setget _char_disable_set;
 func _char_disable_set(value):
-	set_process_input(not value)
-	set_process(not value)
-	set_physics_process(not value)
+	set_process_input(not value and has_method("_input"))
+	set_process(not value and has_method("_process"))
+	set_physics_process(not value and has_method("_physics_process"))
 	char_disabled = value
 
 # Health
@@ -18,7 +18,6 @@ onready var CHAR_UP = Vector2(0, -1).rotated(get_rotation())
 const CHAR_TERMINAL_VELOCITY = 640
 # Maximum floor angle
 const CHAR_MAX_FLOOR_ANGLE = 0.8
-# How the character should handle rotation
 
 # The character's velocity
 onready var char_velocity = -CHAR_UP
