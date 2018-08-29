@@ -23,7 +23,6 @@ margin_left = 0.0
 margin_top = 8.0
 margin_right = 304.0
 margin_bottom = 32.0
-rect_clip_content = false
 action_name = "move_up"
 
 [node name="BindLeft" parent="." index="1" instance=ExtResource( 1 )]
@@ -32,7 +31,6 @@ margin_left = 0.0
 margin_top = 40.0
 margin_right = 304.0
 margin_bottom = 64.0
-rect_clip_content = false
 action_name = "move_left"
 
 [node name="BindDown" parent="." index="2" instance=ExtResource( 1 )]
@@ -41,7 +39,6 @@ margin_left = 0.0
 margin_top = 72.0
 margin_right = 304.0
 margin_bottom = 96.0
-rect_clip_content = false
 action_name = "move_down"
 
 [node name="BindRight" parent="." index="3" instance=ExtResource( 1 )]
@@ -50,7 +47,6 @@ margin_left = 0.0
 margin_top = 104.0
 margin_right = 304.0
 margin_bottom = 128.0
-rect_clip_content = false
 action_name = "move_right"
 
 [node name="BindRun" parent="." index="4" instance=ExtResource( 1 )]
@@ -59,7 +55,6 @@ margin_left = 232.0
 margin_top = 8.0
 margin_right = 536.0
 margin_bottom = 32.0
-rect_clip_content = false
 action_name = "action_run"
 
 [node name="BindJump" parent="." index="5" instance=ExtResource( 1 )]
@@ -68,7 +63,6 @@ margin_left = 232.0
 margin_top = 40.0
 margin_right = 536.0
 margin_bottom = 64.0
-rect_clip_content = false
 action_name = "action_jump"
 
 [node name="BindInteract" parent="." index="6" instance=ExtResource( 1 )]
@@ -77,7 +71,6 @@ margin_left = 232.0
 margin_top = 104.0
 margin_right = 536.0
 margin_bottom = 128.0
-rect_clip_content = false
 action_name = "action_interact"
 
 [node name="BindAttack" parent="." index="7" instance=ExtResource( 1 )]
@@ -86,7 +79,6 @@ margin_left = 232.0
 margin_top = 72.0
 margin_right = 536.0
 margin_bottom = 96.0
-rect_clip_content = false
 action_name = "action_attack"
 
 [node name="StartButton" type="Button" parent="." index="8"]

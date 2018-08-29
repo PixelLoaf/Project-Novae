@@ -33,6 +33,10 @@ window/stretch/aspect="keep"
 
 enabled=PoolStringArray( "ch.fischspiele.tilesethelper", "vaniahelper" )
 
+[gdnative]
+
+singletons=[ "res://pythonscript.gdnlib" ]
+
 [importer_defaults]
 
 texture={
