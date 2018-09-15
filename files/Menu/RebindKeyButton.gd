@@ -24,7 +24,7 @@ func _input(event):
 			button.set_pressed(false)
 			button.accept_event()
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	button.set_disabled(button.is_pressed())
 
 func _ready():

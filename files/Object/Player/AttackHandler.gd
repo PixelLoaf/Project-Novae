@@ -37,7 +37,7 @@ func player_get_next_attack():
 			or (not get_parent().char_is_on_floor() and attack.state == PASTATE_AIR):
 				return attack
 
-func _on_attack(body, attack):
+func _on_attack(_body, attack):
 	if attack.count > 1:
 		return
 	if not get_parent().char_is_on_floor():

@@ -24,10 +24,10 @@ func set_disabled(value):
 	is_disabled = value
 	check_num_bodies()
 
-func _on_Area2D_body_entered(body):
+func _on_Area2D_body_entered(_body):
 	num_bodies += 1
 	check_num_bodies()
 
-func _on_Area2D_body_exited(body):
+func _on_Area2D_body_exited(_body):
 	num_bodies -= 1
 	check_num_bodies()

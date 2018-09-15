@@ -77,19 +77,19 @@ func _physics_process(delta):
 	# Actual movement here
 	char_do_movement(delta, stop_speed)
 	# Change player's acceleration if they are on a slope
-	var mult_accel = 1
-	if target_speed > veloc_h:
-		var mult_right = char_get_normal().dot(CHAR_UP.rotated(PI/2))
-		if mult_right > 0:
-			mult_accel = lerp(1, PLAYER_DOWNHILL_MULT_MAX, mult_right)
-		else:
-			mult_accel = lerp(1, PLAYER_UPHILL_MULT_MIN, -mult_right)
-	else:
-		var mult_left = char_get_normal().dot(CHAR_UP.rotated(-PI/2))
-		if mult_left > 0:
-			mult_accel = lerp(1, PLAYER_DOWNHILL_MULT_MAX, mult_left)
-		else:
-			mult_accel = lerp(1, PLAYER_UPHILL_MULT_MIN, -mult_left)
+#	var mult_accel = 1
+#	if target_speed > veloc_h:
+#		var mult_right = char_get_normal().dot(CHAR_UP.rotated(PI/2))
+#		if mult_right > 0:
+#			mult_accel = lerp(1, PLAYER_DOWNHILL_MULT_MAX, mult_right)
+#		else:
+#			mult_accel = lerp(1, PLAYER_UPHILL_MULT_MIN, -mult_right)
+#	else:
+#		var mult_left = char_get_normal().dot(CHAR_UP.rotated(-PI/2))
+#		if mult_left > 0:
+#			mult_accel = lerp(1, PLAYER_DOWNHILL_MULT_MAX, mult_left)
+#		else:
+#			mult_accel = lerp(1, PLAYER_UPHILL_MULT_MIN, -mult_left)
 	# Player is more slippery when in the air
 	var slip = player_slipperiness
 	if not char_is_on_floor():

@@ -11,11 +11,11 @@ func _char_disable_set(value):
 export var char_maximum_health = 25
 var char_health = char_maximum_health
 # Gravity
-const CHAR_GRAVITY = 960
+const CHAR_GRAVITY = 960.0
 # Up direction
 onready var CHAR_UP = Vector2(0, -1).rotated(get_rotation())
 # Maximum velocity
-const CHAR_TERMINAL_VELOCITY = 640
+const CHAR_TERMINAL_VELOCITY = 640.0
 # Maximum floor angle
 const CHAR_MAX_FLOOR_ANGLE = 0.8
 
@@ -85,7 +85,7 @@ func char_project_self(vec):
 func char_project_movement(vec):
 	var result = char_project_self(vec)
 	if not result.empty() and result[1] != 1:
-		move_and_collide(vec * result[1])
+		var _ignore = move_and_collide(vec * result[1])
 	return result
 
 # Recalculate the character's normal vector
@@ -106,12 +106,6 @@ func char_calc_normal():
 	else:
 		char_floor_normal = char_floor_normal.normalized()
 
-# Determine if the character can snap to the floor
-func char_apply_velocity(veloc, stop_speed):
-	var ret = move_and_slide(veloc, CHAR_UP, stop_speed, 4, CHAR_MAX_FLOOR_ANGLE)
-	char_calc_normal()
-	return ret
-
 # Function that does character movement. Should be called once per frame
 func char_do_movement(delta, stop_speed):
 	CHAR_UP = Vector2(0, -1).rotated(get_rotation())
@@ -121,25 +115,28 @@ func char_do_movement(delta, stop_speed):
 	else:
 		char_velocity += CHAR_GRAVITY * Vector2(0, 1) * delta * 0.25
 		char_ignore_gravity_timer -= delta
-	var prev_on_ground = char_on_ground
-	var prev_pos = position
+#	var prev_on_ground = char_on_ground
 	# Movement
-	var rot = 0;
-	if char_velocity_rotation_method == ROT_CHARUP:
-		rot = CHAR_UP.angle() + PI/2
-	elif char_velocity_rotation_method == ROT_NORMAL:
-		rot = char_get_normal().angle() + PI/2
-	char_velocity = move_and_slide(char_velocity.rotated(rot), CHAR_UP, stop_speed, 4, 0.8).rotated(-rot)
+	if char_on_ground:
+		char_velocity = move_and_slide_with_snap(char_velocity, Vector2(0, 6), CHAR_UP, true, false, 4, 0.8)
+	else:
+		char_velocity = move_and_slide(char_velocity, CHAR_UP, true, false, 4, 0.8)
+#	var rot = 0;
+#	if char_velocity_rotation_method == ROT_CHARUP:
+#		rot = CHAR_UP.angle() + PI/2
+#	elif char_velocity_rotation_method == ROT_NORMAL:
+#		rot = char_get_normal().angle() + PI/2
+#	char_velocity = move_and_slide(char_velocity.rotated(rot), CHAR_UP, true, stop_speed, 4, 0.8).rotated(-rot)
 	# Calculate ground
 	char_on_ground = false
 	char_calc_normal()
 	# Make sure player is on the ground
-	if (char_on_ground or prev_on_ground) and char_time_since_floor < 0.5:
-		var result = char_project_movement(CHAR_UP * -8)
-		if result.empty() or result[1] != 1:
-			move_and_slide(-CHAR_UP, CHAR_UP, 0, 4, 0.8)
-			char_calc_normal()
-			char_on_ground = true
+#	if (char_on_ground or prev_on_ground) and char_time_since_floor < 0.5:
+#		var result = char_project_movement(CHAR_UP * -8)
+#		if result.empty() or result[1] != 1:
+#			var _ignore = move_and_slide(-CHAR_UP, CHAR_UP, true, 0, 4, 0.8)
+#			char_calc_normal()
+#			char_on_ground = true
 	# Check if on ground
 	if char_on_ground:
 		char_time_since_floor = 0.0

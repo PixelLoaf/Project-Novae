@@ -165,6 +165,11 @@ func check_input_valid(event):
 	if event is InputEventJoypadButton:
 		if event.pressed:
 			return event
+	if event is InputEventJoypadMotion:
+#		if event.pressed:
+		print(event.axis_value)
+		event.axis_value = 0.1 * sign(event.axis_value)
+		return event
 	return null
 
 # Get name of an event
@@ -189,4 +194,9 @@ func get_event_name(event):
 		return "Mouse button " + str(event.button_index)
 	if event is InputEventJoypadButton:
 		return "Button " + str(event.button_index)
+	if event is InputEventJoypadMotion:
+		if event.axis_value < 0:
+			return "Axis -" + str(event.axis)
+		else:
+			return "Axis " + str(event.axis)
 	return "Invalid"

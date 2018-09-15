@@ -14,6 +14,9 @@ func angle_to(from, to, amount):
 	#var weight = amount / dis
 	return from + sign(dis)*amount
 
+func print_error(err, stuff):
+	printerr("Error " + err + ": " + stuff)
+
 func _ready():
 	pause_mode = PAUSE_MODE_PROCESS
 

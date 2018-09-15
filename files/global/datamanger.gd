@@ -71,7 +71,9 @@ func load_file(name):
 		return ERR_INVALID_DATA
 	global_data = data.result["global"]
 	local_data = data.result["local"]
-	get_tree().change_scene(data.result["scene"])
+	err = get_tree().change_scene(data.result["scene"])
+	if err != OK:
+		Util.print_error(err, "could not load scene")
 	return OK
 
 ###### GLOBAL DATA ######
@@ -98,7 +100,7 @@ func get_data(key):
 # Set local data
 func set_data_local(key, value):
 	if key.begins_with(GLOBALVAR):
-		set_data(key.right(1))
+		set_data(key.right(1), value)
 	else:
 		local_data[key] = value
 

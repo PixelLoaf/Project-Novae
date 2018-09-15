@@ -15,7 +15,7 @@ func _input(event):
 			show()
 			panel.show()
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if not visible:
 		return
 	var offset_angle = player.rotation
