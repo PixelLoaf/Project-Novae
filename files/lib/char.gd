@@ -117,15 +117,17 @@ func char_do_movement(delta, stop_speed):
 		char_ignore_gravity_timer -= delta
 #	var prev_on_ground = char_on_ground
 	# Movement
+	var rot = 0;
+	if char_velocity_rotation_method == ROT_CHARUP:
+		rot = CHAR_UP.angle() + PI/2
+	elif char_velocity_rotation_method == ROT_NORMAL:
+		rot = char_get_normal().angle() + PI/2
 	if char_on_ground:
-		char_velocity = move_and_slide_with_snap(char_velocity, Vector2(0, 6), CHAR_UP, true, false, 4, 0.8)
+		char_velocity = move_and_slide_with_snap(char_velocity.rotated(rot),
+				Vector2(0, 6), CHAR_UP, true, false, 4, 0.8).rotated(-rot)
 	else:
-		char_velocity = move_and_slide(char_velocity, CHAR_UP, true, false, 4, 0.8)
-#	var rot = 0;
-#	if char_velocity_rotation_method == ROT_CHARUP:
-#		rot = CHAR_UP.angle() + PI/2
-#	elif char_velocity_rotation_method == ROT_NORMAL:
-#		rot = char_get_normal().angle() + PI/2
+		char_velocity = move_and_slide(char_velocity.rotated(rot), CHAR_UP, 
+				true, false, 4, 0.8).rotated(-rot)
 #	char_velocity = move_and_slide(char_velocity.rotated(rot), CHAR_UP, true, stop_speed, 4, 0.8).rotated(-rot)
 	# Calculate ground
 	char_on_ground = false

@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=2]
 
-[ext_resource path="res://Object/Player/Player.gd" type="Script" id=1]
+[ext_resource path="res://Object/Player/Player.py" type="Script" id=1]
 [ext_resource path="res://Object/Player/player.png" type="Texture" id=2]
 [ext_resource path="res://Object/Player/Debug.gd" type="Script" id=3]
 [ext_resource path="res://Object/Player/PlayerCamera.gd" type="Script" id=4]
@@ -50,12 +50,11 @@ collision_mask = 1
 collision/safe_margin = 0.05
 motion/sync_to_physics = false
 script = ExtResource( 1 )
-_sections_unfolded = [ "Collision", "Z Index", "collision" ]
-char_disabled = false
-char_maximum_health = 25
-player_jump_speed = 400
-player_accel_walk = 1200
-player_accel_stop = 2400
+_sections_unfolded = [ "Collision", "Script", "Z Index", "collision" ]
+player_accel_stop = 2400.0
+_char_disabled = false
+player_accel_walk = 1200.0
+player_jump_speed = 400.0
 
 [node name="Hitbox" type="KinematicBody2D" parent="."]
 input_pickable = true

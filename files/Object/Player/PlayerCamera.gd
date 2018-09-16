@@ -26,12 +26,12 @@ func lerp_abs(from, to, speed):
 	return from
 
 func _physics_process(delta):
-	if not player.char_is_on_floor():
-		target_drag_margin_bottom = DRAG_MARGIN_AIR_BOTTOM
-		target_drag_margin_top = DRAG_MARGIN_AIR_TOP
-	else:
-		target_drag_margin_bottom = DRAG_MARGIN_FLOOR_BOTTOM
-		target_drag_margin_top = DRAG_MARGIN_FLOOR_TOP
+#	if not player.char_is_on_floor():
+#		target_drag_margin_bottom = DRAG_MARGIN_AIR_BOTTOM
+#		target_drag_margin_top = DRAG_MARGIN_AIR_TOP
+#	else:
+#		target_drag_margin_bottom = DRAG_MARGIN_FLOOR_BOTTOM
+#		target_drag_margin_top = DRAG_MARGIN_FLOOR_TOP
 	var player_x = player.global_position.x
 	var player_y = player.global_position.y
 	var camera_x = get_camera_screen_center().x
